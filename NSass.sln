@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSass", "NSass\NSass.csproj", "{9EA1A063-BD94-46E8-A6C2-9ED834E94EA3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NSass.Tests", "NSass.Tests\NSass.Tests.csproj", "{1FFCBF9B-0B84-404C-BAFE-9B8BD0814CEB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9EA1A063-BD94-46E8-A6C2-9ED834E94EA3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EA1A063-BD94-46E8-A6C2-9ED834E94EA3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EA1A063-BD94-46E8-A6C2-9ED834E94EA3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EA1A063-BD94-46E8-A6C2-9ED834E94EA3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1FFCBF9B-0B84-404C-BAFE-9B8BD0814CEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1FFCBF9B-0B84-404C-BAFE-9B8BD0814CEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1FFCBF9B-0B84-404C-BAFE-9B8BD0814CEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1FFCBF9B-0B84-404C-BAFE-9B8BD0814CEB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
