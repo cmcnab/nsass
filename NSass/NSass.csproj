@@ -43,9 +43,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Script\Lexer.cs" />
     <Compile Include="Script\LexerExtensions.cs" />
+    <Compile Include="Script\Parser.cs" />
     <Compile Include="Script\Token.cs" />
     <Compile Include="Script\TokenType.cs" />
     <Compile Include="Tree\Node.cs" />
+    <Compile Include="Tree\RootNode.cs" />
+    <Compile Include="Tree\RuleNode.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scss\" />
