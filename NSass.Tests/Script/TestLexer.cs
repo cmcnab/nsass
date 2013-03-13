@@ -151,6 +151,26 @@
         }
 
         [Fact]
+        public void DivIsSeparateToken()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input = "2px/3px";
+            var expected = new Token[]
+            {
+                Tokens.Symbol("2px"),
+                Tokens.Div(),
+                Tokens.Symbol("3px")
+            };
+
+            // Act
+            var tokens = lexer.ReadString(input).ToList();
+
+            // Assert
+            Assert.Equal(expected, tokens, new TokenComparer());
+        }
+
+        [Fact]
         public void Sample1LexesCorrectly()
         {
             // Arrange
@@ -274,6 +294,52 @@
                 Tokens.Symbol("font-weight"),
                 Tokens.Colon(),
                 Tokens.Symbol("normal"),
+                Tokens.SemiColon(),
+                Tokens.EndInterpolation(),
+                Tokens.EndInterpolation()
+            };
+
+            // Act
+            var tokens = lexer.ReadString(input).ToList();
+
+            // Assert
+            Assert.Equal(expected, tokens, new TokenComparer());
+        }
+
+        [Fact]
+        public void Sample4LexesCorrectly()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input =
+@".funky {
+  font: 2px/3px {
+    family: fantasy;
+    size: 30em;
+    weight: bold;
+  }
+}";
+            var expected = new Token[]
+            {
+                Tokens.Symbol(".funky"),
+                Tokens.LCurly(),
+                Tokens.Symbol("font"),
+                Tokens.Colon(),
+                Tokens.Symbol("2px"),
+                Tokens.Div(),
+                Tokens.Symbol("3px"),
+                Tokens.LCurly(),
+                Tokens.Symbol("family"),
+                Tokens.Colon(),
+                Tokens.Symbol("fantasy"),
+                Tokens.SemiColon(),
+                Tokens.Symbol("size"),
+                Tokens.Colon(),
+                Tokens.Symbol("30em"),
+                Tokens.SemiColon(),
+                Tokens.Symbol("weight"),
+                Tokens.Colon(),
+                Tokens.Symbol("bold"),
                 Tokens.SemiColon(),
                 Tokens.EndInterpolation(),
                 Tokens.EndInterpolation()

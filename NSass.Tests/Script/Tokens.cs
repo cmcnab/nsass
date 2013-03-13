@@ -38,5 +38,10 @@
         {
             return new Token(TokenType.Ampersand, "&");
         }
+
+        public static Token Div()
+        {
+            return new Token(TokenType.Div, "/");
+        }
     }
 }

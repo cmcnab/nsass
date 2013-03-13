@@ -14,22 +14,22 @@
         static Lexer()
         {
             TokenTypes = new Dictionary<string, TokenType>();
-            TokenTypes.Add("+", TokenType.Plus);
             TokenTypes.Add("{", TokenType.LCurly);
             TokenTypes.Add("}", TokenType.EndInterpolation);
             TokenTypes.Add(":", TokenType.Colon);
             TokenTypes.Add(";", TokenType.SemiColon);
             TokenTypes.Add(",", TokenType.Comma);
             TokenTypes.Add("&", TokenType.Ampersand);
+            TokenTypes.Add("/", TokenType.Div);
 
             SpecialChars = new HashSet<char>();
-            SpecialChars.Add('+');
             SpecialChars.Add('{');
             SpecialChars.Add('}');
             SpecialChars.Add(':');
             SpecialChars.Add(';');
             SpecialChars.Add(',');
             SpecialChars.Add('&');
+            SpecialChars.Add('/');
         }
 
         public Lexer()
