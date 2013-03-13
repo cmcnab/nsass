@@ -43,6 +43,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Script\Lexer.cs" />
     <Compile Include="Script\LexerExtensions.cs" />
+    <Compile Include="Script\Node.cs" />
     <Compile Include="Script\Token.cs" />
     <Compile Include="Script\TokenType.cs" />
     <Compile Include="Tree\Node.cs" />

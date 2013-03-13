@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NSass.Script
+﻿namespace NSass.Script
 {
+    using System.Collections.Generic;
+    using System.IO;
+
     public static class LexerExtensions
     {
         public static IEnumerable<Token> ReadString(this Lexer lexer, string input)

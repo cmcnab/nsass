@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NSass.Script
+﻿namespace NSass.Script
 {
     public enum TokenType
     {
+        SymLit,
         Plus,
         Minus,
         Times,

@@ -1,29 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NSass.Script
+﻿namespace NSass.Script
 {
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Text;
+
     public class Lexer
     {
         private static readonly Dictionary<string, TokenType> TokenTypes;
         private static readonly HashSet<char> SpecialChars;
 
+        private StringBuilder currentToken;
+
         static Lexer()
         {
             TokenTypes = new Dictionary<string, TokenType>();
             TokenTypes.Add("+", TokenType.Plus);
-            // TODO: continue...
+            TokenTypes.Add("{", TokenType.LCurly);
+            TokenTypes.Add("}", TokenType.EndInterpolation);
+            TokenTypes.Add(":", TokenType.Colon);
+            TokenTypes.Add(";", TokenType.SemiColon);
+            //// TODO: continue...
 
             SpecialChars = new HashSet<char>();
             SpecialChars.Add('+');
-            // TODO: continue...
+            SpecialChars.Add('{');
+            SpecialChars.Add('}');
+            SpecialChars.Add(':');
+            SpecialChars.Add(';');
+            //// TODO: continue...
         }
-
-        private StringBuilder currentToken;
 
         public Lexer()
         {
@@ -48,6 +53,12 @@ namespace NSass.Script
                 char c = (char)ret;
                 if (IsSpecialChar(c))
                 {
+                    if (this.HasToken)
+                    {
+                        yield return this.EatToken();
+                    }
+
+                    yield return this.MakeSpecialToken(c);
                 }
                 else if (char.IsLetterOrDigit(c) || IsSymbolChar(c))
                 {
@@ -68,6 +79,16 @@ namespace NSass.Script
             }
         }
 
+        private static bool IsSpecialChar(char c)
+        {
+            return SpecialChars.Contains(c);
+        }
+
+        private static bool IsSymbolChar(char c)
+        {
+            return c == '#';
+        }
+
         private Token EatToken()
         {
             var token = this.MakeToken();
@@ -77,17 +98,14 @@ namespace NSass.Script
 
         private Token MakeToken()
         {
-            return new Token() { Value = this.currentToken.ToString() };
+            return new Token() { Value = this.currentToken.ToString(), Type = TokenType.SymLit };
         }
 
-        private bool IsSpecialChar(char c)
+        private Token MakeSpecialToken(char c)
         {
-            return false;
-        }
-
-        private bool IsSymbolChar(char c)
-        {
-            return c == '#';
+            var str = c.ToString();
+            var type = TokenTypes[str];
+            return new Token() { Value = str, Type = type };
         }
     }
 }
