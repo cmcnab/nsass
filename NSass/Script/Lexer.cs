@@ -20,7 +20,7 @@
             TokenTypes.Add(":", TokenType.Colon);
             TokenTypes.Add(";", TokenType.SemiColon);
             TokenTypes.Add(",", TokenType.Comma);
-            //// TODO: continue...
+            TokenTypes.Add("&", TokenType.Ampersand);
 
             SpecialChars = new HashSet<char>();
             SpecialChars.Add('+');
@@ -29,7 +29,7 @@
             SpecialChars.Add(':');
             SpecialChars.Add(';');
             SpecialChars.Add(',');
-            //// TODO: continue...
+            SpecialChars.Add('&');
         }
 
         public Lexer()
@@ -90,7 +90,8 @@
         {
             return c == '#'
                 || c == '%'
-                || c == '-';
+                || c == '-'
+                || c == '.';
         }
 
         private Token EatToken()

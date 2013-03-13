@@ -93,6 +93,24 @@
         }
 
         [Fact]
+        public void SymbolWithDotIsOneToken()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input = "body.firefox";
+            var expected = new Token[]
+            {
+                Tokens.Symbol("body.firefox")
+            };
+
+            // Act
+            var tokens = lexer.ReadString(input).ToList();
+
+            // Assert
+            Assert.Equal(expected, tokens, new TokenComparer());
+        }
+
+        [Fact]
         public void CommaIsSeparateToken()
         {
             // Arrange
@@ -103,6 +121,26 @@
                 Tokens.Symbol("p"),
                 Tokens.Comma(),
                 Tokens.Symbol("div")
+            };
+
+            // Act
+            var tokens = lexer.ReadString(input).ToList();
+
+            // Assert
+            Assert.Equal(expected, tokens, new TokenComparer());
+        }
+
+        [Fact]
+        public void AmpersandIsSeparateToken()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input = "&:hover";
+            var expected = new Token[]
+            {
+                Tokens.Ampersand(),
+                Tokens.Colon(),
+                Tokens.Symbol("hover")
             };
 
             // Act
@@ -185,6 +223,57 @@
                 Tokens.Symbol("font-size"),
                 Tokens.Colon(),
                 Tokens.Symbol("3em"), // TODO: split?
+                Tokens.SemiColon(),
+                Tokens.EndInterpolation(),
+                Tokens.EndInterpolation()
+            };
+
+            // Act
+            var tokens = lexer.ReadString(input).ToList();
+
+            // Assert
+            Assert.Equal(expected, tokens, new TokenComparer());
+        }
+
+        [Fact]
+        public void Sample3LexesCorrectly()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input =
+@"a {
+  font-weight: bold;
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
+  body.firefox & { font-weight: normal; }
+}";
+            var expected = new Token[]
+            {
+                Tokens.Symbol("a"),
+                Tokens.LCurly(),
+                Tokens.Symbol("font-weight"),
+                Tokens.Colon(),
+                Tokens.Symbol("bold"),
+                Tokens.SemiColon(),
+                Tokens.Symbol("text-decoration"),
+                Tokens.Colon(),
+                Tokens.Symbol("none"),
+                Tokens.SemiColon(),
+                Tokens.Ampersand(),
+                Tokens.Colon(),
+                Tokens.Symbol("hover"),
+                Tokens.LCurly(),
+                Tokens.Symbol("text-decoration"),
+                Tokens.Colon(),
+                Tokens.Symbol("underline"),
+                Tokens.SemiColon(),
+                Tokens.EndInterpolation(),
+                Tokens.Symbol("body.firefox"),
+                Tokens.Ampersand(),
+                Tokens.LCurly(),
+                Tokens.Symbol("font-weight"),
+                Tokens.Colon(),
+                Tokens.Symbol("normal"),
                 Tokens.SemiColon(),
                 Tokens.EndInterpolation(),
                 Tokens.EndInterpolation()

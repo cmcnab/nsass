@@ -13,6 +13,7 @@
         LParen,
         RParen,
         Comma,
+        Ampersand,
         And,
         Or,
         Not,
