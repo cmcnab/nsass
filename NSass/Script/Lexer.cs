@@ -19,6 +19,7 @@
             TokenTypes.Add("}", TokenType.EndInterpolation);
             TokenTypes.Add(":", TokenType.Colon);
             TokenTypes.Add(";", TokenType.SemiColon);
+            TokenTypes.Add(",", TokenType.Comma);
             //// TODO: continue...
 
             SpecialChars = new HashSet<char>();
@@ -27,6 +28,7 @@
             SpecialChars.Add('}');
             SpecialChars.Add(':');
             SpecialChars.Add(';');
+            SpecialChars.Add(',');
             //// TODO: continue...
         }
 
@@ -86,7 +88,9 @@
 
         private static bool IsSymbolChar(char c)
         {
-            return c == '#';
+            return c == '#'
+                || c == '%'
+                || c == '-';
         }
 
         private Token EatToken()
@@ -98,14 +102,14 @@
 
         private Token MakeToken()
         {
-            return new Token() { Value = this.currentToken.ToString(), Type = TokenType.SymLit };
+            return new Token(TokenType.SymLit, this.currentToken.ToString());
         }
 
         private Token MakeSpecialToken(char c)
         {
             var str = c.ToString();
             var type = TokenTypes[str];
-            return new Token() { Value = str, Type = type };
+            return new Token(type, str);
         }
     }
 }
