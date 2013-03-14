@@ -19,8 +19,6 @@
 
         public ICollection<Node> Children { get; private set; }
 
-        public abstract Node Visit(ParseContext context);
-
         public abstract bool Equals(Node other);
 
         public override bool Equals(object obj)
@@ -47,12 +45,6 @@
             }
 
             return (T)other;
-        }
-
-        protected Node Append(Node child)
-        {
-            this.Children.Add(child);
-            return child;
         }
     }
 }

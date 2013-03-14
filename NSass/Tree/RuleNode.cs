@@ -23,18 +23,6 @@
 
         public ICollection<string> Selectors { get; private set; }
 
-        public override Node Visit(ParseContext context)
-        {
-            switch (context.Current.Type)
-            {
-                case TokenType.LCurly:
-                    return new ScopeNode(this);
-
-                default:
-                    throw new SyntaxException();
-            }
-        }
-
         public override bool Equals(Node other)
         {
             RuleNode that = this.CheckTypeEquals<RuleNode>(other);
