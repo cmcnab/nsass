@@ -8,7 +8,16 @@
     {
         public Node Parse(IEnumerable<Token> tokens)
         {
-            throw new NotImplementedException();
+            var root = new RootNode();
+            var context = new ParseContext(tokens);
+            Node node = root;
+
+            while (context.GetNext() != null)
+            {
+                node = node.Visit(context);
+            }
+
+            return root;
         }
     }
 }

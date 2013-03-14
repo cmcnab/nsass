@@ -6,26 +6,24 @@
     public class TestParser
     {
         [Fact]
-        public void Something()
+        public void EmptyRuleParsesCorrectly()
         {
             // Arrange
             var parser = new Parser();
             var input = new Token[]
             {
                 Tokens.Symbol("#main"),
-                Tokens.Symbol("p"),
                 Tokens.LCurly(),
-                Tokens.Symbol("color"),
-                Tokens.Colon(),
-                Tokens.Symbol("#00ff00"),
-                Tokens.SemiColon(),
                 Tokens.EndInterpolation()
             };
+            var expected = Tree.Root().AppendAll(
+                Tree.Rule("#main"));
 
             // Act
             var ast = parser.Parse(input);
 
-            // TODO: Assert
+            // Assert
+            expected.AssertEqualTree(ast);
         }
     }
 }
