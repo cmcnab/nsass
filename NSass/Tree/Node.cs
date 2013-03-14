@@ -11,9 +11,12 @@
     {
         public Node(Node parent)
         {
+            this.Depth = parent == null ? 0 : parent.Depth + 1;
             this.Parent = parent;
             this.Children = new List<Node>();
         }
+
+        public int Depth { get; private set; }
 
         public Node Parent { get; set; }
 

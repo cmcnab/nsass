@@ -49,10 +49,13 @@
     <Compile Include="Script\Token.cs" />
     <Compile Include="Script\TokenType.cs" />
     <Compile Include="Tree\Node.cs" />
+    <Compile Include="Tree\NodeExtensions.cs" />
     <Compile Include="Tree\PropertyNode.cs" />
     <Compile Include="Tree\RootNode.cs" />
     <Compile Include="Tree\RuleNode.cs" />
     <Compile Include="Tree\ScopeNode.cs" />
+    <Compile Include="Tree\Visitors\BaseVisitor.cs" />
+    <Compile Include="Tree\Visitors\ToCss.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scss\" />

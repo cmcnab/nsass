@@ -49,6 +49,7 @@
     <Compile Include="Script\TokenComparer.cs" />
     <Compile Include="Script\Tokens.cs" />
     <Compile Include="Script\Tree.cs" />
+    <Compile Include="TestEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
