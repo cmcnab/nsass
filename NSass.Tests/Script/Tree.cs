@@ -12,15 +12,21 @@
 
         public static Node Rule(string symbol)
         {
-            var node = new RuleNode();
+            var node = new RuleNode(null);
             node.Selectors.Add(symbol);
             return node;
+        }
+
+        public static Node Property(string name, string value)
+        {
+            return new PropertyNode(null) { Name = name, Value = value };
         }
 
         public static Node AppendAll(this Node parent, params Node[] nodes)
         {
             foreach (var node in nodes)
             {
+                node.Parent = parent;
                 parent.Children.Add(node);
             }
 

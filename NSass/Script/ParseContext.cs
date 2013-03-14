@@ -35,5 +35,16 @@
             this.current = this.iterator.Current;
             return this.current;
         }
+
+        public Token AssertNextIs(TokenType type, string failMessage)
+        {
+            var next = this.GetNext();
+            if (next == null || next.Type != type)
+            {
+                throw new SyntaxException(failMessage);
+            }
+
+            return next;
+        }
     }
 }

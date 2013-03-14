@@ -9,10 +9,13 @@
     /// </summary>
     public abstract class Node : IEquatable<Node>
     {
-        public Node()
+        public Node(Node parent)
         {
+            this.Parent = parent;
             this.Children = new List<Node>();
         }
+
+        public Node Parent { get; set; }
 
         public ICollection<Node> Children { get; private set; }
 
@@ -31,14 +34,14 @@
             return base.GetHashCode();
         }
 
-        protected static T CheckTypeEquals<T>(T source, Node other) where T : Node
+        protected T CheckTypeEquals<T>(Node other) where T : Node
         {
             if (ReferenceEquals(null, other))
             {
                 return null;
             }
 
-            if (!ReferenceEquals(source, other) && !other.GetType().Equals(typeof(T)))
+            if (!ReferenceEquals(this, other) && !other.GetType().Equals(typeof(T)))
             {
                 return null;
             }

@@ -9,14 +9,15 @@
     /// </summary>
     public class RuleNode : Node
     {
-        public RuleNode()
+        public RuleNode(Node parent)
+            : base(parent)
         {
             this.Selectors = new List<string>();
         }
 
-        public RuleNode(string symbol)
+        public RuleNode(Node parent, string symbol)
+            : this(parent)
         {
-            this.Selectors = new List<string>();
             this.Selectors.Add(symbol);
         }
 
@@ -24,12 +25,19 @@
 
         public override Node Visit(ParseContext context)
         {
-            return this;
+            switch (context.Current.Type)
+            {
+                case TokenType.LCurly:
+                    return new ScopeNode(this);
+
+                default:
+                    throw new SyntaxException();
+            }
         }
 
-        public override bool Equals(Node node)
+        public override bool Equals(Node other)
         {
-            RuleNode that = Node.CheckTypeEquals<RuleNode>(this, node);
+            RuleNode that = this.CheckTypeEquals<RuleNode>(other);
             if (that == null)
             {
                 return false;
