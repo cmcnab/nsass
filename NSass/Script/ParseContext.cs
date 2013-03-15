@@ -5,13 +5,13 @@
     public class ParseContext
     {
         private IEnumerator<Token> iterator;
-        private Queue<Token> history;
+        private Queue<Token> lookAhead;
         private Token current;
 
         public ParseContext(IEnumerable<Token> tokens)
         {
             this.iterator = tokens.GetEnumerator();
-            this.history = new Queue<Token>();
+            this.lookAhead = new Queue<Token>();
             this.current = null;
         }
 
@@ -20,31 +20,45 @@
             get { return this.current; }
         }
 
-        public Token GetNext()
+        public Token Peek()
         {
-            if (!this.iterator.MoveNext())
+            var next = this.GetNext();
+            if (next == null)
             {
                 return null;
             }
 
-            if (this.current != null)
-            {
-                this.history.Enqueue(this.current);
-            }
+            this.lookAhead.Enqueue(next);
+            return next;
+        }
 
-            this.current = this.iterator.Current;
+        public Token MoveNext()
+        {
+            this.current = this.lookAhead.Count > 0 
+                ? this.lookAhead.Dequeue()
+                : this.GetNext();
             return this.current;
         }
 
         public Token AssertNextIs(TokenType type, string failMessage)
         {
-            var next = this.GetNext();
+            var next = this.MoveNext();
             if (next == null || next.Type != type)
             {
                 throw new SyntaxException(failMessage);
             }
 
             return next;
+        }
+
+        private Token GetNext()
+        {
+            if (!this.iterator.MoveNext())
+            {
+                return null;
+            }
+
+            return this.iterator.Current;
         }
     }
 }

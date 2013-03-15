@@ -12,7 +12,7 @@
             var context = new ParseContext(tokens);
             Node node = root;
 
-            while (context.GetNext() != null)
+            while (context.MoveNext() != null)
             {
                 node = this.Visit((dynamic)node, context);
             }
@@ -39,6 +39,9 @@
                 case TokenType.LCurly:
                     return new ScopeNode(rule);
 
+                case TokenType.EndInterpolation:
+                    return rule.Parent;
+
                 default:
                     throw new SyntaxException();
             }
@@ -49,7 +52,8 @@
             switch (context.Current.Type)
             {
                 case TokenType.SymLit:
-                    return this.ParseProperty(scope, context);
+                    // Could be a property or another rule.
+                    return this.CheckForProperty(scope, context);
 
                 case TokenType.EndInterpolation:
                     return scope.Rule.Parent;
@@ -75,16 +79,28 @@
             }
         }
 
-        private Node ParseProperty(ScopeNode scope, ParseContext context)
+        private Node CheckForProperty(ScopeNode scope, ParseContext context)
         {
-            var prop = new PropertyNode(scope);
-            prop.Name = context.Current.Value;
-            context.AssertNextIs(TokenType.Colon, "Expecting ':'");
-            var next = context.AssertNextIs(TokenType.SymLit, "Expecting symbol");
-            prop.Value = next.Value;
+            var first = context.Current;
+            var second = context.Peek();
+            Node newChild;
 
-            scope.Rule.Children.Add(prop);
-            return prop;
+            if (second.Type == TokenType.Colon)
+            {
+                context.MoveNext(); // Swallow the colon.
+                newChild = new PropertyNode(scope)
+                {
+                    Name = first.Value,
+                    Value = context.AssertNextIs(TokenType.SymLit, "Expecting symbol").Value
+                };
+            }
+            else
+            {
+                newChild = new RuleNode(scope.Rule, first.Value);
+            }
+            
+            scope.Rule.Children.Add(newChild);
+            return newChild;
         }
     }
 }

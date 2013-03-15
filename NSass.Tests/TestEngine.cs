@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-
-namespace NSass.Tests
+﻿namespace NSass.Tests
 {
+    using System.IO;
+    using Xunit;
+
     public class TestEngine
     {
         [Fact]
