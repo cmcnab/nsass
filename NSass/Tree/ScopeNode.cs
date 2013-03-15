@@ -8,6 +8,7 @@
             : base(rule)
         {
             this.Rule = rule;
+            this.Rule.Scope = this;
         }
 
         public RuleNode Rule { get; set; }
@@ -21,6 +22,19 @@
             }
 
             return this.Rule.Equals(that.Rule);
+        }
+
+        public Node GetParentScope()
+        {
+            var parentRule = this.Rule.Parent as RuleNode;
+            if (parentRule != null && parentRule.Scope != null)
+            {
+                return parentRule.Scope;
+            }
+            else
+            {
+                return this.Rule.Parent;
+            }
         }
     }
 }

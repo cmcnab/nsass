@@ -13,6 +13,8 @@
             : base(parent)
         {
             this.Selectors = new List<string>();
+            this.ExpectingNewSelector = false;
+            this.Scope = null;
         }
 
         public RuleNode(Node parent, string symbol)
@@ -21,7 +23,16 @@
             this.Selectors.Add(symbol);
         }
 
-        public ICollection<string> Selectors { get; private set; }
+        public IList<string> Selectors { get; private set; }
+
+        public bool ExpectingNewSelector { get; set; }
+
+        public ScopeNode Scope { get; set; }
+
+        public RuleNode ParentRule
+        {
+            get { return this.Parent as RuleNode; }
+        }
 
         public override bool Equals(Node other)
         {
@@ -32,6 +43,22 @@
             }
 
             return this.Selectors.SequenceEqual(that.Selectors);
+        }
+
+        public void AppendSelector(string selector)
+        {
+            if (this.ExpectingNewSelector)
+            {
+                this.Selectors.Add(selector);
+                this.ExpectingNewSelector = false;
+            }
+            else
+            {
+                var lastIndex = this.Selectors.Count - 1;
+                var last = this.Selectors[lastIndex];
+                last = last + " " + selector;
+                this.Selectors[lastIndex] = last;
+            }
         }
     }
 }

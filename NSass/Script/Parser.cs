@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using NSass.Tree;
 
     public class Parser
@@ -39,6 +40,14 @@
                 case TokenType.LCurly:
                     return new ScopeNode(rule);
 
+                case TokenType.SymLit:
+                    rule.AppendSelector(context.Current.Value);
+                    return rule;
+
+                case TokenType.Comma:
+                    rule.ExpectingNewSelector = true;
+                    return rule;
+
                 case TokenType.EndInterpolation:
                     return rule.Parent;
 
@@ -56,7 +65,7 @@
                     return this.CheckForProperty(scope, context);
 
                 case TokenType.EndInterpolation:
-                    return scope.Rule.Parent;
+                    return scope.GetParentScope();
 
                 default:
                     throw new SyntaxException();

@@ -10,10 +10,14 @@
             return new RootNode();
         }
 
-        public static Node Rule(string symbol)
+        public static Node Rule(params string[] symbols)
         {
             var node = new RuleNode(null);
-            node.Selectors.Add(symbol);
+            foreach (var symbol in symbols)
+            {
+                node.Selectors.Add(symbol);
+            }
+
             return node;
         }
 
