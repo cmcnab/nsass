@@ -5,26 +5,30 @@
         public void VisitTree(Node tree)
         {
             // TODO: non-recursive implementation?
-            this.BeginVisit((dynamic)tree);
-
-            foreach (var child in tree.Children)
+            if (this.BeginVisit((dynamic)tree))
             {
-                this.VisitTree(child);
+                foreach (var child in tree.Children)
+                {
+                    this.VisitTree(child);
+                }
             }
 
             this.EndVisit((dynamic)tree);
         }
 
-        protected virtual void BeginVisit(RootNode node)
+        protected virtual bool BeginVisit(RootNode node)
         {
+            return true;
         }
 
-        protected virtual void BeginVisit(RuleNode node)
+        protected virtual bool BeginVisit(RuleNode node)
         {
+            return true;
         }
 
-        protected virtual void BeginVisit(PropertyNode node)
+        protected virtual bool BeginVisit(PropertyNode node)
         {
+            return true;
         }
 
         protected virtual void EndVisit(RootNode node)

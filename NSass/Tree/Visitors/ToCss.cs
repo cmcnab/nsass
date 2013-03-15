@@ -13,7 +13,7 @@
             this.output = output;
         }
 
-        protected override void BeginVisit(RuleNode node)
+        protected override bool BeginVisit(RuleNode node)
         {
             if (HasParentRule(node))
             {
@@ -23,6 +23,7 @@
             this.WriteIdent(node);
             this.output.Write(GetRuleSelectors(node));
             this.output.Write(" {");
+            return true;
         }
 
         protected override void EndVisit(RuleNode node)
@@ -33,12 +34,14 @@
             }
         }
 
-        protected override void BeginVisit(PropertyNode node)
+        protected override bool BeginVisit(PropertyNode node)
         {
+            var expr = node.Expression;
+
             // If this property has nested child properties, let the bottom-most node handle it.
-            if (node.Children.Any())
+            if (expr == null)
             {
-                return;
+                return true;
             }
 
             var props = WalkTreeFor<PropertyNode>(node).Reverse().ToList();
@@ -46,8 +49,9 @@
             this.WriteIdent(props.First());
             this.output.Write(string.Join("-", from p in props select p.Name));
             this.output.Write(": ");
-            this.output.Write(node.Value);
+            this.output.Write(expr.Evaluate());
             this.output.Write(";");
+            return false;
         }
 
         private static string GetRuleSelectors(RuleNode rule)

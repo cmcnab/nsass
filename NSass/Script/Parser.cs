@@ -76,18 +76,20 @@
 
         private Node VisitPropertyDefinition(PropertyNode property, ParseContext context)
         {
+            // After the colon...
             switch (context.Current.Type)
             {
                 case TokenType.LCurly:
+                    // TODO: if already have an expression, syntax error
                     property.ScopeOpened = true;
                     return property;
 
                 case TokenType.SymLit:
-                    property.Value = context.Current.Value;
+                    property.Children.Add(new LiteralNode(property, context.Current.Value));
                     return property;
 
                 case TokenType.Variable:
-                    property.Value = property.Resolve(context.Current.Value);
+                    property.Children.Add(new LiteralNode(property, property.Resolve(context.Current.Value)));
                     return property;
 
                 case TokenType.SemiColon:

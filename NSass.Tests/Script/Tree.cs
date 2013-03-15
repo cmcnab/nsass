@@ -28,7 +28,9 @@
 
         public static Node Property(string name, string value)
         {
-            return new PropertyNode(null) { Name = name, Value = value };
+            var prop = Property(name);
+            prop.Children.Add(new LiteralNode(prop, value));
+            return prop;
         }
 
         public static Node Variable(string name)

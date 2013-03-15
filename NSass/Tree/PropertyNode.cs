@@ -1,5 +1,6 @@
 ﻿namespace NSass.Tree
 {
+    using System.Linq;
     using NSass.Script;
 
     /// <summary>
@@ -14,7 +15,10 @@
 
         public string Name { get; set; }
 
-        public string Value { get; set; }
+        public ExpressionNode Expression
+        {
+            get { return this.Children.FirstOrDefault() as ExpressionNode; }
+        }
 
         public override bool Equals(Node other)
         {
@@ -24,8 +28,11 @@
                 return false;
             }
 
-            return this.Name == that.Name
-                && this.Value == that.Value;
+            return this.Name == that.Name;
+        }
+
+        public void AppendExpression(Token token)
+        {
         }
     }
 }
