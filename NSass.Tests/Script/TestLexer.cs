@@ -171,6 +171,24 @@
         }
 
         [Fact]
+        public void StartsWithDollarSignIsVariable()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input = "$vert";
+            var expected = new Token[]
+            {
+                Tokens.Variable("$vert"),
+            };
+
+            // Act
+            var tokens = lexer.ReadString(input).ToList();
+
+            // Assert
+            Assert.Equal(expected, tokens, new TokenComparer());
+        }
+
+        [Fact]
         public void Sample1LexesCorrectly()
         {
             // Arrange

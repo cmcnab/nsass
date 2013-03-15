@@ -35,6 +35,26 @@
             return base.GetHashCode();
         }
 
+        public string Resolve(string variableName)
+        {
+            for (Node node = this; node != null; node = node.Parent)
+            {
+                ScopeNode scope = node as ScopeNode;
+                if (scope == null)
+                {
+                    continue;
+                }
+
+                string value = null;
+                if (scope.Variables.TryGetValue(variableName, out value))
+                {
+                    return value;
+                }
+            }
+
+            throw new SyntaxException("undefined variable");
+        }
+
         protected T CheckTypeEquals<T>(Node other) where T : Node
         {
             if (ReferenceEquals(null, other))

@@ -184,5 +184,31 @@
             // Assert
             expected.AssertEqualTree(ast);
         }
+
+        [Fact]
+        public void SimpleVariableParsesCorrectly()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var parser = new Parser();
+            var input =
+@"$main-color: #ce4dd6;
+
+#navbar {
+  border-bottom: {
+    color: $main-color;
+  }
+}";
+            var expected = Tree.Root().AppendAll(
+                Tree.Rule("#navbar").AppendAll(
+                    Tree.Property("border-bottom").AppendAll(
+                        Tree.Property("color", "#ce4dd6"))));
+
+            // Act
+            var ast = parser.Parse(lexer.ReadString(input));
+
+            // Assert
+            expected.AssertEqualTree(ast);
+        }
     }
 }

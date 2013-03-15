@@ -3,6 +3,7 @@
     public enum TokenType
     {
         SymLit,
+        Variable,
         Plus,
         Minus,
         Times,

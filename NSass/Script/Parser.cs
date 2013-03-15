@@ -23,14 +23,20 @@
 
         private Node Visit(RootNode root, ParseContext context)
         {
-            if (context.Current.Type == TokenType.SymLit)
+            switch (context.Current.Type)
             {
-                var rule = new RuleNode(root, context.Current.Value);
-                root.Children.Add(rule);
-                return rule;
-            }
+                case TokenType.SymLit:
+                    var rule = new RuleNode(root, context.Current.Value);
+                    root.Children.Add(rule);
+                    return rule;
 
-            throw new SyntaxException("Expecting something");
+                case TokenType.Variable:
+                    this.CheckForAssignment(root, context);
+                    return root;
+
+                default:
+                    throw new SyntaxException("Expecting something");
+            }
         }
 
         private Node Visit(RuleNode rule, ParseContext context)
@@ -80,6 +86,10 @@
                     property.Value = context.Current.Value;
                     return property;
 
+                case TokenType.Variable:
+                    property.Value = property.Resolve(context.Current.Value);
+                    return property;
+
                 case TokenType.SemiColon:
                     return property.Parent;
 
@@ -126,6 +136,16 @@
             
             scope.Children.Add(newChild);
             return newChild;
+        }
+
+        private void CheckForAssignment(ScopeNode scope, ParseContext context)
+        {
+            var first = context.Current;
+            context.AssertNextIs(TokenType.Colon, "Expecting ':'");
+            var second = context.AssertNextIs(TokenType.SymLit, "Expecting value");
+            context.AssertNextIs(TokenType.SemiColon, "Expecting ';'");
+
+            scope.Variables[first.Value] = second.Value;
         }
     }
 }

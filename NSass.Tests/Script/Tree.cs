@@ -31,6 +31,11 @@
             return new PropertyNode(null) { Name = name, Value = value };
         }
 
+        public static Node Variable(string name)
+        {
+            return new VariableNode(null) { Name = name };
+        }
+
         public static Node AppendAll(this Node parent, params Node[] nodes)
         {
             foreach (var node in nodes)

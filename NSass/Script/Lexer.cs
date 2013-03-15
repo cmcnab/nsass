@@ -91,7 +91,8 @@
             return c == '#'
                 || c == '%'
                 || c == '-'
-                || c == '.';
+                || c == '.'
+                || c == '$';
         }
 
         private Token EatToken()
@@ -103,7 +104,8 @@
 
         private Token MakeToken()
         {
-            return new Token(TokenType.SymLit, this.currentToken.ToString());
+            var str = this.currentToken.ToString();
+            return new Token(str.StartsWith("$") ? TokenType.Variable : TokenType.SymLit, str);
         }
 
         private Token MakeSpecialToken(char c)

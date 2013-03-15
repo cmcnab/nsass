@@ -9,6 +9,11 @@
             return new Token(TokenType.SymLit, symbol);
         }
 
+        public static Token Variable(string variable)
+        {
+            return new Token(TokenType.Variable, variable);
+        }
+
         public static Token LCurly()
         {
             return new Token(TokenType.LCurly, "{");
