@@ -87,6 +87,62 @@
             Assert.Equal(expected, output);
         }
 
+        [Fact]
+        public void NestedPropertySampleOutputCorrectCss()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@".fakeshadow {
+  border: {
+    style: solid;
+  }
+}";
+            var expected =
+@".fakeshadow {
+  border-style: solid; }";
+
+            // Act
+            var output = Compile(engine, input);
+
+            // Assert
+            Assert.Equal(expected, output);
+        }
+
+        [Fact]
+        public void MultipleNestedPropertiesSampleOutputCorrectCss()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@".fakeshadow {
+  border: {
+    style: solid;
+    left: {
+      width: 4px;
+      color: #888;
+    }
+    right: {
+      width: 2px;
+      color: #ccc;
+    }
+  }
+}";
+            var expected =
+@".fakeshadow {
+  border-style: solid;
+  border-left-width: 4px;
+  border-left-color: #888;
+  border-right-width: 2px;
+  border-right-color: #ccc; }";
+
+            // Act
+            var output = Compile(engine, input);
+
+            // Assert
+            Assert.Equal(expected, output);
+        }
+
         private static string Compile(Engine engine, string input)
         {
             using (var output = new StringWriter())

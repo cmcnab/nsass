@@ -26,11 +26,6 @@
 
         public bool ExpectingNewSelector { get; set; }
 
-        public RuleNode ParentRule
-        {
-            get { return this.Parent as RuleNode; }
-        }
-
         public override bool Equals(Node other)
         {
             RuleNode that = this.CheckTypeEquals<RuleNode>(other);

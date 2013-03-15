@@ -15,7 +15,7 @@
 
         protected override void BeginVisit(RuleNode node)
         {
-            if (node.ParentRule != null)
+            if (HasParentRule(node))
             {
                 this.output.WriteLine(" }");
             }
@@ -27,7 +27,7 @@
 
         protected override void EndVisit(RuleNode node)
         {
-            if (node.ParentRule == null)
+            if (!HasParentRule(node))
             {
                 this.output.Write(" }");
             }
@@ -35,9 +35,16 @@
 
         protected override void BeginVisit(PropertyNode node)
         {
+            // If this property has nested child properties, let the bottom-most node handle it.
+            if (node.Children.Any())
+            {
+                return;
+            }
+
+            var props = WalkTreeFor<PropertyNode>(node).Reverse().ToList();
             this.output.WriteLine();
-            this.WriteIdent(node);
-            this.output.Write(node.Name);
+            this.WriteIdent(props.First());
+            this.output.Write(string.Join("-", from p in props select p.Name));
             this.output.Write(": ");
             this.output.Write(node.Value);
             this.output.Write(";");
@@ -45,18 +52,23 @@
 
         private static string GetRuleSelectors(RuleNode rule)
         {
-            var rules = WalkRules(rule).Reverse();
+            var rules = WalkTreeFor<RuleNode>(rule).Reverse();
             var ret = string.Join(" ", from r in rules select string.Join(", ", r.Selectors));
             return ret;
         }
 
-        private static IEnumerable<RuleNode> WalkRules(RuleNode rule)
+        private static IEnumerable<T> WalkTreeFor<T>(T node) where T : Node
         {
-            while (rule != null)
+            while (node != null)
             {
-                yield return rule;
-                rule = rule.ParentRule;
+                yield return node;
+                node = node.Parent as T;
             }
+        }
+
+        private static bool HasParentRule(RuleNode rule)
+        {
+            return rule.Parent != null && rule.Parent is RuleNode;
         }
 
         private void WriteIdent(Node node)
