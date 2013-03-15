@@ -53,7 +53,6 @@
     <Compile Include="Tree\PropertyNode.cs" />
     <Compile Include="Tree\RootNode.cs" />
     <Compile Include="Tree\RuleNode.cs" />
-    <Compile Include="Tree\ScopeNode.cs" />
     <Compile Include="Tree\Visitors\BaseVisitor.cs" />
     <Compile Include="Tree\Visitors\ToCss.cs" />
   </ItemGroup>

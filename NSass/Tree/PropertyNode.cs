@@ -7,13 +7,10 @@
     /// </summary>
     public class PropertyNode : Node
     {
-        public PropertyNode(ScopeNode scope)
-            : base(scope == null ? null : scope.Parent) // True parent is the rule node.
+        public PropertyNode(Node parent)
+            : base(parent)
         {
-            this.Scope = scope;
         }
-
-        public ScopeNode Scope { get; set; }
 
         public string Name { get; set; }
 

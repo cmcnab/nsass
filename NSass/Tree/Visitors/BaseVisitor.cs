@@ -23,10 +23,6 @@
         {
         }
 
-        protected virtual void BeginVisit(ScopeNode node)
-        {
-        }
-
         protected virtual void BeginVisit(PropertyNode node)
         {
         }
@@ -36,10 +32,6 @@
         }
 
         protected virtual void EndVisit(RuleNode node)
-        {
-        }
-
-        protected virtual void EndVisit(ScopeNode node)
         {
         }
 

@@ -35,10 +35,18 @@
 
         private Node Visit(RuleNode rule, ParseContext context)
         {
+            return rule.ScopeOpened
+                ? this.VisitRuleScope(rule, context)
+                : this.VisitRuleDefinition(rule, context);
+        }
+
+        private Node VisitRuleDefinition(RuleNode rule, ParseContext context)
+        {
             switch (context.Current.Type)
             {
                 case TokenType.LCurly:
-                    return new ScopeNode(rule);
+                    rule.ScopeOpened = true;
+                    return rule;
 
                 case TokenType.SymLit:
                     rule.AppendSelector(context.Current.Value);
@@ -48,24 +56,21 @@
                     rule.ExpectingNewSelector = true;
                     return rule;
 
-                case TokenType.EndInterpolation:
-                    return rule.Parent;
-
                 default:
                     throw new SyntaxException();
             }
         }
 
-        private Node Visit(ScopeNode scope, ParseContext context)
+        private Node VisitRuleScope(RuleNode rule, ParseContext context)
         {
             switch (context.Current.Type)
             {
                 case TokenType.SymLit:
                     // Could be a property or another rule.
-                    return this.CheckForProperty(scope, context);
+                    return this.CheckForProperty(rule, context);
 
                 case TokenType.EndInterpolation:
-                    return scope.GetParentScope();
+                    return rule.Parent;
 
                 default:
                     throw new SyntaxException();
@@ -77,7 +82,7 @@
             switch (context.Current.Type)
             {
                 case TokenType.SemiColon:
-                    return property.Scope;
+                    return property.Parent;
 
                 case TokenType.EndInterpolation:
                     // Go back to the rule's parent.
@@ -88,7 +93,7 @@
             }
         }
 
-        private Node CheckForProperty(ScopeNode scope, ParseContext context)
+        private Node CheckForProperty(Node scope, ParseContext context)
         {
             var first = context.Current;
             var second = context.Peek();
@@ -105,10 +110,10 @@
             }
             else
             {
-                newChild = new RuleNode(scope.Rule, first.Value);
+                newChild = new RuleNode(scope, first.Value);
             }
             
-            scope.Rule.Children.Add(newChild);
+            scope.Children.Add(newChild);
             return newChild;
         }
     }

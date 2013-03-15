@@ -13,8 +13,8 @@
             : base(parent)
         {
             this.Selectors = new List<string>();
+            this.ScopeOpened = false;
             this.ExpectingNewSelector = false;
-            this.Scope = null;
         }
 
         public RuleNode(Node parent, string symbol)
@@ -25,9 +25,9 @@
 
         public IList<string> Selectors { get; private set; }
 
-        public bool ExpectingNewSelector { get; set; }
+        public bool ScopeOpened { get; set; }
 
-        public ScopeNode Scope { get; set; }
+        public bool ExpectingNewSelector { get; set; }
 
         public RuleNode ParentRule
         {
