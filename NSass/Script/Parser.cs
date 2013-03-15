@@ -36,8 +36,15 @@
         private Node Visit(RuleNode rule, ParseContext context)
         {
             return rule.ScopeOpened
-                ? this.VisitRuleScope(rule, context)
+                ? this.VisitScope(rule, context)
                 : this.VisitRuleDefinition(rule, context);
+        }
+
+        private Node Visit(PropertyNode property, ParseContext context)
+        {
+            return property.ScopeOpened
+                ? this.VisitScope(property, context)
+                : this.VisitPropertyDefinition(property, context);
         }
 
         private Node VisitRuleDefinition(RuleNode rule, ParseContext context)
@@ -61,32 +68,40 @@
             }
         }
 
-        private Node VisitRuleScope(RuleNode rule, ParseContext context)
+        private Node VisitPropertyDefinition(PropertyNode property, ParseContext context)
         {
             switch (context.Current.Type)
             {
+                case TokenType.LCurly:
+                    property.ScopeOpened = true;
+                    return property;
+
                 case TokenType.SymLit:
-                    // Could be a property or another rule.
-                    return this.CheckForProperty(rule, context);
+                    property.Value = context.Current.Value;
+                    return property;
 
-                case TokenType.EndInterpolation:
-                    return rule.Parent;
-
-                default:
-                    throw new SyntaxException();
-            }
-        }
-
-        private Node Visit(PropertyNode property, ParseContext context)
-        {
-            switch (context.Current.Type)
-            {
                 case TokenType.SemiColon:
                     return property.Parent;
 
                 case TokenType.EndInterpolation:
                     // Go back to the rule's parent.
                     return property.Parent.Parent;
+
+                default:
+                    throw new SyntaxException();
+            }
+        }
+
+        private Node VisitScope(ScopeNode scope, ParseContext context)
+        {
+            switch (context.Current.Type)
+            {
+                case TokenType.SymLit:
+                    // Could be a property or another rule.
+                    return this.CheckForProperty(scope, context);
+
+                case TokenType.EndInterpolation:
+                    return scope.Parent;
 
                 default:
                     throw new SyntaxException();
@@ -102,11 +117,7 @@
             if (second.Type == TokenType.Colon)
             {
                 context.MoveNext(); // Swallow the colon.
-                newChild = new PropertyNode(scope)
-                {
-                    Name = first.Value,
-                    Value = context.AssertNextIs(TokenType.SymLit, "Expecting symbol").Value
-                };
+                newChild = new PropertyNode(scope) { Name = first.Value };
             }
             else
             {

@@ -160,5 +160,29 @@
             // Assert
             expected.AssertEqualTree(ast);
         }
+
+        [Fact]
+        public void NestedPropertyParsesCorrectly()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var parser = new Parser();
+            var input =
+@"#main {
+  border: {
+    style: solid;
+  }
+}";
+            var expected = Tree.Root().AppendAll(
+                Tree.Rule("#main").AppendAll(
+                    Tree.Property("border").AppendAll(
+                        Tree.Property("style", "solid"))));
+
+            // Act
+            var ast = parser.Parse(lexer.ReadString(input));
+
+            // Assert
+            expected.AssertEqualTree(ast);
+        }
     }
 }

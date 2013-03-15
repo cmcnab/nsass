@@ -21,6 +21,11 @@
             return node;
         }
 
+        public static Node Property(string name)
+        {
+            return new PropertyNode(null) { Name = name };
+        }
+
         public static Node Property(string name, string value)
         {
             return new PropertyNode(null) { Name = name, Value = value };

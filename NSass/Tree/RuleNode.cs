@@ -7,13 +7,12 @@
     /// <summary>
     /// A static node reprenting a CSS rule.
     /// </summary>
-    public class RuleNode : Node
+    public class RuleNode : ScopeNode
     {
         public RuleNode(Node parent)
             : base(parent)
         {
             this.Selectors = new List<string>();
-            this.ScopeOpened = false;
             this.ExpectingNewSelector = false;
         }
 
@@ -24,8 +23,6 @@
         }
 
         public IList<string> Selectors { get; private set; }
-
-        public bool ScopeOpened { get; set; }
 
         public bool ExpectingNewSelector { get; set; }
 

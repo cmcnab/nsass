@@ -5,7 +5,7 @@
     /// <summary>
     /// A static node reprenting a CSS property.
     /// </summary>
-    public class PropertyNode : Node
+    public class PropertyNode : ScopeNode
     {
         public PropertyNode(Node parent)
             : base(parent)
