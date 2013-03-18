@@ -4,7 +4,7 @@
     using NSass.Script;
     using NSass.Tree;
 
-    public class Engine
+    public class Engine : ISassCompiler
     {
         private readonly Lexer lexer;
         private readonly Parser parser;
