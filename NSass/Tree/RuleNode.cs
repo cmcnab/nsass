@@ -17,12 +17,6 @@
             this.ExpectingNewSelector = false;
         }
 
-        //public RuleNode(Node parent, string symbol)
-        //    : this(parent)
-        //{
-        //    this.Selectors.Add(symbol);
-        //}
-
         public override int EffectiveDepth
         {
             get

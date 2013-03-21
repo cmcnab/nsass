@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NSass.Util
+﻿namespace NSass.Util
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     public static class Permutations
     {
         public static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<IEnumerable<T>> lists)
@@ -21,11 +18,13 @@ namespace NSass.Util
             foreach (var list in lists)
             {
                 var it = list.GetEnumerator();
+
                 // Ensure empty sub-lists are excluded.
                 if (!it.MoveNext())
                 {
                     continue;
                 }
+
                 iterators.Add(it);
             }
 

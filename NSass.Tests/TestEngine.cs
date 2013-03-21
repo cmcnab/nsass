@@ -87,8 +87,6 @@
             Assert.Equal(expected, output);
         }
 
-
-
         [Fact]
         public void MultipleNestedRulesAndSelectorsSampleOutputCorrectCss()
         {
@@ -115,9 +113,6 @@
             // Assert
             Assert.Equal(expected, output);
         }
-
-
-
 
         [Fact]
         public void NestedPropertySampleOutputCorrectCss()

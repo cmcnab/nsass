@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NSass.Util
+﻿namespace NSass.Util
 {
+    using System;
+    using System.Collections.Generic;
+
     internal static class ListExtensions
     {
         public static int IndexOf<T>(this IList<T> list, Predicate<T> predicate)

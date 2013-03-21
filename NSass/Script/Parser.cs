@@ -16,28 +16,28 @@
 
             while (context.MoveNext() != null)
             {
-                node = this.Visit((dynamic)node, context);
+                node = Visit((dynamic)node, context);
             }
 
             return root;
         }
 
-        private Node Visit(ScopeNode scope, ParseContext context)
+        private static Node Visit(ScopeNode scope, ParseContext context)
         {
             return scope.ScopeOpened
-                ? this.VisitScope(scope, context)
-                : this.VisitDeclaration(scope, context);
+                ? VisitScope(scope, context)
+                : VisitDeclaration(scope, context);
         }
 
-        private Node VisitScope(ScopeNode scope, ParseContext context)
+        private static Node VisitScope(ScopeNode scope, ParseContext context)
         {
             switch (context.Current.Type)
             {
                 case TokenType.SymLit:
-                    return this.BeginDeclaration(scope, context);
+                    return BeginDeclaration(scope, context);
 
                 case TokenType.Variable:
-                    return this.BeginDeclaration(scope, context);
+                    return BeginDeclaration(scope, context);
 
                 case TokenType.EndInterpolation:
                     // Unless we're root
@@ -51,23 +51,23 @@
             }
         }
 
-        private Node VisitDeclaration(ScopeNode scope, ParseContext context)
+        private static Node VisitDeclaration(ScopeNode scope, ParseContext context)
         {
             switch (context.Current.Type)
             {
                 case TokenType.LCurly:
-                    return this.OpenScope(scope, context);
+                    return OpenScope(scope, context);
 
                 case TokenType.EndInterpolation:
                     if (scope.DeclarationTokens.Any(t => t.Type != TokenType.WhiteSpace))
                     {
-                        this.CloseAsProperty(scope);
+                        CloseAsProperty(scope);
                     }
 
                     return scope.Parent;
 
                 case TokenType.SemiColon:
-                    this.CloseAsProperty(scope);
+                    CloseAsProperty(scope);
                     return scope.Parent;
 
                 case TokenType.SymLit:
@@ -95,7 +95,7 @@
             }
         }
 
-        private ScopeNode BeginDeclaration(ScopeNode scope, ParseContext context)
+        private static ScopeNode BeginDeclaration(ScopeNode scope, ParseContext context)
         {
             // TODO: start with property first?
             var rule = new RuleNode(scope);
@@ -104,7 +104,7 @@
             return rule;
         }
 
-        private ScopeNode OpenScope(ScopeNode decl, ParseContext context)
+        private static ScopeNode OpenScope(ScopeNode decl, ParseContext context)
         {
             // We just hit an LCurly.
             // If the last token, excluding whitespace, was a colon, then this
@@ -117,15 +117,15 @@
 
             if (last.Type == TokenType.Colon)
             {
-                return this.OpenPropertyScope(decl);
+                return OpenPropertyScope(decl);
             }
             else
             {
-                return this.OpenRuleScope(decl);
+                return OpenRuleScope(decl);
             }
         }
 
-        private RuleNode OpenRuleScope(ScopeNode decl)
+        private static RuleNode OpenRuleScope(ScopeNode decl)
         {
             var rule = decl as RuleNode;
             if (rule == null)
@@ -140,7 +140,7 @@
             return rule;
         }
 
-        private PropertyNode OpenPropertyScope(ScopeNode decl)
+        private static PropertyNode OpenPropertyScope(ScopeNode decl)
         {
             var property = new PropertyNode(decl.Parent);
             decl.Parent.ReplaceChild(decl, property);
@@ -150,7 +150,7 @@
             return property;
         }
 
-        private PropertyNode CloseAsProperty(ScopeNode decl)
+        private static PropertyNode CloseAsProperty(ScopeNode decl)
         {
             // We just hit a semi-colon; there should be exactly one colon with one token
             // on the left.
@@ -173,10 +173,10 @@
                 }
             }
             
-            return this.Evaluate(property);
+            return Evaluate(property);
         }
 
-        private PropertyNode Evaluate(PropertyNode property)
+        private static PropertyNode Evaluate(PropertyNode property)
         {
             property.Value = property.Expression.Evaluate();
 
