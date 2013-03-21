@@ -132,7 +132,7 @@
             }
         }
 
-        public void AppendRuleSelector(RuleNode rule, string selector)
+        private void AppendRuleSelector(RuleNode rule, string selector)
         {
             if (rule.ExpectingNewSelector)
             {
@@ -150,6 +150,11 @@
 
         private Node CheckForProperty(Node scope, ParseContext context)
         {
+            // sym:value {  => rule
+            // sym:sym;     => prop
+            // sym: sym;    => prop
+            // sym: {       => prop scope
+            // sym: value { => error
             var first = context.Current;
             var second = context.Peek();
             Node newChild;

@@ -211,7 +211,7 @@
             expected.AssertEqualTree(ast);
         }
 
-        [Fact(Skip = "Figure this out first")]
+        [Fact]
         public void SimpleCompoundSelectorParsesCorrectly()
         {
             // Arrange
