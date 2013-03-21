@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using NSass.Tree;
+    using NSass.Util;
 
     public class Parser
     {
@@ -21,96 +22,11 @@
             return root;
         }
 
-        private Node Visit(RootNode root, ParseContext context)
+        private Node Visit(ScopeNode scope, ParseContext context)
         {
-            switch (context.Current.Type)
-            {
-                case TokenType.SymLit:
-                    var rule = new RuleNode(root, context.Current.Value);
-                    root.Children.Add(rule);
-                    return rule;
-
-                case TokenType.Variable:
-                    this.CheckForAssignment(root, context);
-                    return root;
-
-                case TokenType.WhiteSpace:
-                    return root;
-
-                default:
-                    throw new SyntaxException("Expecting something");
-            }
-        }
-
-        private Node Visit(RuleNode rule, ParseContext context)
-        {
-            return rule.ScopeOpened
-                ? this.VisitScope(rule, context)
-                : this.VisitRuleDefinition(rule, context);
-        }
-
-        private Node Visit(PropertyNode property, ParseContext context)
-        {
-            return property.ScopeOpened
-                ? this.VisitScope(property, context)
-                : this.VisitPropertyDefinition(property, context);
-        }
-
-        private Node VisitRuleDefinition(RuleNode rule, ParseContext context)
-        {
-            switch (context.Current.Type)
-            {
-                case TokenType.LCurly:
-                    rule.ScopeOpened = true;
-                    return rule;
-
-                case TokenType.SymLit:
-                    this.AppendRuleSelector(rule, context.Current.Value);
-                    return rule;
-
-                case TokenType.Comma:
-                    rule.ExpectingNewSelector = true;
-                    return rule;
-
-                case TokenType.WhiteSpace:
-                    return rule;
-
-                default:
-                    throw new SyntaxException();
-            }
-        }
-
-        private Node VisitPropertyDefinition(PropertyNode property, ParseContext context)
-        {
-            // After the colon...
-            switch (context.Current.Type)
-            {
-                case TokenType.LCurly:
-                    // TODO: if already have an expression, syntax error
-                    property.ScopeOpened = true;
-                    return property;
-
-                case TokenType.SymLit:
-                    property.Children.Add(new LiteralNode(property, context.Current.Value));
-                    return property;
-
-                case TokenType.Variable:
-                    property.Children.Add(new LiteralNode(property, property.Resolve(context.Current.Value)));
-                    return property;
-
-                case TokenType.SemiColon:
-                    return property.Parent;
-
-                case TokenType.EndInterpolation:
-                    // Go back to the rule's parent.
-                    return property.Parent.Parent;
-
-                case TokenType.WhiteSpace:
-                    return property;
-
-                default:
-                    throw new SyntaxException();
-            }
+            return scope.ScopeOpened
+                ? this.VisitScope(scope, context)
+                : this.VisitDeclaration(scope, context);
         }
 
         private Node VisitScope(ScopeNode scope, ParseContext context)
@@ -118,10 +34,13 @@
             switch (context.Current.Type)
             {
                 case TokenType.SymLit:
-                    // Could be a property or another rule.
-                    return this.CheckForProperty(scope, context);
+                    return this.BeginDeclaration(scope, context);
+
+                case TokenType.Variable:
+                    return this.BeginDeclaration(scope, context);
 
                 case TokenType.EndInterpolation:
+                    // Unless we're root
                     return scope.Parent;
 
                 case TokenType.WhiteSpace:
@@ -132,63 +51,216 @@
             }
         }
 
-        private void AppendRuleSelector(RuleNode rule, string selector)
+        private Node VisitDeclaration(ScopeNode scope, ParseContext context)
         {
-            if (rule.ExpectingNewSelector)
+            switch (context.Current.Type)
             {
-                rule.Selectors.Add(selector);
-                rule.ExpectingNewSelector = false;
-            }
-            else
-            {
-                var lastIndex = rule.Selectors.Count - 1;
-                var last = rule.Selectors[lastIndex];
-                last = last + " " + selector;
-                rule.Selectors[lastIndex] = last;
+                case TokenType.LCurly:
+                    return this.OpenScope(scope, context);
+
+                case TokenType.EndInterpolation:
+                    if (scope.DeclarationTokens.Any(t => t.Type != TokenType.WhiteSpace))
+                    {
+                        this.CloseAsProperty(scope);
+                    }
+
+                    return scope.Parent;
+
+                case TokenType.SemiColon:
+                    this.CloseAsProperty(scope);
+                    return scope.Parent;
+
+                case TokenType.SymLit:
+                    scope.DeclarationTokens.Add(context.Current);
+                    return scope;
+
+                case TokenType.Variable:
+                    scope.DeclarationTokens.Add(context.Current);
+                    return scope;
+
+                case TokenType.Colon:
+                    scope.DeclarationTokens.Add(context.Current);
+                    return scope;
+
+                case TokenType.Comma:
+                    scope.DeclarationTokens.Add(context.Current);
+                    return scope;
+
+                case TokenType.WhiteSpace:
+                    scope.DeclarationTokens.Add(context.Current);
+                    return scope;
+
+                default:
+                    throw new SyntaxException();
             }
         }
 
-        private Node CheckForProperty(Node scope, ParseContext context)
+        private ScopeNode BeginDeclaration(ScopeNode scope, ParseContext context)
         {
-            // sym:value {  => rule
-            // sym:sym;     => prop
-            // sym: sym;    => prop
-            // sym: {       => prop scope
-            // sym: value { => error
-            var first = context.Current;
-            var second = context.Peek();
-            Node newChild;
+            // TODO: start with property first?
+            var rule = new RuleNode(scope);
+            rule.DeclarationTokens.Add(context.Current);
+            scope.Children.Add(rule);
+            return rule;
+        }
 
-            if (second.Type == TokenType.Colon)
+        private ScopeNode OpenScope(ScopeNode decl, ParseContext context)
+        {
+            // We just hit an LCurly.
+            // If the last token, excluding whitespace, was a colon, then this
+            // is a nested property.
+            var last = decl.DeclarationTokens.LastOrDefault(t => t.Type != TokenType.WhiteSpace);
+            if (last == null)
             {
-                context.MoveNext(); // Swallow the colon.
-                newChild = new PropertyNode(scope) { Name = first.Value };
+                throw new SyntaxException("Expecting selector sequence");
+            }
+
+            if (last.Type == TokenType.Colon)
+            {
+                return this.OpenPropertyScope(decl);
             }
             else
             {
-                newChild = new RuleNode(scope, first.Value);
+                return this.OpenRuleScope(decl);
+            }
+        }
+
+        private RuleNode OpenRuleScope(ScopeNode decl)
+        {
+            var rule = decl as RuleNode;
+            if (rule == null)
+            {
+                throw new SyntaxException("Bad nesting");
+            }
+
+            // Convert the DeclarationTokens to selectors.
+            rule.Selectors = NormalizeSelectors(decl.DeclarationTokens);
+
+            rule.ScopeOpened = true;
+            return rule;
+        }
+
+        private PropertyNode OpenPropertyScope(ScopeNode decl)
+        {
+            var property = new PropertyNode(decl.Parent);
+            decl.Parent.ReplaceChild(decl, property);
+
+            property.Name = SplitPropertyDeclaration(decl.DeclarationTokens).Item1.Value;
+            property.ScopeOpened = true;
+            return property;
+        }
+
+        private PropertyNode CloseAsProperty(ScopeNode decl)
+        {
+            // We just hit a semi-colon; there should be exactly one colon with one token
+            // on the left.
+            var property = new PropertyNode(decl.Parent);
+            decl.Parent.ReplaceChild(decl, property);
+
+            var split = SplitPropertyDeclaration(decl.DeclarationTokens);
+            property.Name = split.Item1.Value;
+            
+            // TODO: fix this
+            foreach (var valueToken in split.Item2)
+            {
+                if (valueToken.Type == TokenType.Variable)
+                {
+                    property.Children.Add(new VariableNode(property, valueToken.Value));
+                }
+                else
+                {
+                    property.Children.Add(new LiteralNode(property, valueToken.Value));
+                }
             }
             
-            scope.Children.Add(newChild);
-            return newChild;
+            return this.Evaluate(property);
         }
 
-        private void CheckForAssignment(ScopeNode scope, ParseContext context)
+        private PropertyNode Evaluate(PropertyNode property)
         {
-            var first = context.Current;
-            context.AssertNextIs(TokenType.Colon, "Expecting ':'");
+            property.Value = property.Expression.Evaluate();
 
-            // Eat up any whitespace.
-            for (context.MoveNext(); context.Current.Type == TokenType.WhiteSpace; context.MoveNext()) ;
-
-            if (context.Current.Type != TokenType.SymLit)
+            // TODO: keep around the token and check that?
+            if (property.Name.StartsWith("$"))
             {
-                throw new SyntaxException("Expecting value");
+                var scope = (ScopeNode)property.Parent;
+                scope.Variables[property.Name] = property.Value;
+
+                // Pull it out of the parent.
+                property.Parent.Children.Remove(property);
             }
 
-            var second = context.Current;
-            context.AssertNextIs(TokenType.SemiColon, "Expecting ';'");
-            scope.Variables[first.Value] = second.Value;
+            return property;
+        }
+
+        private static Tuple<Token, IEnumerable<Token>> SplitPropertyDeclaration(IList<Token> tokens)
+        {
+            var colonIndex = tokens.IndexOf(t => t.Type == TokenType.Colon);
+            if (colonIndex < 0)
+            {
+                throw new SyntaxException("something");
+            }
+
+            var nonWsBefore = from t in tokens.Take(colonIndex)
+                              where t.Type != TokenType.WhiteSpace
+                              select t;
+            if (nonWsBefore.Count() != 1)
+            {
+                throw new SyntaxException("something 2");
+            }
+
+            var after = from t in tokens.Skip(colonIndex + 1)
+                        where t.Type != TokenType.WhiteSpace
+                        select t;
+            return Tuple.Create(nonWsBefore.First(), after);
+        }
+
+        private static IList<IList<string>> NormalizeSelectors(IEnumerable<Token> tokens)
+        {
+            var noWS = from t in tokens
+                       where t.Type != TokenType.WhiteSpace
+                       select t;
+
+            var results = new List<IList<string>>() { new List<string>() };
+            bool afterColon = false;
+
+            foreach (var token in noWS)
+            {
+                if (token.Type == TokenType.Comma)
+                {
+                    // TODO: what if non-empty list is already there (like two commas in a row)?
+                    results.Add(new List<string>());
+                }
+                else if (token.Type == TokenType.Colon)
+                {
+                    ConcatToLastSelector(results, token.Value);
+                    afterColon = true;
+                }
+                else if (afterColon)
+                {
+                    ConcatToLastSelector(results, token.Value);
+                    afterColon = false;
+                }
+                else
+                {
+                    results.Last().Add(token.Value);
+                }
+            }
+
+            return results;
+        }
+
+        private static void ConcatToLastSelector(IList<IList<string>> list, string value)
+        {
+            var lastSelector = list.Last();
+            if (lastSelector.Count == 0)
+            {
+                lastSelector.Add(value);
+            }
+            else
+            {
+                lastSelector.ChangeLast(s => s + value);
+            }
         }
     }
 }

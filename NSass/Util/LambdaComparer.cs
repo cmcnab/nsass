@@ -1,4 +1,4 @@
-﻿namespace NSass.Tests
+﻿namespace NSass.Util
 {
     using System;
     using System.Collections.Generic;

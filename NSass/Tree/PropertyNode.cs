@@ -15,6 +15,8 @@
 
         public string Name { get; set; }
 
+        public string Value { get; set; }
+
         public ExpressionNode Expression
         {
             get { return this.Children.FirstOrDefault() as ExpressionNode; }
@@ -28,11 +30,8 @@
                 return false;
             }
 
-            return this.Name == that.Name;
-        }
-
-        public void AppendExpression(Token token)
-        {
+            return this.Name == that.Name
+                && this.Value == that.Value;
         }
     }
 }

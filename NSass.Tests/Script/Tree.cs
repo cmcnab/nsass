@@ -1,6 +1,8 @@
 ﻿namespace NSass.Tests.Script
 {
+    using System.Collections.Generic;
     using NSass.Tree;
+    using NSass.Util;
     using Xunit;
 
     public static class Tree
@@ -15,27 +17,31 @@
             var node = new RuleNode(null);
             foreach (var symbol in symbols)
             {
-                node.Selectors.Add(symbol);
+                node.Selectors.Add(symbol.Split(' '));
             }
 
             return node;
         }
 
-        public static Node Property(string name)
+        public static PropertyNode Property(string name)
         {
             return new PropertyNode(null) { Name = name };
         }
 
-        public static Node Property(string name, string value)
+        public static PropertyNode Property(string name, string value)
         {
             var prop = Property(name);
             prop.Children.Add(new LiteralNode(prop, value));
+            prop.Value = value;
             return prop;
         }
 
-        public static Node Variable(string name)
+        public static PropertyNode PropertyVariable(string name, string variable, string value)
         {
-            return new VariableNode(null) { Name = name };
+            var prop = Property(name);
+            prop.Children.Add(new VariableNode(prop, variable));
+            prop.Value = value;
+            return prop;
         }
 
         public static Node AppendAll(this Node parent, params Node[] nodes)

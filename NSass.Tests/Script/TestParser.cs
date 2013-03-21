@@ -202,7 +202,7 @@
             var expected = Tree.Root().AppendAll(
                 Tree.Rule("#navbar").AppendAll(
                     Tree.Property("border-bottom").AppendAll(
-                        Tree.Property("color", "#ce4dd6"))));
+                        Tree.PropertyVariable("color", "$main-color", "#ce4dd6"))));
 
             // Act
             var ast = parser.Parse(lexer.ReadString(input));

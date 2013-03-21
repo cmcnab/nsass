@@ -87,6 +87,38 @@
             Assert.Equal(expected, output);
         }
 
+
+
+        [Fact]
+        public void MultipleNestedRulesAndSelectorsSampleOutputCorrectCss()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"#main div, body {
+  color: #00ff00;
+  ul, ol {
+    a {
+        text-decoration: none
+    }
+  }
+}";
+            var expected =
+@"#main div, body {
+  color: #00ff00; }
+  #main div ul a, #main div ol a, body ul a, body ol a {
+    text-decoration: none; }";
+
+            // Act
+            var output = Compile(engine, input);
+
+            // Assert
+            Assert.Equal(expected, output);
+        }
+
+
+
+
         [Fact]
         public void NestedPropertySampleOutputCorrectCss()
         {

@@ -40,17 +40,6 @@
             return this.current;
         }
 
-        public Token AssertNextIs(TokenType type, string failMessage)
-        {
-            var next = this.MoveNext();
-            if (next == null || next.Type != type)
-            {
-                throw new SyntaxException(failMessage);
-            }
-
-            return next;
-        }
-
         private Token GetNext()
         {
             if (!this.iterator.MoveNext())

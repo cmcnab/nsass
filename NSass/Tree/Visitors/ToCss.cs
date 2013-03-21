@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using NSass.Util;
 
     public class ToCss : BaseVisitor
     {
@@ -15,14 +16,18 @@
 
         protected override bool BeginVisit(RuleNode node)
         {
-            if (HasParentRule(node))
+            if (ShouldCloseParent(node))
             {
                 this.output.WriteLine(" }");
             }
 
-            this.WriteIdent(node);
-            this.output.Write(GetRuleSelectors(node));
-            this.output.Write(" {");
+            if (node.HasProperties)
+            {
+                this.WriteIdent(node);
+                this.output.Write(GetRuleSelectors(node));
+                this.output.Write(" {");
+            }
+
             return true;
         }
 
@@ -49,15 +54,18 @@
             this.WriteIdent(props.First());
             this.output.Write(string.Join("-", from p in props select p.Name));
             this.output.Write(": ");
-            this.output.Write(expr.Evaluate());
+            this.output.Write(node.Value);
             this.output.Write(";");
             return false;
         }
 
         private static string GetRuleSelectors(RuleNode rule)
         {
-            var rules = WalkTreeFor<RuleNode>(rule).Reverse();
-            var ret = string.Join(" ", from r in rules select string.Join(", ", r.Selectors));
+            var rules = WalkTreeFor<RuleNode>(rule).ToList();
+            var ruleSelectors = (from r in rules select r.Selectors).ToList();
+            var perms = Permutations.GetPermutations(ruleSelectors).ToList();
+            var flattened = (from p in perms select p.Reverse().SelectMany(s => s).ToList()).ToList();
+            var ret = string.Join(", ", from s in flattened select string.Join(" ", s));
             return ret;
         }
 
@@ -70,6 +78,12 @@
             }
         }
 
+        private static bool ShouldCloseParent(RuleNode rule)
+        {
+            var parentRule = rule.Parent as RuleNode;
+            return parentRule != null && parentRule.HasProperties;
+        }
+
         private static bool HasParentRule(RuleNode rule)
         {
             return rule.Parent != null && rule.Parent is RuleNode;
@@ -77,7 +91,7 @@
 
         private void WriteIdent(Node node)
         {
-            var spaces = 2 * (node.Depth - 1);
+            var spaces = 2 * (node.EffectiveDepth - 1);
             for (int i = 0; i < spaces; ++i)
             {
                 this.output.Write(' ');

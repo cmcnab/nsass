@@ -11,16 +11,21 @@
     {
         public Node(Node parent)
         {
-            this.Depth = parent == null ? 0 : parent.Depth + 1;
             this.Parent = parent;
             this.Children = new List<Node>();
         }
 
-        public int Depth { get; private set; }
+        public virtual int EffectiveDepth
+        {
+            get
+            {
+                return this.Parent == null ? 0 : this.Parent.EffectiveDepth + 1;
+            }
+        }
 
         public Node Parent { get; set; }
 
-        public ICollection<Node> Children { get; private set; }
+        public IList<Node> Children { get; private set; }
 
         public abstract bool Equals(Node other);
 
@@ -33,6 +38,18 @@
         {
             // TODO: I know, bad implementation, but we're not using this.
             return base.GetHashCode();
+        }
+
+        public bool ReplaceChild(Node existing, Node replacement)
+        {
+            int index = this.Children.IndexOf(existing);
+            if (index < 0)
+            {
+                return false;
+            }
+
+            this.Children[index] = replacement;
+            return true;
         }
 
         public string Resolve(string variableName)

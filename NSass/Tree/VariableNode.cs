@@ -1,10 +1,11 @@
 ﻿namespace NSass.Tree
 {
-    public class VariableNode : Node
+    public class VariableNode : ExpressionNode
     {
-        public VariableNode(Node parent)
+        public VariableNode(Node parent, string name)
             : base(parent)
         {
+            this.Name = name;
         }
 
         public string Name { get; set; }
@@ -18,6 +19,11 @@
             }
 
             return this.Name == that.Name;
+        }
+
+        public override string Evaluate()
+        {
+            return this.Resolve(this.Name);
         }
     }
 }
