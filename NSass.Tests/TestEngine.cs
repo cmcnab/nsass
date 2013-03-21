@@ -143,6 +143,34 @@
             Assert.Equal(expected, output);
         }
 
+        [Fact(Skip = "Figure this out first")]
+        public void BasicParentSelectorSampleOutputCorrectCss()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"a {
+  font-weight: bold;
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
+  body.firefox & { font-weight: normal; }
+}";
+            var expected =
+@"a {
+  font-weight: bold;
+  text-decoration: none; }
+  a:hover {
+    text-decoration: underline; }
+  body.firefox a {
+    font-weight: normal; }";
+
+            // Act
+            var output = Compile(engine, input);
+
+            // Assert
+            Assert.Equal(expected, output);
+        }
+
         private static string Compile(Engine engine, string input)
         {
             using (var output = new StringWriter())

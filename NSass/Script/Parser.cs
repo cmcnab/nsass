@@ -34,6 +34,9 @@
                     this.CheckForAssignment(root, context);
                     return root;
 
+                case TokenType.WhiteSpace:
+                    return root;
+
                 default:
                     throw new SyntaxException("Expecting something");
             }
@@ -62,11 +65,14 @@
                     return rule;
 
                 case TokenType.SymLit:
-                    rule.AppendSelector(context.Current.Value);
+                    this.AppendRuleSelector(rule, context.Current.Value);
                     return rule;
 
                 case TokenType.Comma:
                     rule.ExpectingNewSelector = true;
+                    return rule;
+
+                case TokenType.WhiteSpace:
                     return rule;
 
                 default:
@@ -99,6 +105,9 @@
                     // Go back to the rule's parent.
                     return property.Parent.Parent;
 
+                case TokenType.WhiteSpace:
+                    return property;
+
                 default:
                     throw new SyntaxException();
             }
@@ -115,8 +124,27 @@
                 case TokenType.EndInterpolation:
                     return scope.Parent;
 
+                case TokenType.WhiteSpace:
+                    return scope;
+
                 default:
                     throw new SyntaxException();
+            }
+        }
+
+        public void AppendRuleSelector(RuleNode rule, string selector)
+        {
+            if (rule.ExpectingNewSelector)
+            {
+                rule.Selectors.Add(selector);
+                rule.ExpectingNewSelector = false;
+            }
+            else
+            {
+                var lastIndex = rule.Selectors.Count - 1;
+                var last = rule.Selectors[lastIndex];
+                last = last + " " + selector;
+                rule.Selectors[lastIndex] = last;
             }
         }
 
@@ -144,9 +172,17 @@
         {
             var first = context.Current;
             context.AssertNextIs(TokenType.Colon, "Expecting ':'");
-            var second = context.AssertNextIs(TokenType.SymLit, "Expecting value");
-            context.AssertNextIs(TokenType.SemiColon, "Expecting ';'");
 
+            // Eat up any whitespace.
+            for (context.MoveNext(); context.Current.Type == TokenType.WhiteSpace; context.MoveNext()) ;
+
+            if (context.Current.Type != TokenType.SymLit)
+            {
+                throw new SyntaxException("Expecting value");
+            }
+
+            var second = context.Current;
+            context.AssertNextIs(TokenType.SemiColon, "Expecting ';'");
             scope.Variables[first.Value] = second.Value;
         }
     }

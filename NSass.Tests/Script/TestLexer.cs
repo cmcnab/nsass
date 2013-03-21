@@ -28,6 +28,7 @@
             var expected = new Token[]
             {
                 Tokens.Symbol("#main"),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("p")
             };
 
@@ -120,6 +121,7 @@
             {
                 Tokens.Symbol("p"),
                 Tokens.Comma(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("div")
             };
 
@@ -200,12 +202,17 @@
             var expected = new Token[]
             {
                 Tokens.Symbol("#main"),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("p"),
+                Tokens.WhiteSpace(),
                 Tokens.LCurly(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("color"),
                 Tokens.Colon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("#00ff00"),
                 Tokens.SemiColon(),
+                Tokens.WhiteSpace(),
                 Tokens.EndInterpolation()
             };
 
@@ -235,34 +242,54 @@
             var expected = new Token[]
             {
                 Tokens.Symbol("#main"),
+                Tokens.WhiteSpace(),
                 Tokens.LCurly(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("width"),
                 Tokens.Colon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("97%"),
                 Tokens.SemiColon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("p"),
                 Tokens.Comma(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("div"),
+                Tokens.WhiteSpace(),
                 Tokens.LCurly(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("font-size"),
                 Tokens.Colon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("2em"), // TODO: split?
                 Tokens.SemiColon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("a"),
+                Tokens.WhiteSpace(),
                 Tokens.LCurly(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("font-weight"),
                 Tokens.Colon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("bold"),
                 Tokens.SemiColon(),
+                Tokens.WhiteSpace(),
                 Tokens.EndInterpolation(),
+                Tokens.WhiteSpace(),
                 Tokens.EndInterpolation(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("pre"),
+                Tokens.WhiteSpace(),
                 Tokens.LCurly(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("font-size"),
                 Tokens.Colon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("3em"), // TODO: split?
                 Tokens.SemiColon(),
+                Tokens.WhiteSpace(),
                 Tokens.EndInterpolation(),
+                Tokens.WhiteSpace(),
                 Tokens.EndInterpolation()
             };
 
@@ -288,32 +315,49 @@
             var expected = new Token[]
             {
                 Tokens.Symbol("a"),
+                Tokens.WhiteSpace(),
                 Tokens.LCurly(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("font-weight"),
                 Tokens.Colon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("bold"),
                 Tokens.SemiColon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("text-decoration"),
                 Tokens.Colon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("none"),
                 Tokens.SemiColon(),
+                Tokens.WhiteSpace(),
                 Tokens.Ampersand(),
                 Tokens.Colon(),
                 Tokens.Symbol("hover"),
+                Tokens.WhiteSpace(),
                 Tokens.LCurly(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("text-decoration"),
                 Tokens.Colon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("underline"),
                 Tokens.SemiColon(),
+                Tokens.WhiteSpace(),
                 Tokens.EndInterpolation(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("body.firefox"),
+                Tokens.WhiteSpace(),
                 Tokens.Ampersand(),
+                Tokens.WhiteSpace(),
                 Tokens.LCurly(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("font-weight"),
                 Tokens.Colon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("normal"),
                 Tokens.SemiColon(),
+                Tokens.WhiteSpace(),
                 Tokens.EndInterpolation(),
+                Tokens.WhiteSpace(),
                 Tokens.EndInterpolation()
             };
 
@@ -340,26 +384,38 @@
             var expected = new Token[]
             {
                 Tokens.Symbol(".funky"),
+                Tokens.WhiteSpace(),
                 Tokens.LCurly(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("font"),
                 Tokens.Colon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("2px"),
                 Tokens.Div(),
                 Tokens.Symbol("3px"),
+                Tokens.WhiteSpace(),
                 Tokens.LCurly(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("family"),
                 Tokens.Colon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("fantasy"),
                 Tokens.SemiColon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("size"),
                 Tokens.Colon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("30em"),
                 Tokens.SemiColon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("weight"),
                 Tokens.Colon(),
+                Tokens.WhiteSpace(),
                 Tokens.Symbol("bold"),
                 Tokens.SemiColon(),
+                Tokens.WhiteSpace(),
                 Tokens.EndInterpolation(),
+                Tokens.WhiteSpace(),
                 Tokens.EndInterpolation()
             };
 

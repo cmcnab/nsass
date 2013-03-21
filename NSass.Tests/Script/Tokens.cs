@@ -4,6 +4,11 @@
 
     public static class Tokens
     {
+        public static Token WhiteSpace()
+        {
+            return new Token(TokenType.WhiteSpace, " ");
+        }
+
         public static Token Symbol(string symbol)
         {
             return new Token(TokenType.SymLit, symbol);

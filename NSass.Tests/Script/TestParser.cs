@@ -210,5 +210,50 @@
             // Assert
             expected.AssertEqualTree(ast);
         }
+
+        [Fact(Skip = "Figure this out first")]
+        public void SimpleCompoundSelectorParsesCorrectly()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var parser = new Parser();
+            var input =
+@"a:hover {
+  text-decoration: none;
+}";
+            var expected = Tree.Root().AppendAll(
+                Tree.Rule("a:hover").AppendAll(
+                    Tree.Property("text-decoration", "none")));
+
+            // Act
+            var ast = parser.Parse(lexer.ReadString(input));
+
+            // Assert
+            expected.AssertEqualTree(ast);
+        }
+
+        [Fact(Skip = "Figure this out first")]
+        public void SimpleParentSelectorParsesCorrectly()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var parser = new Parser();
+            var input =
+@"a {
+  text-decoration: none;
+  &:hover { text-decoration: underline; }
+}";
+            var expected = Tree.Root().AppendAll(
+                Tree.Rule("a").AppendAll(
+                    Tree.Property("text-decoration", "none"),
+                    Tree.Rule("&:hover").AppendAll(
+                        Tree.Property("color", "#ce4dd6"))));
+
+            // Act
+            var ast = parser.Parse(lexer.ReadString(input));
+
+            // Assert
+            expected.AssertEqualTree(ast);
+        }
     }
 }

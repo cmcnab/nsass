@@ -64,6 +64,20 @@
                 }
                 else if (char.IsLetterOrDigit(c) || IsSymbolChar(c))
                 {
+                    if (this.HasToken && char.IsWhiteSpace(this.currentToken[0]))
+                    {
+                        yield return this.EatToken();
+                    }
+
+                    this.currentToken.Append(c);
+                }
+                else if (char.IsWhiteSpace(c))
+                {
+                    if (this.HasToken && !char.IsWhiteSpace(this.currentToken[0]))
+                    {
+                        yield return this.EatToken();
+                    }
+
                     this.currentToken.Append(c);
                 }
                 else
@@ -105,7 +119,8 @@
         private Token MakeToken()
         {
             var str = this.currentToken.ToString();
-            return new Token(str.StartsWith("$") ? TokenType.Variable : TokenType.SymLit, str);
+            var type = this.GetTokenType(str);
+            return new Token(type, str);
         }
 
         private Token MakeSpecialToken(char c)
@@ -113,6 +128,22 @@
             var str = c.ToString();
             var type = TokenTypes[str];
             return new Token(type, str);
+        }
+
+        private TokenType GetTokenType(string str)
+        {
+            if (str.Length == 0 || char.IsWhiteSpace(str[0]))
+            {
+                return TokenType.WhiteSpace;
+            }
+            else if (str.StartsWith("$"))
+            {
+                return TokenType.Variable;
+            }
+            else
+            {
+                return TokenType.SymLit;
+            }
         }
     }
 }

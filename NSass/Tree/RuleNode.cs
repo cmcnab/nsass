@@ -37,20 +37,5 @@
             return this.Selectors.SequenceEqual(that.Selectors);
         }
 
-        public void AppendSelector(string selector)
-        {
-            if (this.ExpectingNewSelector)
-            {
-                this.Selectors.Add(selector);
-                this.ExpectingNewSelector = false;
-            }
-            else
-            {
-                var lastIndex = this.Selectors.Count - 1;
-                var last = this.Selectors[lastIndex];
-                last = last + " " + selector;
-                this.Selectors[lastIndex] = last;
-            }
-        }
     }
 }

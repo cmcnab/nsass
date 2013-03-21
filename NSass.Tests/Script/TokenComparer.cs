@@ -7,8 +7,15 @@
     {
         public bool Equals(Token x, Token y)
         {
-            return x.Type == y.Type
-                && x.Value == y.Value;
+            if (x.Type == TokenType.WhiteSpace)
+            {
+                return y.Type == TokenType.WhiteSpace;
+            }
+            else
+            {
+                return x.Type == y.Type
+                    && x.Value == y.Value;
+            }
         }
 
         public int GetHashCode(Token token)

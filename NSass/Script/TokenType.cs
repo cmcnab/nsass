@@ -2,6 +2,7 @@
 {
     public enum TokenType
     {
+        WhiteSpace,
         SymLit,
         Variable,
         Plus,
