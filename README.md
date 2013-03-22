@@ -9,7 +9,7 @@ For the first iteration the focus is only on the SCSS syntax and right now it on
 - [x] Nesting
 - [x] Parent References
 - [x] Variables
-- [ ] Comments
+- [x] Comments
 - [ ] Operations and Functions
   - Data types
   - Conversions

@@ -228,6 +228,30 @@
             Assert.Equal(expected, output);
         }
 
+        [Fact]
+        public void BlockCommentSampleOutputCorrectCss()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"/* first line */
+a {
+  font-weight: bold;/* comment here */text-decoration: none;
+}";
+            var expected =
+@"/* first line */
+a {
+  font-weight: bold;
+  /* comment here */
+  text-decoration: none; }";
+
+            // Act
+            var output = Compile(engine, input);
+
+            // Assert
+            Assert.Equal(expected, output);
+        }
+
         private static string Compile(Engine engine, string input)
         {
             using (var output = new StringWriter())

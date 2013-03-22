@@ -46,6 +46,7 @@
     <Compile Include="Script\TestLexer.cs" />
     <Compile Include="Script\TestLexerComments.cs" />
     <Compile Include="Script\TestParser.cs" />
+    <Compile Include="Script\TestParserComments.cs" />
     <Compile Include="Script\TokenComparer.cs" />
     <Compile Include="Script\Tokens.cs" />
     <Compile Include="Script\Tree.cs" />

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSass.Script;
-using Xunit;
-
-namespace NSass.Tests.Script
+﻿namespace NSass.Tests.Script
 {
+    using System.Linq;
+    using NSass.Script;
+    using Xunit;
+
     public class TestLexerComments
     {
         [Fact]

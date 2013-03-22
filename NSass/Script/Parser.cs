@@ -49,6 +49,10 @@
                 case TokenType.WhiteSpace:
                     return scope;
 
+                case TokenType.Comment:
+                    scope.Children.Add(new CommentNode(scope, context.Current.Value));
+                    return scope;
+
                 default:
                     throw new SyntaxException();
             }

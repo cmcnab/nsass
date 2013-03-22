@@ -20,6 +20,10 @@
             {
                 this.output.WriteLine(" }");
             }
+            else if (node.Parent is RootNode && !IsFirstChild(node))
+            {
+                this.output.WriteLine();
+            }
 
             if (node.HasProperties)
             {
@@ -59,6 +63,19 @@
             return false;
         }
 
+        protected override bool BeginVisit(CommentNode node)
+        {
+            // If this comment is the very first thing, don't output the newline.
+            if (!IsVeryFirstNode(node))
+            {
+                this.output.WriteLine();
+            }
+
+            this.WriteIdent(node);
+            this.output.Write(node.Comment);
+            return true;
+        }
+
         private static string GetRuleSelectors(RuleNode rule)
         {
             return string.Join(", ", from s in rule.Selectors select string.Join(" ", s));
@@ -82,6 +99,16 @@
         private static bool HasParentRule(RuleNode rule)
         {
             return rule.Parent != null && rule.Parent is RuleNode;
+        }
+
+        private static bool IsVeryFirstNode(Node node)
+        {
+            return node.Parent is RootNode && IsFirstChild(node);
+        }
+
+        private static bool IsFirstChild(Node node)
+        {
+            return node.Parent.Children.FirstOrDefault() == node;
         }
 
         private void WriteIdent(Node node)

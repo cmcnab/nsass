@@ -44,6 +44,11 @@
             return prop;
         }
 
+        public static CommentNode Comment(string comment)
+        {
+            return new CommentNode(null, comment);
+        }
+
         public static Node AppendAll(this Node parent, params Node[] nodes)
         {
             foreach (var node in nodes)

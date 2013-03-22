@@ -31,6 +31,11 @@
             return true;
         }
 
+        protected virtual bool BeginVisit(CommentNode node)
+        {
+            return true;
+        }
+
         protected virtual void EndVisit(RootNode node)
         {
         }
@@ -40,6 +45,10 @@
         }
 
         protected virtual void EndVisit(PropertyNode node)
+        {
+        }
+
+        protected virtual void EndVisit(CommentNode node)
         {
         }
     }

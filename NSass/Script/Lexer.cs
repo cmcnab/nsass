@@ -131,6 +131,7 @@
                                     this.currentToken.Append(c);
                                 }
                             }
+
                             break;
 
                         case '*':
@@ -143,6 +144,7 @@
                             {
                                 yield return this.MakeSpecialToken(c);
                             }
+
                             break;
 
                         default:
