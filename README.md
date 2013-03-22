@@ -6,17 +6,18 @@ For the first iteration the focus is only on the SCSS syntax and right now it on
 
 ### TODO ###
 
-
-- Expressions
+- <s>Nesting</s>
+- <s>Parent References</s>
+- <s>Variables</s>
+- Operations and Functions
   - Data types
   - Conversions
-- Built-in functions
 - Interpolation
+- Mixins
+- Built-in functions
 - Variable defaults
-- Parent selectors
 - Comments
 - @import
 - @extend
   - Placeholder selectors
-- @mixin/@include
 - Old syntax
