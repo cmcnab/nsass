@@ -170,7 +170,7 @@
             Assert.Equal(expected, output);
         }
 
-        [Fact(Skip = "Figure this out first")]
+        [Fact(Skip = "rework nested rule selectors first")]
         public void BasicParentSelectorSampleOutputCorrectCss()
         {
             // Arrange

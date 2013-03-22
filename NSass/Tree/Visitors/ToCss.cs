@@ -61,12 +61,7 @@
 
         private static string GetRuleSelectors(RuleNode rule)
         {
-            var rules = WalkTreeFor<RuleNode>(rule).ToList();
-            var ruleSelectors = (from r in rules select r.Selectors).ToList();
-            var perms = Permutations.GetPermutations(ruleSelectors).ToList();
-            var flattened = (from p in perms select p.Reverse().SelectMany(s => s).ToList()).ToList();
-            var ret = string.Join(", ", from s in flattened select string.Join(" ", s));
-            return ret;
+            return string.Join(", ", from s in rule.Selectors select string.Join(" ", s));
         }
 
         private static IEnumerable<T> WalkTreeFor<T>(T node) where T : Node

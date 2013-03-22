@@ -58,7 +58,7 @@
             var expected = Tree.Root().AppendAll(
                 Tree.Rule("#main").AppendAll(
                     Tree.Property("color", "#00ff00"),
-                    Tree.Rule("ul").AppendAll(
+                    Tree.Rule("#main ul").AppendAll(
                         Tree.Property("list-style-type", "none"))));
 
             // Act
@@ -82,7 +82,7 @@
             var expected = Tree.Root().AppendAll(
                 Tree.Rule("#main").AppendAll(
                     Tree.Property("color", "#00ff00"),
-                    Tree.Rule("ul").AppendAll(
+                    Tree.Rule("#main ul").AppendAll(
                         Tree.Property("list-style-type", "none"))));
 
             // Act
@@ -107,9 +107,9 @@
             var expected = Tree.Root().AppendAll(
                 Tree.Rule("#main").AppendAll(
                     Tree.Property("color", "#00ff00"),
-                    Tree.Rule("ul").AppendAll(
+                    Tree.Rule("#main ul").AppendAll(
                         Tree.Property("list-style-type", "none")),
-                    Tree.Rule("a").AppendAll(
+                    Tree.Rule("#main a").AppendAll(
                         Tree.Property("float", "left"))));
 
             // Act
@@ -232,8 +232,32 @@
             expected.AssertEqualTree(ast);
         }
 
-        [Fact(Skip = "Figure this out first")]
+        [Fact(Skip = "rework nested rule selectors first")]
         public void SimpleParentSelectorParsesCorrectly()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var parser = new Parser();
+            var input =
+@"a {
+  text-decoration: none;
+  body.firefox & { font-weight: normal; }
+}";
+            var expected = Tree.Root().AppendAll(
+                Tree.Rule("a").AppendAll(
+                    Tree.Property("text-decoration", "none"),
+                    Tree.Rule("body.firefox a").AppendAll(
+                        Tree.Property("font-weight", "normal"))));
+
+            // Act
+            var ast = parser.Parse(lexer.ReadString(input));
+
+            // Assert
+            expected.AssertEqualTree(ast);
+        }
+
+        [Fact(Skip = "rework nested rule selectors first")]
+        public void SimpleParentPseudoClassSelectorParsesCorrectly()
         {
             // Arrange
             var lexer = new Lexer();
@@ -246,8 +270,8 @@
             var expected = Tree.Root().AppendAll(
                 Tree.Rule("a").AppendAll(
                     Tree.Property("text-decoration", "none"),
-                    Tree.Rule("&:hover").AppendAll(
-                        Tree.Property("color", "#ce4dd6"))));
+                    Tree.Rule("a:hover").AppendAll(
+                        Tree.Property("text-decoration", "underline"))));
 
             // Act
             var ast = parser.Parse(lexer.ReadString(input));

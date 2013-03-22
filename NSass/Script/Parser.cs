@@ -39,6 +39,9 @@
                 case TokenType.Variable:
                     return BeginDeclaration(scope, context);
 
+                case TokenType.Ampersand:
+                    return BeginDeclaration(scope, context);
+
                 case TokenType.EndInterpolation:
                     // Unless we're root
                     return scope.Parent;
@@ -134,7 +137,7 @@
             }
 
             // Convert the DeclarationTokens to selectors.
-            rule.Selectors = NormalizeSelectors(decl.DeclarationTokens);
+            rule.Selectors = CreateSelectors(rule, decl.DeclarationTokens);
 
             rule.ScopeOpened = true;
             return rule;
@@ -215,7 +218,24 @@
             return Tuple.Create(nonWsBefore.First(), after);
         }
 
-        private static IList<IList<string>> NormalizeSelectors(IEnumerable<Token> tokens)
+        private static IList<IList<string>> CreateSelectors(RuleNode rule, IEnumerable<Token> tokens)
+        {
+            return JoinSelectorsWithParent(rule, NormalizeSelectors(rule, tokens));
+        }
+
+        private static IList<IList<string>> JoinSelectorsWithParent(RuleNode rule, IList<IList<string>> selectors)
+        {
+            var parentRule = rule.Parent as RuleNode;
+            if (parentRule == null)
+            {
+                return selectors;
+            }
+
+            var perms = Permutations.GetPermutations(Params.ToArray(selectors, parentRule.Selectors));
+            return (from p in perms select (IList<string>)p.Reverse().SelectMany(s => s).ToList()).ToList();
+        }
+
+        private static IList<IList<string>> NormalizeSelectors(RuleNode rule, IEnumerable<Token> tokens)
         {
             var noWS = from t in tokens
                        where t.Type != TokenType.WhiteSpace
