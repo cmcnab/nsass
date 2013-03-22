@@ -19,6 +19,11 @@
             return new Token(TokenType.Variable, variable);
         }
 
+        public static Token Comment(string comment)
+        {
+            return new Token(TokenType.Comment, comment);
+        }
+
         public static Token LCurly()
         {
             return new Token(TokenType.LCurly, "{");
