@@ -198,6 +198,36 @@
             Assert.Equal(expected, output);
         }
 
+        [Fact]
+        public void ComplexParentSelectorSampleOutputCorrectCss()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"a, b {
+    first: one;
+    c, d {
+      second: two;
+      &:e &, f & {
+        third: three;
+      }
+    }
+}";
+            var expected =
+@"a, b {
+  first: one; }
+  a c, a d, b c, b d {
+    second: two; }
+    a c:e a c, f a c, a d:e a d, f a d, b c:e b c, f b c, b d:e b d, f b d {
+      third: three; }";
+
+            // Act
+            var output = Compile(engine, input);
+
+            // Assert
+            Assert.Equal(expected, output);
+        }
+
         private static string Compile(Engine engine, string input)
         {
             using (var output = new StringWriter())
