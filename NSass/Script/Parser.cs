@@ -89,6 +89,10 @@
                     scope.DeclarationTokens.Add(context.Current);
                     return scope;
 
+                case TokenType.Ampersand:
+                    scope.DeclarationTokens.Add(context.Current);
+                    return scope;
+
                 case TokenType.WhiteSpace:
                     scope.DeclarationTokens.Add(context.Current);
                     return scope;
@@ -137,7 +141,7 @@
             }
 
             // Convert the DeclarationTokens to selectors.
-            rule.Selectors = CreateSelectors(rule, decl.DeclarationTokens);
+            rule.Selectors = CreateSelectors(rule, decl.DeclarationTokens).ToList();
 
             rule.ScopeOpened = true;
             return rule;
@@ -218,12 +222,12 @@
             return Tuple.Create(nonWsBefore.First(), after);
         }
 
-        private static IList<IList<string>> CreateSelectors(RuleNode rule, IEnumerable<Token> tokens)
+        private static IEnumerable<string> CreateSelectors(RuleNode rule, IEnumerable<Token> tokens)
         {
             return JoinSelectorsWithParent(rule, NormalizeSelectors(rule, tokens));
         }
 
-        private static IList<IList<string>> JoinSelectorsWithParent(RuleNode rule, IList<IList<string>> selectors)
+        private static IEnumerable<string> JoinSelectorsWithParent(RuleNode rule, IEnumerable<string> selectors)
         {
             var parentRule = rule.Parent as RuleNode;
             if (parentRule == null)
@@ -231,56 +235,61 @@
                 return selectors;
             }
 
-            var perms = Permutations.GetPermutations(Params.ToArray(selectors, parentRule.Selectors));
-            return (from p in perms select (IList<string>)p.Reverse().SelectMany(s => s).ToList()).ToList();
+            return PermuteSelectors(selectors, parentRule.Selectors);
         }
 
-        private static IList<IList<string>> NormalizeSelectors(RuleNode rule, IEnumerable<Token> tokens)
+        private static IEnumerable<string> PermuteSelectors(IEnumerable<string> current, IEnumerable<string> parent)
+        {
+            foreach (var parentSelector in parent)
+            {
+                foreach (var mySelector in current)
+                {
+                    if (mySelector.Contains('&'))
+                    {
+                        yield return mySelector.Replace("&", parentSelector);
+                    }
+                    else
+                    {
+                        yield return parentSelector + " " + mySelector;
+                    }
+                }
+            }
+        }
+
+        private static IEnumerable<string> NormalizeSelectors(RuleNode rule, IEnumerable<Token> tokens)
         {
             var noWS = from t in tokens
                        where t.Type != TokenType.WhiteSpace
                        select t;
 
-            var results = new List<IList<string>>() { new List<string>() };
-            bool afterColon = false;
+            foreach (var subList in SplitOnComma(noWS))
+            {
+                yield return SpaceSelectors(subList);
+            }
+        }
 
-            foreach (var token in noWS)
+        private static IEnumerable<IEnumerable<Token>> SplitOnComma(IEnumerable<Token> tokens)
+        {
+            var subList = new List<Token>();
+            foreach (var token in tokens)
             {
                 if (token.Type == TokenType.Comma)
                 {
-                    // TODO: what if non-empty list is already there (like two commas in a row)?
-                    results.Add(new List<string>());
-                }
-                else if (token.Type == TokenType.Colon)
-                {
-                    ConcatToLastSelector(results, token.Value);
-                    afterColon = true;
-                }
-                else if (afterColon)
-                {
-                    ConcatToLastSelector(results, token.Value);
-                    afterColon = false;
+                    yield return subList;
+                    subList = new List<Token>();
                 }
                 else
                 {
-                    results.Last().Add(token.Value);
+                    subList.Add(token);
                 }
             }
 
-            return results;
+            yield return subList;
         }
 
-        private static void ConcatToLastSelector(IList<IList<string>> list, string value)
+        private static string SpaceSelectors(IEnumerable<Token> tokens)
         {
-            var lastSelector = list.Last();
-            if (lastSelector.Count == 0)
-            {
-                lastSelector.Add(value);
-            }
-            else
-            {
-                lastSelector.ChangeLast(s => s + value);
-            }
+            return string.Join(" ", from t in tokens select t.Value).Replace(": ", ":").Replace(" :", ":");
         }
     }
 }

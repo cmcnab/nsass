@@ -13,7 +13,7 @@
         public RuleNode(Node parent)
             : base(parent)
         {
-            this.Selectors = new List<IList<string>>();
+            this.Selectors = new List<string>();
             this.ExpectingNewSelector = false;
         }
 
@@ -33,7 +33,7 @@
             get { return this.Children.Any(n => n is PropertyNode); }
         }
 
-        public IList<IList<string>> Selectors { get; set; }
+        public IList<string> Selectors { get; set; }
 
         public bool ExpectingNewSelector { get; set; }
 
@@ -45,7 +45,7 @@
                 return false;
             }
 
-            return this.Selectors.SequenceEqual(that.Selectors, new LambdaComparer<IList<string>>((a, b) => a.SequenceEqual(b)));
+            return this.Selectors.SequenceEqual(that.Selectors);
         }
     }
 }

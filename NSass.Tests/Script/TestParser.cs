@@ -232,7 +232,7 @@
             expected.AssertEqualTree(ast);
         }
 
-        [Fact(Skip = "rework nested rule selectors first")]
+        [Fact]
         public void SimpleParentSelectorParsesCorrectly()
         {
             // Arrange
@@ -256,7 +256,7 @@
             expected.AssertEqualTree(ast);
         }
 
-        [Fact(Skip = "rework nested rule selectors first")]
+        [Fact]
         public void SimpleParentPseudoClassSelectorParsesCorrectly()
         {
             // Arrange

@@ -64,7 +64,6 @@
     <Compile Include="Tree\Visitors\ToCss.cs" />
     <Compile Include="Util\LambdaComparer.cs" />
     <Compile Include="Util\Params.cs" />
-    <Compile Include="Util\Permutations.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scss\" />

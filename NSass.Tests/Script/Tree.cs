@@ -17,7 +17,7 @@
             var node = new RuleNode(null);
             foreach (var symbol in symbols)
             {
-                node.Selectors.Add(symbol.Split(' '));
+                node.Selectors.Add(symbol);
             }
 
             return node;
