@@ -35,7 +35,7 @@
 }";
             var expected = Tree.Root().AppendAll(
                 Tree.Rule("#main").AppendAll(
-                    Tree.Property("color", "#00ff00")));
+                    Tree.PropertyLiteral("color", "#00ff00")));
 
             // Act
             var ast = parser.Parse(lexer.ReadString(input));
@@ -57,9 +57,9 @@
 }";
             var expected = Tree.Root().AppendAll(
                 Tree.Rule("#main").AppendAll(
-                    Tree.Property("color", "#00ff00"),
+                    Tree.PropertyLiteral("color", "#00ff00"),
                     Tree.Rule("#main ul").AppendAll(
-                        Tree.Property("list-style-type", "none"))));
+                        Tree.PropertyLiteral("list-style-type", "none"))));
 
             // Act
             var ast = parser.Parse(lexer.ReadString(input));
@@ -81,9 +81,9 @@
 }";
             var expected = Tree.Root().AppendAll(
                 Tree.Rule("#main").AppendAll(
-                    Tree.Property("color", "#00ff00"),
+                    Tree.PropertyLiteral("color", "#00ff00"),
                     Tree.Rule("#main ul").AppendAll(
-                        Tree.Property("list-style-type", "none"))));
+                        Tree.PropertyLiteral("list-style-type", "none"))));
 
             // Act
             var ast = parser.Parse(lexer.ReadString(input));
@@ -106,11 +106,11 @@
 }";
             var expected = Tree.Root().AppendAll(
                 Tree.Rule("#main").AppendAll(
-                    Tree.Property("color", "#00ff00"),
+                    Tree.PropertyLiteral("color", "#00ff00"),
                     Tree.Rule("#main ul").AppendAll(
-                        Tree.Property("list-style-type", "none")),
+                        Tree.PropertyLiteral("list-style-type", "none")),
                     Tree.Rule("#main a").AppendAll(
-                        Tree.Property("float", "left"))));
+                        Tree.PropertyLiteral("float", "left"))));
 
             // Act
             var ast = parser.Parse(lexer.ReadString(input));
@@ -131,7 +131,7 @@
 }";
             var expected = Tree.Root().AppendAll(
                 Tree.Rule("#main ul").AppendAll(
-                    Tree.Property("color", "#00ff00")));
+                    Tree.PropertyLiteral("color", "#00ff00")));
 
             // Act
             var ast = parser.Parse(lexer.ReadString(input));
@@ -152,7 +152,7 @@
 }";
             var expected = Tree.Root().AppendAll(
                 Tree.Rule("#main", "#foo").AppendAll(
-                    Tree.Property("color", "#00ff00")));
+                    Tree.PropertyLiteral("color", "#00ff00")));
 
             // Act
             var ast = parser.Parse(lexer.ReadString(input));
@@ -176,7 +176,7 @@
             var expected = Tree.Root().AppendAll(
                 Tree.Rule("#main").AppendAll(
                     Tree.Property("border").AppendAll(
-                        Tree.Property("style", "solid"))));
+                        Tree.PropertyLiteral("style", "solid"))));
 
             // Act
             var ast = parser.Parse(lexer.ReadString(input));
@@ -223,7 +223,7 @@
 }";
             var expected = Tree.Root().AppendAll(
                 Tree.Rule("a:hover").AppendAll(
-                    Tree.Property("text-decoration", "none")));
+                    Tree.PropertyLiteral("text-decoration", "none")));
 
             // Act
             var ast = parser.Parse(lexer.ReadString(input));
@@ -245,9 +245,9 @@
 }";
             var expected = Tree.Root().AppendAll(
                 Tree.Rule("a").AppendAll(
-                    Tree.Property("text-decoration", "none"),
+                    Tree.PropertyLiteral("text-decoration", "none"),
                     Tree.Rule("body.firefox a").AppendAll(
-                        Tree.Property("font-weight", "normal"))));
+                        Tree.PropertyLiteral("font-weight", "normal"))));
 
             // Act
             var ast = parser.Parse(lexer.ReadString(input));
@@ -269,9 +269,9 @@
 }";
             var expected = Tree.Root().AppendAll(
                 Tree.Rule("a").AppendAll(
-                    Tree.Property("text-decoration", "none"),
+                    Tree.PropertyLiteral("text-decoration", "none"),
                     Tree.Rule("a:hover").AppendAll(
-                        Tree.Property("text-decoration", "underline"))));
+                        Tree.PropertyLiteral("text-decoration", "underline"))));
 
             // Act
             var ast = parser.Parse(lexer.ReadString(input));

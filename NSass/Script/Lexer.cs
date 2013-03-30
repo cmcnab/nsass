@@ -22,6 +22,7 @@
             TokenTypes.Add(";", TokenType.SemiColon);
             TokenTypes.Add(",", TokenType.Comma);
             TokenTypes.Add("&", TokenType.Ampersand);
+            TokenTypes.Add("+", TokenType.Plus);
             TokenTypes.Add("/", TokenType.Div);
             TokenTypes.Add("*", TokenType.Times);
 
@@ -32,6 +33,7 @@
             SpecialChars.Add(';', true);
             SpecialChars.Add(',', true);
             SpecialChars.Add('&', true);
+            SpecialChars.Add('+', true);
             SpecialChars.Add('/', false);
             SpecialChars.Add('*', false);
         }

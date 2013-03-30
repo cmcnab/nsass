@@ -45,8 +45,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Script\TestLexer.cs" />
     <Compile Include="Script\TestLexerComments.cs" />
+    <Compile Include="Script\TestLexerExpressions.cs" />
     <Compile Include="Script\TestParser.cs" />
     <Compile Include="Script\TestParserComments.cs" />
+    <Compile Include="Script\TestParserExpressions.cs" />
     <Compile Include="Script\TokenComparer.cs" />
     <Compile Include="Script\Tokens.cs" />
     <Compile Include="Script\Tree.cs" />

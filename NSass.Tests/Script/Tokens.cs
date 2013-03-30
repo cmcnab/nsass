@@ -54,6 +54,11 @@
             return new Token(TokenType.Ampersand, "&");
         }
 
+        public static Token Plus()
+        {
+            return new Token(TokenType.Plus, "+");
+        }
+
         public static Token Div()
         {
             return new Token(TokenType.Div, "/");

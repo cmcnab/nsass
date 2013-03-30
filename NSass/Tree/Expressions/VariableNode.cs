@@ -1,6 +1,6 @@
-﻿namespace NSass.Tree
+﻿namespace NSass.Tree.Expressions
 {
-    public class VariableNode : ExpressionNode
+    public class VariableNode : SymbolNode
     {
         public VariableNode(Node parent, string name)
             : base(parent)

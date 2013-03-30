@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using NSass.Tree;
+    using NSass.Tree.Expressions;
     using NSass.Util;
     using Xunit;
 
@@ -30,6 +31,11 @@
 
         public static PropertyNode Property(string name, string value)
         {
+            return new PropertyNode(null) { Name = name, Value = value };
+        }
+
+        public static PropertyNode PropertyLiteral(string name, string value)
+        {
             var prop = Property(name);
             prop.Children.Add(new LiteralNode(prop, value));
             prop.Value = value;
@@ -42,6 +48,21 @@
             prop.Children.Add(new VariableNode(prop, variable));
             prop.Value = value;
             return prop;
+        }
+
+        public static AdditionNode Addition()
+        {
+            return new AdditionNode(null);
+        }
+
+        public static LiteralNode Literal(string value)
+        {
+            return new LiteralNode(null, value);
+        }
+
+        public static VariableNode Variable(string variable)
+        {
+            return new VariableNode(null, variable);
         }
 
         public static CommentNode Comment(string comment)

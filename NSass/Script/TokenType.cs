@@ -13,7 +13,7 @@
         Colon,
         Comma,
         Ampersand,
-        ////Plus,
+        Plus,
         ////Minus,
         Times,
         Div

@@ -77,32 +77,9 @@
                     CloseAsProperty(scope);
                     return scope.Parent;
 
-                case TokenType.SymLit:
-                    scope.DeclarationTokens.Add(context.Current);
-                    return scope;
-
-                case TokenType.Variable:
-                    scope.DeclarationTokens.Add(context.Current);
-                    return scope;
-
-                case TokenType.Colon:
-                    scope.DeclarationTokens.Add(context.Current);
-                    return scope;
-
-                case TokenType.Comma:
-                    scope.DeclarationTokens.Add(context.Current);
-                    return scope;
-
-                case TokenType.Ampersand:
-                    scope.DeclarationTokens.Add(context.Current);
-                    return scope;
-
-                case TokenType.WhiteSpace:
-                    scope.DeclarationTokens.Add(context.Current);
-                    return scope;
-
                 default:
-                    throw new SyntaxException();
+                    scope.DeclarationTokens.Add(context.Current);
+                    return scope;
             }
         }
 
@@ -170,18 +147,11 @@
 
             var split = SplitPropertyDeclaration(decl.DeclarationTokens);
             property.Name = split.Item1.Value;
+            var expressionTokens = split.Item2;
             
-            // TODO: fix this
-            foreach (var valueToken in split.Item2)
+            foreach (var valueToken in expressionTokens)
             {
-                if (valueToken.Type == TokenType.Variable)
-                {
-                    property.Children.Add(new VariableNode(property, valueToken.Value));
-                }
-                else
-                {
-                    property.Children.Add(new LiteralNode(property, valueToken.Value));
-                }
+                ExpressionBuilder.Push(property, valueToken);
             }
             
             return Evaluate(property);

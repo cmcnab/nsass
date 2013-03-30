@@ -7,6 +7,8 @@
         {
         }
 
+        public abstract bool IsOperator { get; }
+
         public abstract string Evaluate();
     }
 }

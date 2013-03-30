@@ -1,6 +1,6 @@
-﻿namespace NSass.Tree
+﻿namespace NSass.Tree.Expressions
 {
-    public class LiteralNode : ExpressionNode
+    public class LiteralNode : SymbolNode
     {
         public LiteralNode(Node parent, string value)
             : base(parent)
