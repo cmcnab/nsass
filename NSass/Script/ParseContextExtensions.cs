@@ -14,6 +14,17 @@
             return ThrowIfNull(failMessage, context.MoveNext);
         }
 
+        public static Token AssertCurrentIs(this ParseContext context, TokenType type, string failMessage)
+        {
+            var token = context.Current;
+            if (token == null || token.Type != type)
+            {
+                throw new SyntaxException(failMessage);
+            }
+
+            return token;
+        }
+
         public static Token AssertNextIs(this ParseContext context, TokenType type, string failMessage)
         {
             var token = context.MoveNext();

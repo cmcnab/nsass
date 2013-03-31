@@ -7,16 +7,21 @@
     public class TestLexer
     {
         [Fact]
-        public void EmptyStringResultsInNoTokens()
+        public void EmptyStringResultsInBeginEnd()
         {
             // Arrange
             var lexer = new Lexer();
+            var expected = new Token[]
+            {
+                Tokens.Begin(),
+                Tokens.End()
+            };
 
             // Act
             var tokens = lexer.ReadString(string.Empty).ToList();
 
             // Assert
-            Assert.Equal(0, tokens.Count);
+            Assert.Equal(expected, tokens, new TokenComparer());
         }
 
         [Fact]
@@ -27,9 +32,11 @@
             var input = "#main p";
             var expected = new Token[]
             {
+                Tokens.Begin(),
                 Tokens.Symbol("#main"),
                 Tokens.WhiteSpace(),
-                Tokens.Symbol("p")
+                Tokens.Symbol("p"),
+                Tokens.End()
             };
 
             // Act
@@ -47,7 +54,9 @@
             var input = "85%";
             var expected = new Token[]
             {
-                Tokens.Symbol("85%")
+                Tokens.Begin(),
+                Tokens.Symbol("85%"),
+                Tokens.End()
             };
 
             // Act
@@ -65,7 +74,9 @@
             var input = "1px";
             var expected = new Token[]
             {
-                Tokens.Symbol("1px")
+                Tokens.Begin(),
+                Tokens.Symbol("1px"),
+                Tokens.End()
             };
 
             // Act
@@ -83,7 +94,9 @@
             var input = "font-size";
             var expected = new Token[]
             {
-                Tokens.Symbol("font-size")
+                Tokens.Begin(),
+                Tokens.Symbol("font-size"),
+                Tokens.End()
             };
 
             // Act
@@ -101,7 +114,9 @@
             var input = "body.firefox";
             var expected = new Token[]
             {
-                Tokens.Symbol("body.firefox")
+                Tokens.Begin(),
+                Tokens.Symbol("body.firefox"),
+                Tokens.End()
             };
 
             // Act
@@ -119,10 +134,12 @@
             var input = "p, div";
             var expected = new Token[]
             {
+                Tokens.Begin(),
                 Tokens.Symbol("p"),
                 Tokens.Comma(),
                 Tokens.WhiteSpace(),
-                Tokens.Symbol("div")
+                Tokens.Symbol("div"),
+                Tokens.End()
             };
 
             // Act
@@ -140,9 +157,11 @@
             var input = "&:hover";
             var expected = new Token[]
             {
+                Tokens.Begin(),
                 Tokens.Ampersand(),
                 Tokens.Colon(),
-                Tokens.Symbol("hover")
+                Tokens.Symbol("hover"),
+                Tokens.End()
             };
 
             // Act
@@ -160,9 +179,11 @@
             var input = "2px/3px";
             var expected = new Token[]
             {
+                Tokens.Begin(),
                 Tokens.Symbol("2px"),
                 Tokens.Div(),
-                Tokens.Symbol("3px")
+                Tokens.Symbol("3px"),
+                Tokens.End()
             };
 
             // Act
@@ -180,7 +201,9 @@
             var input = "$vert";
             var expected = new Token[]
             {
+                Tokens.Begin(),
                 Tokens.Variable("$vert"),
+                Tokens.End()
             };
 
             // Act
@@ -201,6 +224,7 @@
 }";
             var expected = new Token[]
             {
+                Tokens.Begin(),
                 Tokens.Symbol("#main"),
                 Tokens.WhiteSpace(),
                 Tokens.Symbol("p"),
@@ -213,7 +237,8 @@
                 Tokens.Symbol("#00ff00"),
                 Tokens.SemiColon(),
                 Tokens.WhiteSpace(),
-                Tokens.EndInterpolation()
+                Tokens.EndInterpolation(),
+                Tokens.End()
             };
 
             // Act
@@ -241,6 +266,7 @@
 }";
             var expected = new Token[]
             {
+                Tokens.Begin(),
                 Tokens.Symbol("#main"),
                 Tokens.WhiteSpace(),
                 Tokens.LCurly(),
@@ -290,7 +316,8 @@
                 Tokens.WhiteSpace(),
                 Tokens.EndInterpolation(),
                 Tokens.WhiteSpace(),
-                Tokens.EndInterpolation()
+                Tokens.EndInterpolation(),
+                Tokens.End()
             };
 
             // Act
@@ -314,6 +341,7 @@
 }";
             var expected = new Token[]
             {
+                Tokens.Begin(),
                 Tokens.Symbol("a"),
                 Tokens.WhiteSpace(),
                 Tokens.LCurly(),
@@ -358,7 +386,8 @@
                 Tokens.WhiteSpace(),
                 Tokens.EndInterpolation(),
                 Tokens.WhiteSpace(),
-                Tokens.EndInterpolation()
+                Tokens.EndInterpolation(),
+                Tokens.End()
             };
 
             // Act
@@ -383,6 +412,7 @@
 }";
             var expected = new Token[]
             {
+                Tokens.Begin(),
                 Tokens.Symbol(".funky"),
                 Tokens.WhiteSpace(),
                 Tokens.LCurly(),
@@ -416,7 +446,8 @@
                 Tokens.WhiteSpace(),
                 Tokens.EndInterpolation(),
                 Tokens.WhiteSpace(),
-                Tokens.EndInterpolation()
+                Tokens.EndInterpolation(),
+                Tokens.End()
             };
 
             // Act

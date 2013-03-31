@@ -1,10 +1,10 @@
 ﻿namespace NSass.Parse.Expressions
 {
-    public class NameExpression : IExpression
+    public abstract class Property : Statement
     {
         private readonly string name;
 
-        public NameExpression(string name)
+        public Property(string name)
         {
             this.name = name;
         }

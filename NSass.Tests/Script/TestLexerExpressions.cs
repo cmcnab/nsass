@@ -14,11 +14,13 @@
             var input = "1in + 8pt";
             var expected = new Token[]
             {
+                Tokens.Begin(),
                 Tokens.Symbol("1in"),
                 Tokens.WhiteSpace(),
                 Tokens.Plus(),
                 Tokens.WhiteSpace(),
-                Tokens.Symbol("8pt")
+                Tokens.Symbol("8pt"),
+                Tokens.End()
             };
 
             // Act
@@ -36,12 +38,14 @@
             var input = "1in + -8pt";
             var expected = new Token[]
             {
+                Tokens.Begin(),
                 Tokens.Symbol("1in"),
                 Tokens.WhiteSpace(),
                 Tokens.Plus(),
                 Tokens.WhiteSpace(),
                 Tokens.Minus(),
-                Tokens.Symbol("8pt")
+                Tokens.Symbol("8pt"),
+                Tokens.End()
             };
 
             // Act
@@ -59,13 +63,15 @@
             var input = "(1in + 8pt)";
             var expected = new Token[]
             {
+                Tokens.Begin(),
                 Tokens.LParen(),
                 Tokens.Symbol("1in"),
                 Tokens.WhiteSpace(),
                 Tokens.Plus(),
                 Tokens.WhiteSpace(),
                 Tokens.Symbol("8pt"),
-                Tokens.RParen()
+                Tokens.RParen(),
+                Tokens.End()
             };
 
             // Act

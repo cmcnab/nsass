@@ -4,6 +4,16 @@
 
     public static class Tokens
     {
+        public static Token Begin()
+        {
+            return new Token(TokenType.BeginStream, null);
+        }
+
+        public static Token End()
+        {
+            return new Token(TokenType.EndOfStream, null);
+        }
+
         public static Token WhiteSpace()
         {
             return new Token(TokenType.WhiteSpace, " ");

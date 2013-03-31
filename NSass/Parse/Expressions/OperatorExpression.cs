@@ -1,4 +1,4 @@
-﻿namespace NSass.Parse
+﻿namespace NSass.Parse.Expressions
 {
     using NSass.Script;
 

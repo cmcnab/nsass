@@ -1,5 +1,6 @@
-﻿namespace NSass.Parse
+﻿namespace NSass.Parse.Parselets
 {
+    using NSass.Parse.Expressions;
     using NSass.Script;
 
     public class PrefixOperatorParselet : IPrefixParselet
@@ -11,7 +12,7 @@
             this.precedence = precedence;
         }
 
-        public IExpression Parse(Parser parser, Token token)
+        public IExpression Parse(IParser parser, Token token)
         {
             var operand = parser.Parse(this.precedence);
             return new PrefixExpression(token.Type, operand);

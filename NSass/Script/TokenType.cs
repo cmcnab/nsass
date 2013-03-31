@@ -2,6 +2,7 @@
 {
     public enum TokenType
     {
+        BeginStream,
         WhiteSpace,
         SymLit,
         Variable,
@@ -20,7 +21,7 @@
         ////Mod,
         ////SingleEq,
         LParen,
-        RParen
+        RParen,
         ////And,
         ////Or,
         ////Not,
@@ -31,5 +32,6 @@
         ////Gt,
         ////Lt,
         ////Splat
+        EndOfStream
     }
 }

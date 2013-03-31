@@ -2,10 +2,12 @@
 {
     using System.Collections.Generic;
     using System.Linq;
+    using NSass.Parse.Expressions;
+    using NSass.Parse.Parselets;
     using NSass.Script;
     using NSass.Util;
 
-    public class Parser
+    public class Parser : IParser
     {
         private ParseContext tokens;
         private Dictionary<TokenType, IPrefixParselet> prefixParselets;
@@ -17,6 +19,11 @@
             this.prefixParselets = new Dictionary<TokenType, IPrefixParselet>();
             this.infixParselets = new Dictionary<TokenType, IInfixParselet>();
             this.DefineGrammar();
+        }
+
+        public ParseContext Tokens
+        {
+            get { return this.tokens; }
         }
 
         public IExpression Parse()
@@ -77,7 +84,12 @@
 
         private void DefineGrammar()
         {
+            this.Register(TokenType.BeginStream, new BodyParselet(true));
+            this.Register(TokenType.LCurly, new BodyParselet(false));
+            this.Register(TokenType.Colon, new PropertyParselet());
+
             this.Register(TokenType.SymLit, new NameParselet());
+
             this.Prefix(TokenType.Plus);
             this.Prefix(TokenType.Minus);
             this.Register(TokenType.Plus, new BinaryOperatorParselet(Precedence.Plus, false));

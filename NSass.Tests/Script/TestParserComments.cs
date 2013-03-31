@@ -5,7 +5,7 @@
 
     public class TestParserComments
     {
-        [Fact]
+        [Fact(Skip = "Need to switch to new parser.")]
         public void BlockCommentParsesCorrectly()
         {
             // Arrange

@@ -19,6 +19,7 @@
 }";
             var expected = new Token[]
             {
+                Tokens.Begin(),
                 Tokens.Symbol("a"),
                 Tokens.WhiteSpace(),
                 Tokens.LCurly(),
@@ -37,7 +38,8 @@
                 Tokens.Symbol("none"),
                 Tokens.SemiColon(),
                 Tokens.WhiteSpace(),
-                Tokens.EndInterpolation()
+                Tokens.EndInterpolation(),
+                Tokens.End()
             };
 
             // Act
@@ -58,6 +60,7 @@
 }";
             var expected = new Token[]
             {
+                Tokens.Begin(),
                 Tokens.Symbol("a"),
                 Tokens.WhiteSpace(),
                 Tokens.LCurly(),
@@ -74,7 +77,8 @@
                 Tokens.Symbol("none"),
                 Tokens.SemiColon(),
                 Tokens.WhiteSpace(),
-                Tokens.EndInterpolation()
+                Tokens.EndInterpolation(),
+                Tokens.End()
             };
 
             // Act
@@ -96,6 +100,7 @@
 }";
             var expected = new Token[]
             {
+                Tokens.Begin(),
                 Tokens.Symbol("a"),
                 Tokens.WhiteSpace(),
                 Tokens.LCurly(),
@@ -113,7 +118,8 @@
                 Tokens.Symbol("none"),
                 Tokens.SemiColon(),
                 Tokens.WhiteSpace(),
-                Tokens.EndInterpolation()
+                Tokens.EndInterpolation(),
+                Tokens.End()
             };
 
             // Act

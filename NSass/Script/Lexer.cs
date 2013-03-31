@@ -66,6 +66,8 @@
 
         public IEnumerable<Token> Read(TextReader input)
         {
+            yield return new Token(TokenType.BeginStream, null);
+
             bool inBlockComment = false;
             bool inLineComment = false;
             bool singleSpecial = false;
@@ -191,6 +193,8 @@
             {
                 yield return this.EatToken();
             }
+
+            yield return new Token(TokenType.EndOfStream, null);
         }
 
         private static bool IsSpecialChar(char c, out bool singleSpecial)

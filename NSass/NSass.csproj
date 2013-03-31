@@ -31,6 +31,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Collections.Immutable">
+      <HintPath>..\packages\Microsoft.Bcl.Immutable.1.0.8-beta\lib\net45\System.Collections.Immutable.dll</HintPath>
+    </Reference>
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -41,6 +44,15 @@
   <ItemGroup>
     <Compile Include="Engine.cs" />
     <Compile Include="ISassCompiler.cs" />
+    <Compile Include="Parse\Expressions\Body.cs" />
+    <Compile Include="Parse\Expressions\Literal.cs" />
+    <Compile Include="Parse\Expressions\Property.cs" />
+    <Compile Include="Parse\Expressions\Root.cs" />
+    <Compile Include="Parse\Expressions\Rule.cs" />
+    <Compile Include="Parse\Expressions\Selectors.cs" />
+    <Compile Include="Parse\Expressions\SimpleProperty.cs" />
+    <Compile Include="Parse\Expressions\Statement.cs" />
+    <Compile Include="Parse\IParser.cs" />
     <Compile Include="Parse\Parselets\BinaryOperatorParselet.cs" />
     <Compile Include="Parse\Parselets\GroupParselet.cs" />
     <Compile Include="Parse\Expressions\IExpression.cs" />
@@ -48,6 +60,8 @@
     <Compile Include="Parse\Expressions\NameExpression.cs" />
     <Compile Include="Parse\Parselets\NameParselet.cs" />
     <Compile Include="Parse\Expressions\OperatorExpression.cs" />
+    <Compile Include="Parse\Parselets\BodyParselet.cs" />
+    <Compile Include="Parse\Parselets\PropertyParselet.cs" />
     <Compile Include="Parse\Parser.cs" />
     <Compile Include="Parse\Parselets\IPrefixParselet.cs" />
     <Compile Include="Parse\Precedence.cs" />
@@ -85,6 +99,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scss\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -1,5 +1,6 @@
-﻿namespace NSass.Parse
+﻿namespace NSass.Parse.Parselets
 {
+    using NSass.Parse.Expressions;
     using NSass.Script;
 
     public class BinaryOperatorParselet : IInfixParselet
@@ -18,7 +19,7 @@
             get { return this.precedence; }
         }
 
-        public IExpression Parse(Parser parser, IExpression left, Token token)
+        public IExpression Parse(IParser parser, IExpression left, Token token)
         {
             var right = parser.Parse(this.precedence - (this.isRight ? 1 : 0));
             return new OperatorExpression(left, token.Type, right);
