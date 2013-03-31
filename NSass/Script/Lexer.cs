@@ -23,8 +23,11 @@
             TokenTypes.Add(",", TokenType.Comma);
             TokenTypes.Add("&", TokenType.Ampersand);
             TokenTypes.Add("+", TokenType.Plus);
+            //TokenTypes.Add("-", TokenType.Minus);
             TokenTypes.Add("/", TokenType.Div);
             TokenTypes.Add("*", TokenType.Times);
+            TokenTypes.Add("(", TokenType.LParen);
+            TokenTypes.Add(")", TokenType.RParen);
 
             SpecialChars = new Dictionary<char, bool>();
             SpecialChars.Add('{', true);
@@ -34,8 +37,11 @@
             SpecialChars.Add(',', true);
             SpecialChars.Add('&', true);
             SpecialChars.Add('+', true);
+            //SpecialChars.Add('-', true);
             SpecialChars.Add('/', false);
             SpecialChars.Add('*', false);
+            SpecialChars.Add('(', true);
+            SpecialChars.Add(')', true);
         }
 
         public Lexer()

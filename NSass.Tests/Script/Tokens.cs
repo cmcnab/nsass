@@ -59,9 +59,24 @@
             return new Token(TokenType.Plus, "+");
         }
 
+        public static Token Minus()
+        {
+            return new Token(TokenType.Minus, "-");
+        }
+
         public static Token Div()
         {
             return new Token(TokenType.Div, "/");
+        }
+
+        public static Token LParen()
+        {
+            return new Token(TokenType.LParen, "(");
+        }
+
+        public static Token RParen()
+        {
+            return new Token(TokenType.RParen, ")");
         }
     }
 }

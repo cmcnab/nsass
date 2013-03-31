@@ -1,43 +1,55 @@
 ﻿namespace NSass.Script
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     public class ParseContext
     {
         private IEnumerator<Token> iterator;
-        private Queue<Token> lookAhead;
-        private Token current;
+        private List<Token> buffer; // TODO: deque
 
         public ParseContext(IEnumerable<Token> tokens)
         {
             this.iterator = tokens.GetEnumerator();
-            this.lookAhead = new Queue<Token>();
-            this.current = null;
+            this.buffer = new List<Token>();
         }
 
         public Token Current
         {
-            get { return this.current; }
+            get { return this.buffer.FirstOrDefault(); }
         }
 
         public Token Peek()
         {
-            var next = this.GetNext();
-            if (next == null)
+            return this.LookAhead(1);
+        }
+
+        public Token LookAhead(int distance)
+        {
+            while (distance >= this.buffer.Count)
             {
-                return null;
+                var next = this.GetNext();
+                if (next == null)
+                {
+                    break;
+                }
+
+                this.buffer.Add(next);
             }
 
-            this.lookAhead.Enqueue(next);
-            return next;
+            return distance < this.buffer.Count
+                ? this.buffer[distance]
+                : null;
         }
 
         public Token MoveNext()
         {
-            this.current = this.lookAhead.Count > 0 
-                ? this.lookAhead.Dequeue()
-                : this.GetNext();
-            return this.current;
+            if (this.buffer.Any())
+            {
+                this.buffer.RemoveAt(0);
+            }
+
+            return this.LookAhead(0);
         }
 
         private Token GetNext()

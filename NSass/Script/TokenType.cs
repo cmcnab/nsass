@@ -14,13 +14,13 @@
         Comma,
         Ampersand,
         Plus,
-        ////Minus,
+        Minus,
         Times,
-        Div
+        Div,
         ////Mod,
         ////SingleEq,
-        ////LParen,
-        ////RParen,        
+        LParen,
+        RParen
         ////And,
         ////Or,
         ////Not,

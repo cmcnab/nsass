@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSass.Script;
-using Xunit;
-
-namespace NSass.Tests.Script
+﻿namespace NSass.Tests.Script
 {
+    using System.Linq;
+    using NSass.Script;
+    using Xunit;
+
     public class TestLexerExpressions
     {
         [Fact]
@@ -15,14 +11,61 @@ namespace NSass.Tests.Script
         {
             // Arrange
             var lexer = new Lexer();
-            var input = "11in + 8pt";
+            var input = "1in + 8pt";
             var expected = new Token[]
             {
-                Tokens.Symbol("11in"),
+                Tokens.Symbol("1in"),
                 Tokens.WhiteSpace(),
                 Tokens.Plus(),
                 Tokens.WhiteSpace(),
                 Tokens.Symbol("8pt")
+            };
+
+            // Act
+            var tokens = lexer.ReadString(input).ToList();
+
+            // Assert
+            Assert.Equal(expected, tokens, new TokenComparer());
+        }
+
+        [Fact(Skip = "Need to figure out how to deal with minus signs in property names.")]
+        public void NegationLexesCorrectly()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input = "1in + -8pt";
+            var expected = new Token[]
+            {
+                Tokens.Symbol("1in"),
+                Tokens.WhiteSpace(),
+                Tokens.Plus(),
+                Tokens.WhiteSpace(),
+                Tokens.Minus(),
+                Tokens.Symbol("8pt")
+            };
+
+            // Act
+            var tokens = lexer.ReadString(input).ToList();
+
+            // Assert
+            Assert.Equal(expected, tokens, new TokenComparer());
+        }
+
+        [Fact]
+        public void ParenthesesLexCorrectly()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input = "(1in + 8pt)";
+            var expected = new Token[]
+            {
+                Tokens.LParen(),
+                Tokens.Symbol("1in"),
+                Tokens.WhiteSpace(),
+                Tokens.Plus(),
+                Tokens.WhiteSpace(),
+                Tokens.Symbol("8pt"),
+                Tokens.RParen()
             };
 
             // Act
