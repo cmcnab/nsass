@@ -44,6 +44,11 @@
             return new NameExpression(value);
         }
 
+        public static Comment Comment(string text)
+        {
+            return new Comment(text);
+        }
+
         private static bool ExpressionsEqual(Rule rule, IExpression other)
         {
             var otherRule = other as Rule;
@@ -88,6 +93,17 @@
 
             return prop.Name == otherProp.Name
                 && ExpressionsEqual((dynamic)prop.Expression, otherProp.Expression);
+        }
+
+        private static bool ExpressionsEqual(Comment comment, IExpression other)
+        {
+            var otherComment = other as Comment;
+            if (otherComment == null)
+            {
+                return false;
+            }
+
+            return comment.Text == otherComment.Text;
         }
 
         private static bool ExpressionsEqual(OperatorExpression op, IExpression other)

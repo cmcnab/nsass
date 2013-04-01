@@ -7,17 +7,24 @@
 
     public class TestParserExpressions
     {
-        [Fact(Skip = "Need to switch to root model.")]
+        [Fact]
         public void AdditionExpressionParsesCorrectly()
         {
             // Arrange
             var lexer = new Lexer();
             var input =
-@"1in + 8pt";
-            var expected = new OperatorExpression(
-                                new NameExpression("1in"),
-                                TokenType.Plus,
-                                new NameExpression("8pt"));
+@"#main {
+  font-size: 1in + 8pt;
+}";
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "#main",
+                                Expr.Property(
+                                    "font-size",
+                                    new OperatorExpression(
+                                        Expr.Literal("1in"),
+                                        TokenType.Plus,
+                                        Expr.Literal("8pt")))));
 
             // Act
             var parser = new Parse.Parser(lexer.ReadString(input));

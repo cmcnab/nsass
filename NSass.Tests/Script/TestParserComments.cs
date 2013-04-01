@@ -5,27 +5,32 @@
 
     public class TestParserComments
     {
-        [Fact(Skip = "Need to switch to new parser.")]
+        [Fact]
         public void BlockCommentParsesCorrectly()
         {
             // Arrange
             var lexer = new Lexer();
-            var parser = new Parser();
             var input =
 @"a {
   font-weight: bold;/* comment here */text-decoration: none;
 }";
-            var expected = Tree.Root().AppendAll(
-                Tree.Rule("a").AppendAll(
-                    Tree.PropertyLiteral("font-weight", "bold"),
-                    Tree.Comment("/* comment here */"),
-                    Tree.PropertyLiteral("text-decoration", "none")));
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "a",
+                                Expr.Property(
+                                    "font-weight",
+                                    Expr.Literal("bold")),
+                                Expr.Comment("/* comment here */"),
+                                Expr.Property(
+                                    "text-decoration",
+                                    Expr.Literal("none"))));
 
             // Act
-            var ast = parser.Parse(lexer.ReadString(input));
+            var parser = new Parse.Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
 
             // Assert
-            expected.AssertEqualTree(ast);
+            Assert.Equal(expected, ast, Expr.Comparer);
         }
     }
 }

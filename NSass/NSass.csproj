@@ -45,6 +45,7 @@
     <Compile Include="Engine.cs" />
     <Compile Include="ISassCompiler.cs" />
     <Compile Include="Parse\Expressions\Body.cs" />
+    <Compile Include="Parse\Expressions\Comment.cs" />
     <Compile Include="Parse\Expressions\Literal.cs" />
     <Compile Include="Parse\Expressions\Property.cs" />
     <Compile Include="Parse\Expressions\Root.cs" />

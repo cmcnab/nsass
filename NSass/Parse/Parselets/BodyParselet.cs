@@ -58,6 +58,10 @@
             var first = parser.Tokens.LookAhead(1);
             switch (first.Type)
             {
+                case TokenType.Comment:
+                    parser.Tokens.MoveNext();
+                    return new Comment(parser.Tokens.Current.Value);
+
                 case TokenType.EndInterpolation:
                     return null;
 
