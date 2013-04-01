@@ -1,7 +1,7 @@
 ﻿namespace NSass.Tests.Script
 {
     using System.Collections.Generic;
-    using NSass.Script;
+    using NSass.Lex;
 
     public class TokenComparer : IEqualityComparer<Token>
     {

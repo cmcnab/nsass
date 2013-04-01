@@ -1,6 +1,6 @@
 ﻿namespace NSass.Tests.Script
 {
-    using NSass.Script;
+    using NSass.Lex;
 
     public static class Tokens
     {

@@ -4,7 +4,7 @@
     using System.Linq;
     using NSass.Parse.Expressions;
     using NSass.Parse.Parselets;
-    using NSass.Script;
+    using NSass.Lex;
     using NSass.Util;
 
     public class Parser : IParser

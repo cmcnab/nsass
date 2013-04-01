@@ -1,6 +1,6 @@
 ﻿namespace NSass.Parse.Expressions
 {
-    public abstract class Name : INode
+    public abstract class Name : Node
     {
         private readonly string value;
 

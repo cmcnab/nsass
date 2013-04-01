@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using NSass.Parse.Expressions;
-    using NSass.Script;
+    using NSass.Lex;
 
     public class BodyParselet : IPrefixParselet
     {
@@ -96,7 +96,7 @@
 
             // End one before the LCurly so it will invoke the body parser again.
             var body = parser.Parse();
-            return new Rule(new Selectors(selectors), (Body)body);
+            return new Rule(selectors, (Body)body);
         }
 
         private IEnumerable<string> GatherSelectors(IParser parser)

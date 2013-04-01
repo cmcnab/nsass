@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public class Body : INode
+    public class Body : Node
     {
         private readonly IReadOnlyList<INode> statements;
 

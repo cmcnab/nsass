@@ -1,4 +1,4 @@
-﻿namespace NSass.Script
+﻿namespace NSass.Lex
 {
     using System.Collections.Generic;
     using System.IO;

@@ -1,7 +1,8 @@
-﻿namespace NSass.Script
+﻿namespace NSass.Parse
 {
     using System.Collections.Generic;
     using System.Linq;
+    using NSass.Lex;
 
     public class ParseContext
     {

@@ -1,8 +1,8 @@
 ﻿namespace NSass.Parse.Expressions
 {
-    using NSass.Script;
+    using NSass.Lex;
 
-    public class OperatorExpression : INode
+    public class OperatorExpression : Node
     {
         private readonly INode left;
         private readonly INode right;

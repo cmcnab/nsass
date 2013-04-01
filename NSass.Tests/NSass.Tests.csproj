@@ -42,6 +42,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Evaluate\TestEvaluator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Script\Expr.cs" />
     <Compile Include="Script\TestLexer.cs" />
@@ -52,7 +53,6 @@
     <Compile Include="Script\TestParserExpressions.cs" />
     <Compile Include="Script\TokenComparer.cs" />
     <Compile Include="Script\Tokens.cs" />
-    <Compile Include="Script\Tree.cs" />
     <Compile Include="TestEngine.cs" />
   </ItemGroup>
   <ItemGroup>

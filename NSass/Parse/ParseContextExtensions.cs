@@ -1,6 +1,7 @@
-﻿namespace NSass.Script
+﻿namespace NSass.Parse
 {
     using System;
+    using NSass.Lex;
 
     public static class ParseContextExtensions
     {

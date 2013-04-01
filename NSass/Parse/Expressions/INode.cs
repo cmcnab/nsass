@@ -2,5 +2,6 @@
 {
     public interface INode
     {
+        INode Parent { get; }
     }
 }

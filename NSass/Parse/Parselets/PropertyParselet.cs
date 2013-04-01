@@ -1,7 +1,7 @@
 ﻿namespace NSass.Parse.Parselets
 {
     using NSass.Parse.Expressions;
-    using NSass.Script;
+    using NSass.Lex;
 
     public class PropertyParselet : IInfixParselet
     {

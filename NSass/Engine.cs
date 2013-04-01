@@ -1,24 +1,21 @@
 ﻿namespace NSass
 {
     using System.IO;
-    using NSass.Script;
-    using NSass.Tree;
+    using NSass.Lex;
+    using NSass.Parse;
 
     public class Engine : ISassCompiler
     {
-        private readonly Lexer lexer;
-        private readonly Parser parser;
-
         public Engine()
         {
-            this.lexer = new Lexer();
-            this.parser = new Parser();
         }
 
         public void Compile(TextReader input, TextWriter output)
         {
-            var ast = this.parser.Parse(this.lexer.Read(input));
-            ast.ToCss(output);
+            var lexer = new Lexer();
+            var parser = new Parser(lexer.Read(input));
+            var ast = parser.Parse();
+            //ast.ToCss(output);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace NSass.Tests.Script
 {
     using System.Linq;
-    using NSass.Script;
+    using NSass.Lex;
     using Xunit;
 
     public class TestLexerExpressions

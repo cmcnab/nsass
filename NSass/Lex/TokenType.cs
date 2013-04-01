@@ -1,4 +1,4 @@
-﻿namespace NSass.Script
+﻿namespace NSass.Lex
 {
     public enum TokenType
     {

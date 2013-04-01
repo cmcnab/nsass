@@ -26,7 +26,7 @@
 
         public static Rule Rule(IEnumerable<string> selectors, params INode[] statements)
         {
-            return new Rule(new Selectors(new List<string>(selectors)), new Body(new List<INode>(statements)));
+            return new Rule(new List<string>(selectors), new Body(new List<INode>(statements)));
         }
 
         public static Property Property(string name, INode expression)
@@ -67,7 +67,7 @@
                 return false;
             }
 
-            return ExpressionsEqual(rule.Selectors, otherRule.Selectors)
+            return Enumerable.SequenceEqual(rule.Selectors, otherRule.Selectors)
                 && ExpressionsEqual(rule.Body, otherRule.Body);
         }
 
@@ -80,17 +80,6 @@
             }
 
             return Enumerable.SequenceEqual(body.Statements, otherBody.Statements, Comparer);
-        }
-
-        private static bool ExpressionsEqual(Selectors selectors, INode other)
-        {
-            var otherSelectors = other as Selectors;
-            if (otherSelectors == null)
-            {
-                return false;
-            }
-
-            return Enumerable.SequenceEqual(selectors.Values, otherSelectors.Values);
         }
 
         private static bool ExpressionsEqual(Property prop, INode other)

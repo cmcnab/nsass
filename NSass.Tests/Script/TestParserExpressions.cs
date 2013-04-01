@@ -2,7 +2,7 @@
 {
     using NSass.Parse;
     using NSass.Parse.Expressions;
-    using NSass.Script;
+    using NSass.Lex;
     using Xunit;
 
     public class TestParserExpressions

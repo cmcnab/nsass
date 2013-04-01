@@ -4,16 +4,16 @@
 
     public class Rule : Statement
     {
-        private readonly Selectors selectors;
+        private readonly IReadOnlyList<string> selectors;
         private readonly Body body;
 
-        public Rule(Selectors selectors, Body body)
+        public Rule(IReadOnlyList<string> selectors, Body body)
         {
             this.selectors = selectors;
             this.body = body;
         }
 
-        public Selectors Selectors
+        public IReadOnlyList<string> Selectors
         {
             get { return this.selectors; }
         }

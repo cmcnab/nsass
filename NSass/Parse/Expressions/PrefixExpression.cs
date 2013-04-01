@@ -1,8 +1,8 @@
 ﻿namespace NSass.Parse.Expressions
 {
-    using NSass.Script;
+    using NSass.Lex;
 
-    public class PrefixExpression : INode
+    public class PrefixExpression : Node
     {
         private readonly TokenType type;
         private readonly INode operand;
