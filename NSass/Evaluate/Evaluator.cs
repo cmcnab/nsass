@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using NSass.Parse.Expressions;
-using NSass.Visitors;
 
 namespace NSass.Evaluate
 {

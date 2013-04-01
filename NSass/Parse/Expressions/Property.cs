@@ -20,5 +20,7 @@
         {
             get { return this.expression; }
         }
+
+        public string Value { get; set; } // TODO: get calculated
     }
 }
