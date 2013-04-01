@@ -84,23 +84,29 @@
         {
             // Arrange
             var lexer = new Lexer();
-            var parser = new Parser();
             var input =
 @"#main {
   color: #00ff00;
   ul { list-style-type: none }
 }";
-            var expected = Tree.Root().AppendAll(
-                Tree.Rule("#main").AppendAll(
-                    Tree.PropertyLiteral("color", "#00ff00"),
-                    Tree.Rule("#main ul").AppendAll(
-                        Tree.PropertyLiteral("list-style-type", "none"))));
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "#main",
+                                Expr.Property(
+                                    "color",
+                                    Expr.Literal("#00ff00")),
+                                Expr.Rule(
+                                    "ul",
+                                    Expr.Property(
+                                        "list-style-type",
+                                        Expr.Literal("none")))));
 
             // Act
-            var ast = parser.Parse(lexer.ReadString(input));
+            var parser = new Parse.Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
 
             // Assert
-            expected.AssertEqualTree(ast);
+            Assert.Equal(expected, ast, Expr.Comparer);
         }
 
         [Fact]
@@ -187,28 +193,65 @@
             Assert.Equal(expected, ast, Expr.Comparer);
         }
 
-        [Fact(Skip = "Need to switch to new parser.")]
+        [Fact]
+        public void MultipleRulesParsesCorrectly()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input =
+@"#main {
+  color: #00ff00;
+}
+
+#foo {
+  list-style-type: none;
+}";
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "#main",
+                                Expr.Property(
+                                    "color",
+                                    Expr.Literal("#00ff00"))),
+                            Expr.Rule(
+                                "#foo",
+                                Expr.Property(
+                                    "list-style-type",
+                                    Expr.Literal("none"))));
+
+            // Act
+            var parser = new Parse.Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
+
+            // Assert
+            Assert.Equal(expected, ast, Expr.Comparer);
+        }
+
+        [Fact]
         public void NestedPropertyParsesCorrectly()
         {
             // Arrange
             var lexer = new Lexer();
-            var parser = new Parser();
             var input =
 @"#main {
   border: {
     style: solid;
   }
 }";
-            var expected = Tree.Root().AppendAll(
-                Tree.Rule("#main").AppendAll(
-                    Tree.Property("border").AppendAll(
-                        Tree.PropertyLiteral("style", "solid"))));
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "#main",
+                                Expr.NestedProperty(
+                                    "border",
+                                    Expr.Property(
+                                        "style",
+                                        Expr.Literal("solid")))));
 
             // Act
-            var ast = parser.Parse(lexer.ReadString(input));
+            var parser = new Parse.Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
 
             // Assert
-            expected.AssertEqualTree(ast);
+            Assert.Equal(expected, ast, Expr.Comparer);
         }
 
         [Fact(Skip = "Need to switch to new parser.")]

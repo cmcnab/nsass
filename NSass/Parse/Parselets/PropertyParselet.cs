@@ -14,8 +14,7 @@
         {
             var nameExp = (NameExpression)left;
             var expression = parser.Parse();
-            parser.Consume(TokenType.SemiColon, "Expecting ';'"); // TODO: make its existance optional?
-            //parser.Consume();
+            parser.Tokens.MoveNextIfNextIs(TokenType.SemiColon);
             return new Property(nameExp.Name, expression);
         }
     }

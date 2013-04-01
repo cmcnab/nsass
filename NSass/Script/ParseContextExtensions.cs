@@ -36,9 +36,10 @@
             return token;
         }
 
-        public static ParseContext MoveNextIfIs(this ParseContext context, TokenType type)
+        public static ParseContext MoveNextIfNextIs(this ParseContext context, TokenType type)
         {
-            if (context.Current.Type == type)
+            var next = context.Peek();
+            if (next.Type == type)
             {
                 context.MoveNext();
             }

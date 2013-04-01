@@ -34,6 +34,11 @@
             return new Property(name, expression);
         }
 
+        public static Property NestedProperty(string name, params IExpression[] statements)
+        {
+            return new Property(name, new Body(new List<IExpression>(statements)));
+        }
+
         public static NameExpression Literal(string value)
         {
             return new NameExpression(value);

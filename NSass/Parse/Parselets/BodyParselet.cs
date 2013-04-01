@@ -30,11 +30,7 @@
                 if (statement != null)
                 {
                     statements.Add(statement);
-                }
-                else
-                {
-                    parser.Tokens.MoveNextIfIs(TokenType.SemiColon); // TODO: necessary?
-                }                
+                }             
             }
 
             if (!this.isRoot)
