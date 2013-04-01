@@ -7,6 +7,6 @@
     {
         int Precedence { get; }
 
-        IExpression Parse(IParser parser, IExpression left, Token token);
+        INode Parse(IParser parser, INode left, Token token);
     }
 }

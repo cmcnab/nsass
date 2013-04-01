@@ -5,7 +5,7 @@
 
     public class GroupParselet : IPrefixParselet
     {
-        public IExpression Parse(IParser parser, Token token)
+        public INode Parse(IParser parser, Token token)
         {
             var expression = parser.Parse();
             parser.Consume(TokenType.RParen, "Expecting ')'");

@@ -42,11 +42,11 @@
             var input =
 @"1in + -8pt";
             var expected = new OperatorExpression(
-                                new NameExpression("1in"),
+                                Expr.Literal("1in"),
                                 TokenType.Plus,
                                 new PrefixExpression(
                                     TokenType.Minus,
-                                    new NameExpression("8pt")));
+                                    Expr.Literal("8pt")));
 
             // Act
             var parser = new Parse.Parser(lexer.ReadString(input));
@@ -64,12 +64,12 @@
             var input =
 @"8 * 9 * 1";
             var expected = new OperatorExpression(
-                                new NameExpression("8"),
+                                Expr.Literal("8"),
                                 TokenType.Times,
                                 new OperatorExpression(
-                                    new NameExpression("9"),
+                                    Expr.Literal("9"),
                                     TokenType.Times,
-                                    new NameExpression("1")));
+                                    Expr.Literal("1")));
 
             // Act
             var parser = new Parse.Parser(lexer.ReadString(input));
@@ -87,12 +87,12 @@
             var input =
 @"8 + 9 * 2";
             var expected = new OperatorExpression(
-                                new NameExpression("8"),
+                                Expr.Literal("8"),
                                 TokenType.Plus,
                                 new OperatorExpression(
-                                    new NameExpression("9"),
+                                    Expr.Literal("9"),
                                     TokenType.Times,
-                                    new NameExpression("2")));
+                                    Expr.Literal("2")));
 
             // Act
             var parser = new Parse.Parser(lexer.ReadString(input));
@@ -111,11 +111,11 @@
 @"(8 + 9) * 2";
             var expected = new OperatorExpression(
                                 new OperatorExpression(
-                                    new NameExpression("8"),
+                                    Expr.Literal("8"),
                                     TokenType.Plus,
-                                    new NameExpression("9")),
+                                    Expr.Literal("9")),
                                 TokenType.Times,
-                                new NameExpression("2"));
+                                Expr.Literal("2"));
 
             // Act
             var parser = new Parse.Parser(lexer.ReadString(input));

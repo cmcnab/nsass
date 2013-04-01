@@ -2,12 +2,12 @@
 {
     using NSass.Script;
 
-    public class PrefixExpression : IExpression
+    public class PrefixExpression : INode
     {
         private readonly TokenType type;
-        private readonly IExpression operand;
+        private readonly INode operand;
 
-        public PrefixExpression(TokenType type, IExpression operand)
+        public PrefixExpression(TokenType type, INode operand)
         {
             this.type = type;
             this.operand = operand;
@@ -18,7 +18,7 @@
             get { return this.type; }
         }
 
-        public IExpression Operand
+        public INode Operand
         {
             get { return this.operand; }
         }

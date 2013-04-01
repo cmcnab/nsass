@@ -4,7 +4,7 @@
 
     public class Root : Body
     {
-        public Root(IReadOnlyList<IExpression> statements)
+        public Root(IReadOnlyList<INode> statements)
             : base(statements)
         {
         }

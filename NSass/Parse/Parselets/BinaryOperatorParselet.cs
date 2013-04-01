@@ -19,7 +19,7 @@
             get { return this.precedence; }
         }
 
-        public IExpression Parse(IParser parser, IExpression left, Token token)
+        public INode Parse(IParser parser, INode left, Token token)
         {
             var right = parser.Parse(this.precedence - (this.isRight ? 1 : 0));
             return new OperatorExpression(left, token.Type, right);

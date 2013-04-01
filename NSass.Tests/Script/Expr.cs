@@ -7,41 +7,51 @@
 
     public static class Expr
     {
-        private static readonly IEqualityComparer<IExpression> ExprComparer = new LambdaComparer<IExpression>((a, b) => ExpressionsEqual((dynamic)a, b));
+        private static readonly IEqualityComparer<INode> ExprComparer = new LambdaComparer<INode>((a, b) => ExpressionsEqual((dynamic)a, b));
 
-        public static IEqualityComparer<IExpression> Comparer
+        public static IEqualityComparer<INode> Comparer
         {
             get { return ExprComparer; }
         }
 
-        public static Root Root(params IExpression[] statements)
+        public static Root Root(params INode[] statements)
         {
-            return new Root(new List<IExpression>(statements));
+            return new Root(new List<INode>(statements));
         }
 
-        public static Rule Rule(string singleSelector, params IExpression[] statements)
+        public static Rule Rule(string singleSelector, params INode[] statements)
         {
             return Rule(Params.Get(singleSelector), statements);
         }
 
-        public static Rule Rule(IEnumerable<string> selectors, params IExpression[] statements)
+        public static Rule Rule(IEnumerable<string> selectors, params INode[] statements)
         {
-            return new Rule(new Selectors(new List<string>(selectors)), new Body(new List<IExpression>(statements)));
+            return new Rule(new Selectors(new List<string>(selectors)), new Body(new List<INode>(statements)));
         }
 
-        public static Property Property(string name, IExpression expression)
+        public static Property Property(string name, INode expression)
         {
             return new Property(name, expression);
         }
 
-        public static Property NestedProperty(string name, params IExpression[] statements)
+        public static Property NestedProperty(string name, params INode[] statements)
         {
-            return new Property(name, new Body(new List<IExpression>(statements)));
+            return new Property(name, new Body(new List<INode>(statements)));
         }
 
-        public static NameExpression Literal(string value)
+        public static Assignment Assignment(string name, INode expression)
         {
-            return new NameExpression(value);
+            return new Assignment(name, expression);
+        }
+
+        public static Literal Literal(string value)
+        {
+            return new Literal(value);
+        }
+
+        public static Variable Variable(string name)
+        {
+            return new Variable(name);
         }
 
         public static Comment Comment(string text)
@@ -49,7 +59,7 @@
             return new Comment(text);
         }
 
-        private static bool ExpressionsEqual(Rule rule, IExpression other)
+        private static bool ExpressionsEqual(Rule rule, INode other)
         {
             var otherRule = other as Rule;
             if (otherRule == null)
@@ -61,7 +71,7 @@
                 && ExpressionsEqual(rule.Body, otherRule.Body);
         }
 
-        private static bool ExpressionsEqual(Body body, IExpression other)
+        private static bool ExpressionsEqual(Body body, INode other)
         {
             var otherBody = other as Body;
             if (otherBody == null)
@@ -72,7 +82,7 @@
             return Enumerable.SequenceEqual(body.Statements, otherBody.Statements, Comparer);
         }
 
-        private static bool ExpressionsEqual(Selectors selectors, IExpression other)
+        private static bool ExpressionsEqual(Selectors selectors, INode other)
         {
             var otherSelectors = other as Selectors;
             if (otherSelectors == null)
@@ -83,7 +93,7 @@
             return Enumerable.SequenceEqual(selectors.Values, otherSelectors.Values);
         }
 
-        private static bool ExpressionsEqual(Property prop, IExpression other)
+        private static bool ExpressionsEqual(Property prop, INode other)
         {
             var otherProp = other as Property;
             if (otherProp == null)
@@ -95,7 +105,7 @@
                 && ExpressionsEqual((dynamic)prop.Expression, otherProp.Expression);
         }
 
-        private static bool ExpressionsEqual(Comment comment, IExpression other)
+        private static bool ExpressionsEqual(Comment comment, INode other)
         {
             var otherComment = other as Comment;
             if (otherComment == null)
@@ -106,7 +116,7 @@
             return comment.Text == otherComment.Text;
         }
 
-        private static bool ExpressionsEqual(OperatorExpression op, IExpression other)
+        private static bool ExpressionsEqual(OperatorExpression op, INode other)
         {
             var otherOp = other as OperatorExpression;
             if (otherOp == null)
@@ -119,7 +129,7 @@
                 && ExpressionsEqual((dynamic)op.Right, otherOp.Right);
         }
 
-        private static bool ExpressionsEqual(PrefixExpression prefix, IExpression other)
+        private static bool ExpressionsEqual(PrefixExpression prefix, INode other)
         {
             var otherPrefix = other as PrefixExpression;
             if (otherPrefix == null)
@@ -131,15 +141,15 @@
                 && ExpressionsEqual((dynamic)prefix.Operand, otherPrefix.Operand);
         }
 
-        private static bool ExpressionsEqual(NameExpression name, IExpression other)
+        private static bool ExpressionsEqual(Name name, INode other)
         {
-            var otherName = other as NameExpression;
+            var otherName = other as Name;
             if (otherName == null)
             {
                 return false;
             }
 
-            return name.Name == otherName.Name;
+            return name.Value == otherName.Value;
         }
     }
 }

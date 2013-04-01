@@ -3,9 +3,9 @@
     public class Property : Statement
     {
         private readonly string name;
-        private readonly IExpression expression;
+        private readonly INode expression;
 
-        public Property(string name, IExpression expression)
+        public Property(string name, INode expression)
         {
             this.name = name;
             this.expression = expression;
@@ -16,7 +16,7 @@
             get { return this.name; }
         }
 
-        public IExpression Expression
+        public INode Expression
         {
             get { return this.expression; }
         }

@@ -1,6 +1,6 @@
 ﻿namespace NSass.Parse.Expressions
 {
-    public interface IExpression
+    public interface INode
     {
     }
 }

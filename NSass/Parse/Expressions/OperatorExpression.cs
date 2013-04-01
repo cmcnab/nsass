@@ -2,25 +2,25 @@
 {
     using NSass.Script;
 
-    public class OperatorExpression : IExpression
+    public class OperatorExpression : INode
     {
-        private readonly IExpression left;
-        private readonly IExpression right;
+        private readonly INode left;
+        private readonly INode right;
         private readonly TokenType type;
 
-        public OperatorExpression(IExpression left, TokenType type, IExpression right)
+        public OperatorExpression(INode left, TokenType type, INode right)
         {
             this.left = left;
             this.right = right;
             this.type = type;
         }
 
-        public IExpression Left
+        public INode Left
         {
             get { return this.left; }
         }
 
-        public IExpression Right
+        public INode Right
         {
             get { return this.right; }
         }

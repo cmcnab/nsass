@@ -10,12 +10,19 @@
             get { return 1; } // TODO: what?
         }
 
-        public IExpression Parse(IParser parser, IExpression left, Token token)
+        public INode Parse(IParser parser, INode left, Token token)
         {
-            var nameExp = (NameExpression)left;
+            var nameExp = (Name)left;
             var expression = parser.Parse();
             parser.Tokens.MoveNextIfNextIs(TokenType.SemiColon);
-            return new Property(nameExp.Name, expression);
+            if (left is Assignment)
+            {
+                return new Assignment(nameExp.Value, expression);
+            }
+            else
+            {
+                return new Property(nameExp.Value, expression);
+            }
         }
     }
 }

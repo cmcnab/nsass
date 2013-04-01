@@ -1,6 +1,6 @@
 ﻿namespace NSass.Parse.Expressions
 {
-    public abstract class Statement : IExpression
+    public abstract class Statement : INode
     {
     }
 }

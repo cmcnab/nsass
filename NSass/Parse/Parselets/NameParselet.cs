@@ -5,9 +5,16 @@
 
     public class NameParselet : IPrefixParselet
     {
-        public IExpression Parse(IParser parser, Token token)
+        public INode Parse(IParser parser, Token token)
         {
-            return new NameExpression(token.Value);
+            if (token.Type == TokenType.Variable)
+            {
+                return new Variable(token.Value);
+            }
+            else
+            {
+                return new Literal(token.Value);
+            }
         }
     }
 }

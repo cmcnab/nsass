@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public class Selectors : IExpression
+    public class Selectors : INode
     {
         private readonly IReadOnlyList<string> values;
 

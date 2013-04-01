@@ -2,16 +2,16 @@
 {
     using System.Collections.Generic;
 
-    public class Body : IExpression
+    public class Body : INode
     {
-        private readonly IReadOnlyList<IExpression> statements;
+        private readonly IReadOnlyList<INode> statements;
 
-        public Body(IReadOnlyList<IExpression> statements)
+        public Body(IReadOnlyList<INode> statements)
         {
             this.statements = statements;
         }
 
-        public IReadOnlyList<IExpression> Statements
+        public IReadOnlyList<INode> Statements
         {
             get { return this.statements; }
         }

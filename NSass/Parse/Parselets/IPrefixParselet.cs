@@ -5,6 +5,6 @@
 
     public interface IPrefixParselet
     {
-        IExpression Parse(IParser parser, Token token);
+        INode Parse(IParser parser, Token token);
     }
 }

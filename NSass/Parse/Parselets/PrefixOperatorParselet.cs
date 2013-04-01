@@ -12,7 +12,7 @@
             this.precedence = precedence;
         }
 
-        public IExpression Parse(IParser parser, Token token)
+        public INode Parse(IParser parser, Token token)
         {
             var operand = parser.Parse(this.precedence);
             return new PrefixExpression(token.Type, operand);

@@ -7,9 +7,9 @@
     {
         ParseContext Tokens { get; }
 
-        IExpression Parse();
+        INode Parse();
 
-        IExpression Parse(int precedence);
+        INode Parse(int precedence);
 
         Token Consume();
 

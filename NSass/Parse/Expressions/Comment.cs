@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NSass.Parse.Expressions
 {
-    public class Comment : IExpression
+    public class Comment : INode
     {
         private readonly string text;
 

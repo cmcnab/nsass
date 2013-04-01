@@ -26,12 +26,12 @@
             get { return this.tokens; }
         }
 
-        public IExpression Parse()
+        public INode Parse()
         {
             return this.Parse(0);
         }
 
-        public IExpression Parse(int precedence)
+        public INode Parse(int precedence)
         {
             var token = this.Consume();
             var prefix = this.prefixParselets.GetOrDefault(token.Type);
@@ -89,6 +89,7 @@
             this.Register(TokenType.Colon, new PropertyParselet());
 
             this.Register(TokenType.SymLit, new NameParselet());
+            this.Register(TokenType.Variable, new NameParselet());
 
             this.Prefix(TokenType.Plus);
             this.Prefix(TokenType.Minus);

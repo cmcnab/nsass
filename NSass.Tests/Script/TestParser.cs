@@ -254,12 +254,11 @@
             Assert.Equal(expected, ast, Expr.Comparer);
         }
 
-        [Fact(Skip = "Need to switch to new parser.")]
+        [Fact]
         public void SimpleVariableParsesCorrectly()
         {
             // Arrange
             var lexer = new Lexer();
-            var parser = new Parser();
             var input =
 @"$main-color: #ce4dd6;
 
@@ -268,16 +267,24 @@
     color: $main-color;
   }
 }";
-            var expected = Tree.Root().AppendAll(
-                Tree.Rule("#navbar").AppendAll(
-                    Tree.Property("border-bottom").AppendAll(
-                        Tree.PropertyVariable("color", "$main-color", "#ce4dd6"))));
+            var expected = Expr.Root(
+                            Expr.Assignment(
+                                "$main-color",
+                                Expr.Literal("#ce4dd6")),
+                            Expr.Rule(
+                                "#navbar",
+                                Expr.NestedProperty(
+                                    "border-bottom",
+                                    Expr.Property(
+                                        "color",
+                                        Expr.Variable("$main-color")))));
 
             // Act
-            var ast = parser.Parse(lexer.ReadString(input));
+            var parser = new Parse.Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
 
             // Assert
-            expected.AssertEqualTree(ast);
+            Assert.Equal(expected, ast, Expr.Comparer);
         }
 
         [Fact(Skip = "Need to switch to new parser.")]

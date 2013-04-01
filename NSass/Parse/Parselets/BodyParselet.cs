@@ -14,9 +14,9 @@
             this.isRoot = isRoot;
         }
 
-        public IExpression Parse(IParser parser, Token token)
+        public INode Parse(IParser parser, Token token)
         {
-            var statements = new List<IExpression>();
+            var statements = new List<INode>();
 
             while (true)
             {
@@ -52,7 +52,7 @@
                 || type == TokenType.EndOfStream;
         }
 
-        private IExpression ParseStatement(IParser parser)
+        private INode ParseStatement(IParser parser)
         {
             // TODO: If the first token is a comment, return comment.
             var first = parser.Tokens.LookAhead(1);
@@ -74,6 +74,7 @@
             {
                 case TokenType.Colon:
                     // Assignment or property.
+                    // TODO: no properties on root
                     var property = parser.Parse();
                     return property;
 
