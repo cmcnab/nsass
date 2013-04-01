@@ -287,73 +287,88 @@
             Assert.Equal(expected, ast, Expr.Comparer);
         }
 
-        [Fact(Skip = "Need to switch to new parser.")]
+        [Fact]
         public void SimpleCompoundSelectorParsesCorrectly()
         {
             // Arrange
             var lexer = new Lexer();
-            var parser = new Parser();
             var input =
 @"a:hover {
   text-decoration: none;
 }";
-            var expected = Tree.Root().AppendAll(
-                Tree.Rule("a:hover").AppendAll(
-                    Tree.PropertyLiteral("text-decoration", "none")));
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "a:hover",
+                                Expr.Property(
+                                    "text-decoration",
+                                    Expr.Literal("none"))));
 
             // Act
-            var ast = parser.Parse(lexer.ReadString(input));
+            var parser = new Parse.Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
 
             // Assert
-            expected.AssertEqualTree(ast);
+            Assert.Equal(expected, ast, Expr.Comparer);
         }
 
-        [Fact(Skip = "Need to switch to new parser.")]
+        [Fact]
         public void SimpleParentSelectorParsesCorrectly()
         {
             // Arrange
             var lexer = new Lexer();
-            var parser = new Parser();
             var input =
 @"a {
   text-decoration: none;
   body.firefox & { font-weight: normal; }
 }";
-            var expected = Tree.Root().AppendAll(
-                Tree.Rule("a").AppendAll(
-                    Tree.PropertyLiteral("text-decoration", "none"),
-                    Tree.Rule("body.firefox a").AppendAll(
-                        Tree.PropertyLiteral("font-weight", "normal"))));
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "a",
+                                Expr.Property(
+                                    "text-decoration",
+                                    Expr.Literal("none")),
+                                Expr.Rule(
+                                    "body.firefox &", // TODO: replace selector during parse?
+                                    Expr.Property(
+                                        "font-weight",
+                                        Expr.Literal("normal")))));
 
             // Act
-            var ast = parser.Parse(lexer.ReadString(input));
+            var parser = new Parse.Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
 
             // Assert
-            expected.AssertEqualTree(ast);
+            Assert.Equal(expected, ast, Expr.Comparer);
         }
 
-        [Fact(Skip = "Need to switch to new parser.")]
+        [Fact]
         public void SimpleParentPseudoClassSelectorParsesCorrectly()
         {
             // Arrange
             var lexer = new Lexer();
-            var parser = new Parser();
             var input =
 @"a {
   text-decoration: none;
   &:hover { text-decoration: underline; }
 }";
-            var expected = Tree.Root().AppendAll(
-                Tree.Rule("a").AppendAll(
-                    Tree.PropertyLiteral("text-decoration", "none"),
-                    Tree.Rule("a:hover").AppendAll(
-                        Tree.PropertyLiteral("text-decoration", "underline"))));
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "a",
+                                Expr.Property(
+                                    "text-decoration",
+                                    Expr.Literal("none")),
+                                Expr.Rule(
+                                    "&:hover", // TODO: replace selector during parse?
+                                    Expr.Property(
+                                        "text-decoration",
+                                        Expr.Literal("underline")))));
 
             // Act
-            var ast = parser.Parse(lexer.ReadString(input));
+            var parser = new Parse.Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
 
             // Assert
-            expected.AssertEqualTree(ast);
+            Assert.Equal(expected, ast, Expr.Comparer);
         }
     }
 }

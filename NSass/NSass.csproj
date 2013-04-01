@@ -69,6 +69,7 @@
     <Compile Include="Parse\Precedence.cs" />
     <Compile Include="Parse\Expressions\PrefixExpression.cs" />
     <Compile Include="Parse\Parselets\PrefixOperatorParselet.cs" />
+    <Compile Include="Parse\TokenTransform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Script\ExpressionBuilder.cs" />
     <Compile Include="Script\Lexer.cs" />

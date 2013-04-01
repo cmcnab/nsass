@@ -15,7 +15,7 @@
 
         public Parser(IEnumerable<Token> tokens)
         {
-            this.tokens = new ParseContext(from t in tokens where t.Type != TokenType.WhiteSpace select t);
+            this.tokens = new ParseContext(tokens.CombineCompoundSelectors().RemoveWhiteSpace());
             this.prefixParselets = new Dictionary<TokenType, IPrefixParselet>();
             this.infixParselets = new Dictionary<TokenType, IInfixParselet>();
             this.DefineGrammar();
