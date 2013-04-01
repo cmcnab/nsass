@@ -36,7 +36,17 @@
             return token;
         }
 
-        public static Token EatWhiteSpace(this ParseContext context, string failMessage)
+        public static ParseContext MoveNextIfIs(this ParseContext context, TokenType type)
+        {
+            if (context.Current.Type == type)
+            {
+                context.MoveNext();
+            }
+
+            return context;
+        }
+
+        public static ParseContext EatWhiteSpace(this ParseContext context, string failMessage)
         {
             while (true)
             {
@@ -47,9 +57,11 @@
 
                 if (context.Current.Type != TokenType.WhiteSpace)
                 {
-                    return context.Current;
+                    break;
                 }
             }
+
+            return context;
         }
 
         private static Token ThrowIfNull(string failMessage, Func<Token> getter)

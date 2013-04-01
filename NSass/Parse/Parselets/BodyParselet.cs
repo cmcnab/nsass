@@ -1,6 +1,7 @@
 ﻿namespace NSass.Parse.Parselets
 {
     using System.Collections.Generic;
+    using System.Linq;
     using NSass.Parse.Expressions;
     using NSass.Script;
 
@@ -19,7 +20,8 @@
 
             while (true)
             {
-                if (IsEnd(parser.Tokens))
+                var next = parser.Tokens.Peek();
+                if (IsEnd(next.Type))
                 {
                     break;
                 }
@@ -29,36 +31,55 @@
                 {
                     statements.Add(statement);
                 }
+                else
+                {
+                    parser.Tokens.MoveNextIfIs(TokenType.SemiColon); // TODO: necessary?
+                }                
             }
 
             if (!this.isRoot)
             {
-                parser.Tokens.AssertCurrentIs(TokenType.EndInterpolation, "Expecting '}'");
-                parser.Tokens.MoveNext();
+                
+                parser.Tokens.AssertNextIs(TokenType.EndInterpolation, "Expecting '}'");
                 return new Body(statements);
             }
             else
             {
+                // TODO: AssertNextIs EndInterpolation ?
                 return new Root(statements);
             }
         }
 
-        private static bool IsEnd(ParseContext tokens)
+        private static bool IsEnd(TokenType type)
         {
-            return tokens.Current.Type == TokenType.EndInterpolation
-                || tokens.Current.Type == TokenType.EndOfStream;
+            return type == TokenType.EndInterpolation
+                || type == TokenType.EndOfStream;
         }
 
         private IExpression ParseStatement(IParser parser)
         {
             // TODO: If the first token is a comment, return comment.
             var first = parser.Tokens.LookAhead(1);
+            switch (first.Type)
+            {
+                case TokenType.EndInterpolation:
+                    return null;
+
+                default:
+                    break;
+            }
+
             var second = parser.Tokens.LookAhead(2);
             switch (second.Type)
             {
                 case TokenType.Colon:
                     // Assignment or property.
-                    return parser.Parse();
+                    var property = parser.Parse();
+                    return property;
+
+                case TokenType.EndInterpolation:
+                    parser.Tokens.MoveNext();
+                    return null;
 
                 case TokenType.EndOfStream:
                     parser.Tokens.MoveNext();
@@ -68,13 +89,43 @@
                     break;
             }
 
-            // TODO: Gather selectors for a rule
+            // Gather selectors for a rule.
             parser.Tokens.MoveNext();
-            var selector = parser.Tokens.Current.Value;
+            var selectors = this.GatherSelectors(parser).ToList();
 
             // End one before the LCurly so it will invoke the body parser again.
             var body = parser.Parse();
-            return new Rule(new Selectors(new List<string>() { selector }), (Body)body);
+            return new Rule(new Selectors(selectors), (Body)body);
+        }
+
+        private IEnumerable<string> GatherSelectors(IParser parser)
+        {
+            List<string> currentSelector = new List<string>() { parser.Tokens.Current.Value };
+
+            while (true)
+            {
+                var token = parser.Tokens.Peek();
+                if (token.Type == TokenType.SymLit)
+                {
+                    currentSelector.Add(token.Value);
+                }
+                else if (token.Type == TokenType.Comma)
+                {
+                    yield return string.Join(" ", currentSelector);
+                    currentSelector.Clear();
+                }
+                else
+                {
+                    break;
+                }
+
+                parser.Tokens.MoveNext();
+            }
+
+            if (currentSelector.Any())
+            {
+                yield return string.Join(" ", currentSelector);
+            }
         }
     }
 }

@@ -50,7 +50,6 @@
     <Compile Include="Parse\Expressions\Root.cs" />
     <Compile Include="Parse\Expressions\Rule.cs" />
     <Compile Include="Parse\Expressions\Selectors.cs" />
-    <Compile Include="Parse\Expressions\SimpleProperty.cs" />
     <Compile Include="Parse\Expressions\Statement.cs" />
     <Compile Include="Parse\IParser.cs" />
     <Compile Include="Parse\Parselets\BinaryOperatorParselet.cs" />

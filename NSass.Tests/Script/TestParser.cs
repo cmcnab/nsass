@@ -37,9 +37,9 @@
             var expected = Expr.Root(
                             Expr.Rule(
                                 "#main",
-                                Expr.SimpleProperty(
+                                Expr.Property(
                                     "color",
-                                    new NameExpression("#00ff00"))));
+                                    Expr.Literal("#00ff00"))));
 
             // Act
             var parser = new Parse.Parser(lexer.ReadString(input));
@@ -49,28 +49,34 @@
             Assert.Equal(expected, ast, Expr.Comparer);
         }
 
-        [Fact(Skip = "Need to switch to new parser.")]
+        [Fact]
         public void NestedRuleParsesCorrectly()
         {
             // Arrange
             var lexer = new Lexer();
-            var parser = new Parser();
             var input =
 @"#main {
   color: #00ff00;
   ul { list-style-type: none; }
 }";
-            var expected = Tree.Root().AppendAll(
-                Tree.Rule("#main").AppendAll(
-                    Tree.PropertyLiteral("color", "#00ff00"),
-                    Tree.Rule("#main ul").AppendAll(
-                        Tree.PropertyLiteral("list-style-type", "none"))));
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "#main",
+                                Expr.Property(
+                                    "color",
+                                    Expr.Literal("#00ff00")),
+                                Expr.Rule(
+                                    "ul",
+                                    Expr.Property(
+                                        "list-style-type",
+                                        Expr.Literal("none")))));
 
             // Act
-            var ast = parser.Parse(lexer.ReadString(input));
+            var parser = new Parse.Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
 
             // Assert
-            expected.AssertEqualTree(ast);
+            Assert.Equal(expected, ast, Expr.Comparer);
         }
 
         [Fact(Skip = "Need to switch to new parser.")]
@@ -97,73 +103,88 @@
             expected.AssertEqualTree(ast);
         }
 
-        [Fact(Skip = "Need to switch to new parser.")]
+        [Fact]
         public void TwoNestedRulesParsesCorrectly()
         {
             // Arrange
             var lexer = new Lexer();
-            var parser = new Parser();
             var input =
 @"#main {
   color: #00ff00;
   ul { list-style-type: none; }
   a { float: left; }
 }";
-            var expected = Tree.Root().AppendAll(
-                Tree.Rule("#main").AppendAll(
-                    Tree.PropertyLiteral("color", "#00ff00"),
-                    Tree.Rule("#main ul").AppendAll(
-                        Tree.PropertyLiteral("list-style-type", "none")),
-                    Tree.Rule("#main a").AppendAll(
-                        Tree.PropertyLiteral("float", "left"))));
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "#main",
+                                Expr.Property(
+                                    "color",
+                                    Expr.Literal("#00ff00")),
+                                Expr.Rule(
+                                    "ul",
+                                    Expr.Property(
+                                        "list-style-type",
+                                        Expr.Literal("none"))),
+                                Expr.Rule(
+                                    "a",
+                                    Expr.Property(
+                                        "float",
+                                        Expr.Literal("left")))));
 
             // Act
-            var ast = parser.Parse(lexer.ReadString(input));
+            var parser = new Parse.Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
 
             // Assert
-            expected.AssertEqualTree(ast);
+            Assert.Equal(expected, ast, Expr.Comparer);
         }
 
-        [Fact(Skip = "Need to switch to new parser.")]
+        [Fact]
         public void RuleWithCompoundSelectorParsesCorrectly()
         {
             // Arrange
             var lexer = new Lexer();
-            var parser = new Parser();
             var input =
 @"#main ul {
   color: #00ff00;
 }";
-            var expected = Tree.Root().AppendAll(
-                Tree.Rule("#main ul").AppendAll(
-                    Tree.PropertyLiteral("color", "#00ff00")));
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "#main ul",
+                                Expr.Property(
+                                    "color",
+                                    Expr.Literal("#00ff00"))));
 
             // Act
-            var ast = parser.Parse(lexer.ReadString(input));
+            var parser = new Parse.Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
 
             // Assert
-            expected.AssertEqualTree(ast);
+            Assert.Equal(expected, ast, Expr.Comparer);
         }
 
-        [Fact(Skip = "Need to switch to new parser.")]
+        [Fact]
         public void RuleWithMultipleSelectorsParsesCorrectly()
         {
             // Arrange
             var lexer = new Lexer();
-            var parser = new Parser();
             var input =
 @"#main, #foo {
   color: #00ff00;
 }";
-            var expected = Tree.Root().AppendAll(
-                Tree.Rule("#main", "#foo").AppendAll(
-                    Tree.PropertyLiteral("color", "#00ff00")));
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                Params.Get("#main", "#foo"),
+                                Expr.Property(
+                                    "color",
+                                    Expr.Literal("#00ff00"))));
 
             // Act
-            var ast = parser.Parse(lexer.ReadString(input));
+            var parser = new Parse.Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
 
             // Assert
-            expected.AssertEqualTree(ast);
+            Assert.Equal(expected, ast, Expr.Comparer);
         }
 
         [Fact(Skip = "Need to switch to new parser.")]

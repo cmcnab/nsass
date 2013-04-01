@@ -29,14 +29,14 @@
             return new Rule(new Selectors(new List<string>(selectors)), new Body(new List<IExpression>(statements)));
         }
 
-        public static SimpleProperty SimpleProperty(string name, IExpression expression)
+        public static Property Property(string name, IExpression expression)
         {
-            return new SimpleProperty(name, expression);
+            return new Property(name, expression);
         }
 
-        public static Literal Literal(string value)
+        public static NameExpression Literal(string value)
         {
-            return new Literal(value);
+            return new NameExpression(value);
         }
 
         private static bool ExpressionsEqual(Rule rule, IExpression other)
@@ -73,9 +73,9 @@
             return Enumerable.SequenceEqual(selectors.Values, otherSelectors.Values);
         }
 
-        private static bool ExpressionsEqual(SimpleProperty prop, IExpression other)
+        private static bool ExpressionsEqual(Property prop, IExpression other)
         {
-            var otherProp = other as SimpleProperty;
+            var otherProp = other as Property;
             if (otherProp == null)
             {
                 return false;
