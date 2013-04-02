@@ -281,5 +281,32 @@ namespace NSass.Tests.Evaluate
             Assert.Equal(1, ruleMain.Depth);
             Assert.Equal(2, ruleA.Depth);
         }
+
+        [Fact]
+        public void ParentSelectorIsReplaced()
+        {
+            // Arrange
+            //
+            // a {
+            //   &:hover { text-decoration: underline; }
+            // }
+            var ast = Expr.Root(
+                            Expr.Rule(
+                                "a",
+                                Expr.Rule(
+                                    "&:hover",
+                                    Expr.Property(
+                                        "text-decoration",
+                                        Expr.Literal("underline")))));
+
+            // Act
+            var evald = ast.Evaluate();
+
+            // Assert
+            var root = Assert.IsType<Root>(evald);
+            var ruleA = Assert.IsType<Rule>(root.Statements[0]);
+            var ruleHover = Assert.IsType<Rule>(ruleA.Body.Statements[0]);
+            Assert.Equal("a:hover", ruleHover.Selectors[0]);
+        }
     }
 }

@@ -136,7 +136,7 @@
             Assert.Equal(expected, output);
         }
 
-        [Fact(Skip = "Need to switch to new parser.")]
+        [Fact]
         public void MultipleNestedPropertiesSampleOutputCorrectCss()
         {
             // Arrange
@@ -170,7 +170,7 @@
             Assert.Equal(expected, output);
         }
 
-        [Fact(Skip = "Need to switch to new parser.")]
+        [Fact]
         public void BasicParentSelectorSampleOutputCorrectCss()
         {
             // Arrange
@@ -198,7 +198,7 @@
             Assert.Equal(expected, output);
         }
 
-        [Fact(Skip = "Need to switch to new parser.")]
+        [Fact]
         public void ComplexParentSelectorSampleOutputCorrectCss()
         {
             // Arrange

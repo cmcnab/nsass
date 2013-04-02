@@ -137,14 +137,14 @@ namespace NSass.Evaluate
                 {
                     foreach (var mySelector in current)
                     {
-                        //if (mySelector.Contains('&'))
-                        //{
-                        //    yield return mySelector.Replace("&", parentSelector);
-                        //}
-                        //else
-                        //{
-                        yield return parentSelector + " " + mySelector;
-                        //}
+                        if (mySelector.Contains('&'))
+                        {
+                            yield return mySelector.Replace("&", parentSelector);
+                        }
+                        else
+                        {
+                            yield return parentSelector + " " + mySelector;
+                        }
                     }
                 }
             }
