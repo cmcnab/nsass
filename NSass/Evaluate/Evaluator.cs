@@ -58,20 +58,29 @@ namespace NSass.Evaluate
 
             private INode Visit(Body body, VisitData arg)
             {
+                SetNode(body, arg);
+
                 var next = arg.DescendFrom(body);
                 foreach (var statement in body.Statements)
                 {
                     this.Visit((dynamic)statement, next);
                 }
 
-                return SetNode(body, arg);
+                return body;
             }
 
             private INode Visit(Rule rule, VisitData arg)
             {
+                SetNode(rule, arg);
                 this.Visit(rule.Body, arg.LevelWith(rule));
-                // TODO: rewrite selectors
-                return SetNode(rule, arg);
+
+                var parentRule = rule.ParentRule;
+                if (parentRule != null)
+                {
+                    rule.Selectors = PermuteSelectors(rule.Selectors, parentRule.Selectors).ToList();
+                }
+
+                return rule;
             }
 
             private INode Visit(Assignment assignment, VisitData arg)
@@ -82,6 +91,8 @@ namespace NSass.Evaluate
 
             private INode Visit(Property property, VisitData arg)
             {
+                SetNode(property, arg);
+
                 if (property.Expression is Body)
                 {
                     // TODO: handle nested props
@@ -89,7 +100,7 @@ namespace NSass.Evaluate
                 }
 
                 property.Value = evaluator.VisitTree(property.Expression);
-                return SetNode(property, arg);
+                return property;
             }
 
             private INode Visit(Node node, VisitData arg)
@@ -102,6 +113,24 @@ namespace NSass.Evaluate
                 node.Parent = arg.Parent;
                 node.Depth = arg.Depth;
                 return node;
+            }
+
+            private static IEnumerable<string> PermuteSelectors(IEnumerable<string> current, IEnumerable<string> parent)
+            {
+                foreach (var parentSelector in parent)
+                {
+                    foreach (var mySelector in current)
+                    {
+                        //if (mySelector.Contains('&'))
+                        //{
+                        //    yield return mySelector.Replace("&", parentSelector);
+                        //}
+                        //else
+                        //{
+                        yield return parentSelector + " " + mySelector;
+                        //}
+                    }
+                }
             }
         }
 

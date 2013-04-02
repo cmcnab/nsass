@@ -5,7 +5,7 @@
 
     public class Rule : Statement
     {
-        private readonly IReadOnlyList<string> selectors;
+        private IReadOnlyList<string> selectors;
         private readonly Body body;
 
         public Rule(IReadOnlyList<string> selectors, Body body)
@@ -17,6 +17,7 @@
         public IReadOnlyList<string> Selectors
         {
             get { return this.selectors; }
+            internal set { this.selectors = value; } // TODO: hmm can I restore immutability?
         }
 
         public Body Body

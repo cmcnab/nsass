@@ -7,6 +7,7 @@ using Xunit;
 using NSass.Evaluate;
 using NSass.Tests.Script;
 using NSass.Parse.Expressions;
+using NSass.Util;
 
 namespace NSass.Tests.Evaluate
 {
@@ -65,6 +66,32 @@ namespace NSass.Tests.Evaluate
             Assert.Equal(rule, prop.ParentRule);
         }
 
+
+        [Fact]
+        public void OneRuleAndPropertyValueGetsSet()
+        {
+            // Arrange
+            //
+            // #main {
+            //   color: #00ff00;
+            // }
+            var ast = Expr.Root(
+                            Expr.Rule(
+                                "#main",
+                                Expr.Property(
+                                    "color",
+                                    Expr.Literal("#00ff00"))));
+
+            // Act
+            var evald = ast.Evaluate();
+
+            // Assert
+            var root = Assert.IsType<Root>(evald);
+            var rule = Assert.IsType<Rule>(root.Statements.First());
+            var prop = Assert.IsType<Property>(rule.Body.Statements.First());
+            Assert.Equal("#00ff00", prop.Value);
+        }
+
         [Fact]
         public void NestedRulePropertyParentRulesGetSet()
         {
@@ -100,28 +127,36 @@ namespace NSass.Tests.Evaluate
         }
 
         [Fact]
-        public void OneRuleAndPropertyValueGetsSet()
+        public void NestedRuleSelectorGetsCombined()
         {
             // Arrange
             //
             // #main {
             //   color: #00ff00;
+            //   ul { list-style-type: none; }
             // }
             var ast = Expr.Root(
                             Expr.Rule(
                                 "#main",
                                 Expr.Property(
                                     "color",
-                                    Expr.Literal("#00ff00"))));
+                                    Expr.Literal("#00ff00")),
+                                Expr.Rule(
+                                    "ul",
+                                    Expr.Property(
+                                        "list-style-type",
+                                        Expr.Literal("none")))));
 
             // Act
             var evald = ast.Evaluate();
 
             // Assert
             var root = Assert.IsType<Root>(evald);
-            var rule = Assert.IsType<Rule>(root.Statements.First());
-            var prop = Assert.IsType<Property>(rule.Body.Statements.First());
-            Assert.Equal("#00ff00", prop.Value);
+            var rule1 = Assert.IsType<Rule>(root.Statements.First());
+            var prop1 = Assert.IsType<Property>(rule1.Body.Statements[0]);
+            var rule2 = Assert.IsType<Rule>(rule1.Body.Statements[1]);
+            var expectedSelectors = Params.ToList("#main ul");
+            Assert.Equal(expectedSelectors, rule2.Selectors);
         }
     }
 }

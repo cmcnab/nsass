@@ -59,7 +59,7 @@ namespace NSass.Render
                     this.Visit((dynamic)child);
                 }
 
-                if (rule.Parent != null)
+                if (rule.ParentRule == null)
                 {
                     this.output.Write(" }");
                 }
