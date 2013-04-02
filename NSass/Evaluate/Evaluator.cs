@@ -93,10 +93,12 @@ namespace NSass.Evaluate
             {
                 SetNode(property, arg);
 
-                if (property.Expression is Body)
+                var body = property.Expression as Body;
+                if (body != null)
                 {
-                    // TODO: handle nested props
-                    throw new NotImplementedException();
+                    // Don't evaluate nested properties directly.
+                    this.Visit(body, arg.LevelWith(property));
+                    return property;
                 }
 
                 property.Value = evaluator.VisitTree(property.Expression);

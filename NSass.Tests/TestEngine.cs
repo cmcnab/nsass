@@ -114,7 +114,7 @@
             Assert.Equal(expected, output);
         }
 
-        [Fact(Skip = "Need to switch to new parser.")]
+        [Fact]
         public void NestedPropertySampleOutputCorrectCss()
         {
             // Arrange

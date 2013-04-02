@@ -66,7 +66,6 @@ namespace NSass.Tests.Evaluate
             Assert.Equal(rule, prop.ParentRule);
         }
 
-
         [Fact]
         public void OneRuleAndPropertyValueGetsSet()
         {
@@ -157,6 +156,41 @@ namespace NSass.Tests.Evaluate
             var rule2 = Assert.IsType<Rule>(rule1.Body.Statements[1]);
             var expectedSelectors = Params.ToList("#main ul");
             Assert.Equal(expectedSelectors, rule2.Selectors);
+        }
+
+        [Fact]
+        public void NestedPropertyParentGetsSet()
+        {
+            // Arrange
+            //
+            // .fakeshadow {
+            //   border: {
+            //     style: solid;
+            //   }
+            // }
+            var ast = Expr.Root(
+                            Expr.Rule(
+                                ".fakeshadow",
+                                Expr.NestedProperty(
+                                    "border",
+                                    Expr.Property(
+                                        "style",
+                                        Expr.Literal("solid")))));
+
+            // Act
+            var evald = ast.Evaluate();
+
+            // Assert
+            var root = Assert.IsType<Root>(evald);
+            var rule = Assert.IsType<Rule>(root.Statements.First());
+            var prop1 = Assert.IsType<Property>(rule.Body.Statements.First());
+            var pbody1 = Assert.IsType<Body>(prop1.Expression);
+            var prop2 = Assert.IsType<Property>(pbody1.Statements.First());
+            Assert.Equal(root, rule.Parent);
+            Assert.Equal(rule, rule.Body.Parent);
+            Assert.Equal(rule.Body, prop1.Parent);
+            Assert.Equal(prop1, pbody1.Parent);
+            Assert.Equal(pbody1, prop2.Parent);
         }
     }
 }

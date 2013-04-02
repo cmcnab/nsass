@@ -25,5 +25,22 @@ namespace NSass.Parse.Expressions
 
             return null;
         }
+
+        public static IEnumerable<INode> WalkToRoot(this INode node)
+        {
+            for (; node != null; node = node.Parent)
+            {
+                yield return node;
+            }
+        }
+
+        public static IEnumerable<T> WalkForType<T>(this INode node) where T : class, INode
+        {
+            return from n in node.WalkToRoot()
+                   let nt = n as T
+                   where nt != null
+                   select nt;
+
+        }
     }
 }

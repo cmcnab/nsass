@@ -76,12 +76,14 @@ namespace NSass.Render
             private void Visit(Property property)
             {
                 // If this property has nested child properties, let the bottom-most node handle it.
-                if (property.Expression is Body)
+                var body = property.Expression as Body;
+                if (body != null)
                 {
+                    this.Visit(body);
                     return;
                 }
 
-                var props = WalkTreeFor<Property>(property).Reverse().ToList();
+                var props = property.WalkForType<Property>().Reverse().ToList();
                 this.output.WriteLine();
                 this.WriteIdent(props.First());
                 this.output.Write(string.Join("-", from p in props select p.Name));
@@ -109,15 +111,6 @@ namespace NSass.Render
             private static string GetRuleSelectors(Rule rule)
             {
                 return string.Join(", ", from s in rule.Selectors select string.Join(" ", s));
-            }
-
-            private static IEnumerable<T> WalkTreeFor<T>(T node) where T : Node
-            {
-                while (node != null)
-                {
-                    yield return node;
-                    node = node.Parent as T;
-                }
             }
 
             private static bool IsFirstChild(Statement node)
