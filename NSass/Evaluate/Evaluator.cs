@@ -60,7 +60,10 @@ namespace NSass.Evaluate
             {
                 SetNode(body, arg);
 
-                var next = arg.DescendFrom(body);
+                var next = ShouldDescend(body)
+                    ? arg.DescendFrom(body)
+                    : arg.LevelWith(body);
+
                 foreach (var statement in body.Statements)
                 {
                     this.Visit((dynamic)statement, next);
@@ -115,6 +118,17 @@ namespace NSass.Evaluate
                 node.Parent = arg.Parent;
                 node.Depth = arg.Depth;
                 return node;
+            }
+
+            private static bool ShouldDescend(Body body)
+            {
+                if (body is Root)
+                {
+                    return true;
+                }
+
+                var rule = body.Parent as Rule;
+                return rule != null && rule.HasProperties;
             }
 
             private static IEnumerable<string> PermuteSelectors(IEnumerable<string> current, IEnumerable<string> parent)

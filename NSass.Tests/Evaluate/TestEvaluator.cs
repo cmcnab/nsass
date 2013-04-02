@@ -192,5 +192,94 @@ namespace NSass.Tests.Evaluate
             Assert.Equal(prop1, pbody1.Parent);
             Assert.Equal(pbody1, prop2.Parent);
         }
+
+        [Fact]
+        public void DoubleNestedRuleSelectorGetsCombined()
+        {
+            // Arrange
+            //
+            // #main {
+            //   color: #00ff00;
+            //   ul { list-style-type: none; }
+            //   li {
+            //     float: left;
+            //     a { font-weight: bold; }
+            //   }
+            // }
+            var ast = Expr.Root(
+                            Expr.Rule(
+                                "#main",
+                                Expr.Property(
+                                    "color",
+                                    Expr.Literal("#00ff00")),
+                                Expr.Rule(
+                                    "ul",
+                                    Expr.Property(
+                                        "list-style-type",
+                                        Expr.Literal("none"))),
+                                Expr.Rule(
+                                    "li",
+                                    Expr.Property(
+                                        "float",
+                                        Expr.Literal("left")),
+                                    Expr.Rule(
+                                        "a",
+                                        Expr.Property(
+                                            "font-weight",
+                                            Expr.Literal("bold"))))));
+
+            // Act
+            var evald = ast.Evaluate();
+
+            // Assert
+            var root = Assert.IsType<Root>(evald);
+            var ruleMain = Assert.IsType<Rule>(root.Statements[0]);
+            var ruleLi = Assert.IsType<Rule>(ruleMain.Body.Statements[2]);
+            var ruleA = Assert.IsType<Rule>(ruleLi.Body.Statements[1]);
+            var expectedSelectors = Params.ToList("#main li a");
+            Assert.Equal(expectedSelectors, ruleA.Selectors);
+        }
+
+        [Fact]
+        public void NestedRuleWithNoPropertiesDoesntContributeToDepth()
+        {
+            // Arrange
+            //
+            // #main {
+            //   color: #00ff00;
+            //   ul {
+            //     a {
+            //       text-decoration: none
+            //     }
+            //   }
+            // }
+            var ast = Expr.Root(
+                            Expr.Rule(
+                                "#main",
+                                Expr.Property(
+                                    "color",
+                                    Expr.Literal("#00ff00")),
+                                Expr.Rule(
+                                    "ul",
+                                    Expr.Rule(
+                                        "a",
+                                        Expr.Property(
+                                            "text-decoration",
+                                            Expr.Literal("none"))))));
+
+            // Act
+            var evald = ast.Evaluate();
+
+            // Assert
+            var root = Assert.IsType<Root>(evald);
+            var ruleMain = Assert.IsType<Rule>(root.Statements[0]);
+            var ruleUl = Assert.IsType<Rule>(ruleMain.Body.Statements[1]);
+            var ruleA = Assert.IsType<Rule>(ruleUl.Body.Statements[0]);
+
+            // I don't care what ruleUl's depth is...
+            Assert.Equal(0, root.Depth);
+            Assert.Equal(1, ruleMain.Depth);
+            Assert.Equal(2, ruleA.Depth);
+        }
     }
 }
