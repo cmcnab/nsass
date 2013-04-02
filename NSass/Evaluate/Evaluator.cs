@@ -72,7 +72,6 @@ namespace NSass.Evaluate
             private INode Visit(Rule rule, VisitData arg)
             {
                 SetNode(rule, arg);
-                this.Visit(rule.Body, arg.LevelWith(rule));
 
                 var parentRule = rule.ParentRule;
                 if (parentRule != null)
@@ -80,6 +79,7 @@ namespace NSass.Evaluate
                     rule.Selectors = PermuteSelectors(rule.Selectors, parentRule.Selectors).ToList();
                 }
 
+                this.Visit(rule.Body, arg.LevelWith(rule));
                 return rule;
             }
 
