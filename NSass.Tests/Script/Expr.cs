@@ -105,9 +105,9 @@
             return comment.Text == otherComment.Text;
         }
 
-        private static bool ExpressionsEqual(OperatorExpression op, INode other)
+        private static bool ExpressionsEqual(BinaryOperator op, INode other)
         {
-            var otherOp = other as OperatorExpression;
+            var otherOp = other as BinaryOperator;
             if (otherOp == null)
             {
                 return false;
@@ -118,9 +118,9 @@
                 && ExpressionsEqual((dynamic)op.Right, otherOp.Right);
         }
 
-        private static bool ExpressionsEqual(PrefixExpression prefix, INode other)
+        private static bool ExpressionsEqual(UnaryOperator prefix, INode other)
         {
-            var otherPrefix = other as PrefixExpression;
+            var otherPrefix = other as UnaryOperator;
             if (otherPrefix == null)
             {
                 return false;

@@ -2,12 +2,12 @@
 {
     using NSass.Lex;
 
-    public class PrefixExpression : Node
+    public class UnaryOperator : PropertyExpression
     {
         private readonly TokenType type;
         private readonly INode operand;
 
-        public PrefixExpression(TokenType type, INode operand)
+        public UnaryOperator(TokenType type, INode operand)
         {
             this.type = type;
             this.operand = operand;

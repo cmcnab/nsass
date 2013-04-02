@@ -2,6 +2,9 @@
 {
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Represents a collection of Statement nodes found inbetween braces or at the global scope.
+    /// </summary>
     public class Body : Node
     {
         private readonly IReadOnlyList<INode> statements;

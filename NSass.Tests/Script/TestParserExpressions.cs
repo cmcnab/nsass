@@ -20,7 +20,7 @@
                                 "#main",
                                 Expr.Property(
                                     "font-size",
-                                    new OperatorExpression(
+                                    new BinaryOperator(
                                         Expr.Literal("1in"),
                                         TokenType.Plus,
                                         Expr.Literal("8pt")))));
@@ -42,10 +42,10 @@
 @"#main {
   font-size: 1in + -8pt;
 }";
-            var expected = new OperatorExpression(
+            var expected = new BinaryOperator(
                                 Expr.Literal("1in"),
                                 TokenType.Plus,
-                                new PrefixExpression(
+                                new UnaryOperator(
                                     TokenType.Minus,
                                     Expr.Literal("-8pt")));
 
@@ -64,10 +64,10 @@
             var lexer = new Lexer();
             var input =
 @"8 * 9 * 1";
-            var expected = new OperatorExpression(
+            var expected = new BinaryOperator(
                                 Expr.Literal("8"),
                                 TokenType.Times,
-                                new OperatorExpression(
+                                new BinaryOperator(
                                     Expr.Literal("9"),
                                     TokenType.Times,
                                     Expr.Literal("1")));
@@ -87,10 +87,10 @@
             var lexer = new Lexer();
             var input =
 @"8 + 9 * 2";
-            var expected = new OperatorExpression(
+            var expected = new BinaryOperator(
                                 Expr.Literal("8"),
                                 TokenType.Plus,
-                                new OperatorExpression(
+                                new BinaryOperator(
                                     Expr.Literal("9"),
                                     TokenType.Times,
                                     Expr.Literal("2")));
@@ -110,8 +110,8 @@
             var lexer = new Lexer();
             var input =
 @"(8 + 9) * 2";
-            var expected = new OperatorExpression(
-                                new OperatorExpression(
+            var expected = new BinaryOperator(
+                                new BinaryOperator(
                                     Expr.Literal("8"),
                                     TokenType.Plus,
                                     Expr.Literal("9")),

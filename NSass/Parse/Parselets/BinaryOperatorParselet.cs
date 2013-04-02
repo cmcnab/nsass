@@ -22,7 +22,7 @@
         public INode Parse(IParser parser, INode left, Token token)
         {
             var right = parser.Parse(this.precedence - (this.isRight ? 1 : 0));
-            return new OperatorExpression(left, token.Type, right);
+            return new BinaryOperator(left, token.Type, right);
         }
     }
 }

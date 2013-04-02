@@ -2,13 +2,13 @@
 {
     using NSass.Lex;
 
-    public class OperatorExpression : Node
+    public class BinaryOperator : PropertyExpression
     {
         private readonly INode left;
         private readonly INode right;
         private readonly TokenType type;
 
-        public OperatorExpression(INode left, TokenType type, INode right)
+        public BinaryOperator(INode left, TokenType type, INode right)
         {
             this.left = left;
             this.right = right;

@@ -15,7 +15,7 @@
         public INode Parse(IParser parser, Token token)
         {
             var operand = parser.Parse(this.precedence);
-            return new PrefixExpression(token.Type, operand);
+            return new UnaryOperator(token.Type, operand);
         }
     }
 }
