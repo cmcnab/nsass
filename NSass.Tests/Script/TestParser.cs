@@ -1,6 +1,5 @@
 ﻿namespace NSass.Tests.Script
 {
-    using NSass.Parse.Expressions;
     using NSass.Lex;
     using NSass.Util;
     using Xunit;

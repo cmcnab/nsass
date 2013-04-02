@@ -5,8 +5,8 @@
 
     public class Rule : Statement
     {
-        private IReadOnlyList<string> selectors;
         private readonly Body body;
+        private IReadOnlyList<string> selectors;
 
         public Rule(IReadOnlyList<string> selectors, Body body)
         {

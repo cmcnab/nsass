@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Xunit;
-using NSass.Evaluate;
-using NSass.Tests.Script;
-using NSass.Parse.Expressions;
-using NSass.Util;
-
-namespace NSass.Tests.Evaluate
+﻿namespace NSass.Tests.Evaluate
 {
+    using System.Linq;
+    using NSass.Evaluate;
+    using NSass.Parse.Expressions;
+    using NSass.Tests.Script;
+    using NSass.Util;
+    using Xunit;
+
     public class TestEvaluator
     {
         [Fact]

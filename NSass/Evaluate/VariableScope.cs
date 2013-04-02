@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSass.Parse.Expressions;
-
-namespace NSass.Evaluate
+﻿namespace NSass.Evaluate
 {
+    using System.Collections.Generic;
+    using NSass.Parse.Expressions;
+
     public class VariableScope
     {
         private readonly VariableScope parentScope;
@@ -25,5 +21,15 @@ namespace NSass.Evaluate
             this.variables = new Dictionary<string, string>();
         }
 
+        public string Lookup(string variable)
+        {
+            string result = string.Empty;
+            if (!this.variables.TryGetValue(variable, out result) && this.parentScope != null)
+            {
+                result = this.parentScope.Lookup(variable);
+            }
+
+            return result;
+        }
     }
 }

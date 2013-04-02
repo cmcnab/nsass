@@ -2,8 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using NSass.Parse.Expressions;
     using NSass.Lex;
+    using NSass.Parse.Expressions;
 
     public class BodyParselet : IPrefixParselet
     {
@@ -35,7 +35,6 @@
 
             if (!this.isRoot)
             {
-                
                 parser.Tokens.AssertNextIs(TokenType.EndInterpolation, "Expecting '}'");
                 return new Body(statements);
             }

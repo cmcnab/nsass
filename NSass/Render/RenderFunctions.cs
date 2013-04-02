@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSass.Parse.Expressions;
-
-namespace NSass.Render
+﻿namespace NSass.Render
 {
+    using System.IO;
+    using NSass.Parse.Expressions;
+
     public static class RenderFunctions
     {
         public static void ToCss(this INode node, TextWriter output)

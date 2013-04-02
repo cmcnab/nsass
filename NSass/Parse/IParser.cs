@@ -1,7 +1,7 @@
 ﻿namespace NSass.Parse
 {
-    using NSass.Parse.Expressions;
     using NSass.Lex;
+    using NSass.Parse.Expressions;
 
     public interface IParser
     {

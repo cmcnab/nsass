@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSass.Parse.Expressions;
-
-namespace NSass.Render
+﻿namespace NSass.Render
 {
+    using System.IO;
+    using System.Linq;
+    using NSass.Parse.Expressions;
+
     public class ToCss
     {
         private Visitor visitor;
@@ -34,6 +30,28 @@ namespace NSass.Render
             public void VisitTree(INode tree)
             {
                 this.Visit((dynamic)tree);
+            }
+
+            private static string GetRuleSelectors(Rule rule)
+            {
+                return string.Join(", ", from s in rule.Selectors select string.Join(" ", s));
+            }
+
+            private static bool IsFirstChild(Statement node)
+            {
+                var body = node.Parent as Body;
+                return body != null && body.Statements.FirstOrDefault() == node;
+            }
+
+            private static bool IsVeryFirstNode(Statement node)
+            {
+                return node.Parent is Root && IsFirstChild(node);
+            }
+
+            private static bool ShouldCloseParent(Rule rule)
+            {
+                var parentRule = rule.ParentRule;
+                return parentRule != null && parentRule.HasProperties;
             }
 
             private void Visit(Rule rule)
@@ -106,28 +124,6 @@ namespace NSass.Render
 
             private void Visit(Node node)
             {
-            }
-
-            private static string GetRuleSelectors(Rule rule)
-            {
-                return string.Join(", ", from s in rule.Selectors select string.Join(" ", s));
-            }
-
-            private static bool IsFirstChild(Statement node)
-            {
-                var body = node.Parent as Body;
-                return body != null && body.Statements.FirstOrDefault() == node;
-            }
-
-            private static bool IsVeryFirstNode(Statement node)
-            {
-                return node.Parent is Root && IsFirstChild(node);
-            }
-
-            private static bool ShouldCloseParent(Rule rule)
-            {
-                var parentRule = rule.ParentRule;
-                return parentRule != null && parentRule.HasProperties;
             }
 
             private void WriteIdent(Node node)

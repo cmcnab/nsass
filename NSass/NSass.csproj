@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="Engine.cs" />
     <Compile Include="Evaluate\Evaluator.cs" />
+    <Compile Include="Evaluate\PropertyEvaluator.cs" />
+    <Compile Include="Evaluate\TreeBuilder.cs" />
     <Compile Include="Evaluate\VariableScope.cs" />
     <Compile Include="ISassCompiler.cs" />
     <Compile Include="Parse\Expressions\Assignment.cs" />
@@ -55,7 +57,6 @@
     <Compile Include="Parse\Expressions\Property.cs" />
     <Compile Include="Parse\Expressions\Root.cs" />
     <Compile Include="Parse\Expressions\Rule.cs" />
-    <Compile Include="Parse\Expressions\Selectors.cs" />
     <Compile Include="Parse\Expressions\Statement.cs" />
     <Compile Include="Parse\Expressions\Variable.cs" />
     <Compile Include="Parse\IParser.cs" />

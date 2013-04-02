@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NSass.Parse.Expressions
+﻿namespace NSass.Parse.Expressions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public static class NodeExtensions
     {
         public static INode FindParent(this INode node, Predicate<INode> pred)
@@ -40,7 +38,6 @@ namespace NSass.Parse.Expressions
                    let nt = n as T
                    where nt != null
                    select nt;
-
         }
     }
 }

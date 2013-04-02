@@ -1,8 +1,7 @@
 ﻿namespace NSass.Tests.Script
 {
-    using NSass.Parse;
-    using NSass.Parse.Expressions;
     using NSass.Lex;
+    using NSass.Parse.Expressions;
     using Xunit;
 
     public class TestParserExpressions
@@ -40,13 +39,15 @@
             // Arrange
             var lexer = new Lexer();
             var input =
-@"1in + -8pt";
+@"#main {
+  font-size: 1in + -8pt;
+}";
             var expected = new OperatorExpression(
                                 Expr.Literal("1in"),
                                 TokenType.Plus,
                                 new PrefixExpression(
                                     TokenType.Minus,
-                                    Expr.Literal("8pt")));
+                                    Expr.Literal("-8pt")));
 
             // Act
             var parser = new Parse.Parser(lexer.ReadString(input));

@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NSass.Lex;
-
-namespace NSass.Parse
+﻿namespace NSass.Parse
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using NSass.Lex;
+
     public static class TokenTransform
     {
         public static IEnumerable<Token> CombineCompoundSelectors(this IEnumerable<Token> tokens)
@@ -40,6 +37,13 @@ namespace NSass.Parse
             }
         }
 
+        public static IEnumerable<Token> RemoveWhiteSpace(this IEnumerable<Token> tokens)
+        {
+            return from t in tokens
+                   where t.Type != TokenType.WhiteSpace
+                   select t;
+        }
+
         private static bool IsLiteral(Token token)
         {
             return token.Type == TokenType.SymLit
@@ -49,13 +53,6 @@ namespace NSass.Parse
         private static bool IsColon(Token token)
         {
             return token.Type == TokenType.Colon;
-        }
-
-        public static IEnumerable<Token> RemoveWhiteSpace(this IEnumerable<Token> tokens)
-        {
-            return from t in tokens
-                   where t.Type != TokenType.WhiteSpace
-                   select t;
         }
     }
 }
