@@ -77,6 +77,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Lex\Lexer.cs" />
     <Compile Include="Lex\LexerExtensions.cs" />
+    <Compile Include="Render\RenderFunctions.cs" />
     <Compile Include="Render\ToCss.cs" />
     <Compile Include="Util\DictionaryExtensions.cs" />
     <Compile Include="Util\ListExtensions.cs" />

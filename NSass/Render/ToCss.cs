@@ -17,6 +17,11 @@ namespace NSass.Render
             this.visitor = new Visitor(output);
         }
 
+        public void Render(INode tree)
+        {
+            this.visitor.VisitTree(tree);
+        }
+
         private class Visitor
         {
             private TextWriter output;
@@ -26,9 +31,9 @@ namespace NSass.Render
                 this.output = output;
             }
 
-            public INode VisitTree(INode tree)
+            public void VisitTree(INode tree)
             {
-                return this.Visit((dynamic)tree);
+                this.Visit((dynamic)tree);
             }
 
             private void Visit(Rule rule)

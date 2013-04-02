@@ -5,7 +5,7 @@
 
     public class TestEngine
     {
-        [Fact(Skip = "Need to switch to new parser.")]
+        [Fact]
         public void SingleRuleSampleOutputCorrectCss()
         {
             // Arrange
@@ -27,7 +27,7 @@
             Assert.Equal(expected, output);
         }
 
-        [Fact(Skip = "Need to switch to new parser.")]
+        [Fact]
         public void NestedRuleSampleOutputCorrectCss()
         {
             // Arrange

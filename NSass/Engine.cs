@@ -1,8 +1,10 @@
 ﻿namespace NSass
 {
     using System.IO;
+    using NSass.Evaluate;
     using NSass.Lex;
     using NSass.Parse;
+    using NSass.Render;
 
     public class Engine : ISassCompiler
     {
@@ -15,7 +17,7 @@
             var lexer = new Lexer();
             var parser = new Parser(lexer.Read(input));
             var ast = parser.Parse();
-            //ast.ToCss(output);
+            ast.Evaluate().ToCss(output);
         }
     }
 }

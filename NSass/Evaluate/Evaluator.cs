@@ -7,9 +7,9 @@ using NSass.Parse.Expressions;
 
 namespace NSass.Evaluate
 {
-    public class Evaluator
+    public static class Evaluator
     {
-        public INode Evaluate(INode tree)
+        public static INode Evaluate(this INode tree)
         {
             return new Visitor().VisitTree(tree);
         }
@@ -49,6 +49,8 @@ namespace NSass.Evaluate
         // TODO: replace parent selectors
         private class Visitor
         {
+            private readonly EvalVisitor evaluator = new EvalVisitor();
+
             public INode VisitTree(INode tree)
             {
                 return this.Visit((dynamic)tree, new VisitData(null, 0));
@@ -67,9 +69,9 @@ namespace NSass.Evaluate
 
             private INode Visit(Rule rule, VisitData arg)
             {
-                this.Visit(rule.Body, arg);
+                this.Visit(rule.Body, arg.LevelWith(rule));
                 // TODO: rewrite selectors
-                return rule;
+                return SetNode(rule, arg);
             }
 
             private INode Visit(Assignment assignment, VisitData arg)
@@ -80,6 +82,13 @@ namespace NSass.Evaluate
 
             private INode Visit(Property property, VisitData arg)
             {
+                if (property.Expression is Body)
+                {
+                    // TODO: handle nested props
+                    throw new NotImplementedException();
+                }
+
+                property.Value = evaluator.VisitTree(property.Expression);
                 return SetNode(property, arg);
             }
 
@@ -93,6 +102,24 @@ namespace NSass.Evaluate
                 node.Parent = arg.Parent;
                 node.Depth = arg.Depth;
                 return node;
+            }
+        }
+
+        private class EvalVisitor
+        {
+            public string VisitTree(INode tree)
+            {
+                return this.Visit((dynamic)tree);
+            }
+
+            private string Visit(Literal literal)
+            {
+                return literal.Value;
+            }
+
+            private INode Visit(Node node)
+            {
+                throw new Exception("Can't evaluate");
             }
         }
     }
