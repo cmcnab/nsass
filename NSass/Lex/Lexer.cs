@@ -21,9 +21,8 @@
             TokenTypes.Add(":", TokenType.Colon);
             TokenTypes.Add(";", TokenType.SemiColon);
             TokenTypes.Add(",", TokenType.Comma);
-            TokenTypes.Add("&", TokenType.Ampersand);
             TokenTypes.Add("+", TokenType.Plus);
-            ////TokenTypes.Add("-", TokenType.Minus);
+            TokenTypes.Add("-", TokenType.Minus);
             TokenTypes.Add("/", TokenType.Div);
             TokenTypes.Add("*", TokenType.Times);
             TokenTypes.Add("(", TokenType.LParen);
@@ -35,9 +34,8 @@
             SpecialChars.Add(':', true);
             SpecialChars.Add(';', true);
             SpecialChars.Add(',', true);
-            SpecialChars.Add('&', true);
             SpecialChars.Add('+', true);
-            ////SpecialChars.Add('-', true);
+            SpecialChars.Add('-', true);
             SpecialChars.Add('/', false);
             SpecialChars.Add('*', false);
             SpecialChars.Add('(', true);
@@ -65,6 +63,26 @@
         }
 
         public IEnumerable<Token> Read(TextReader input)
+        {
+            return this.ReadMain(input).CombineCompoundTokens();
+        }
+
+        private static bool IsSpecialChar(char c, out bool singleSpecial)
+        {
+            return SpecialChars.TryGetValue(c, out singleSpecial);
+        }
+
+        private static bool IsSymbolChar(char c)
+        {
+            return c == '#'
+                || c == '%'
+                || c == '-'
+                || c == '.'
+                || c == '$'
+                || c == '&';
+        }
+
+        private IEnumerable<Token> ReadMain(TextReader input)
         {
             yield return new Token(TokenType.BeginStream, null);
 
@@ -195,20 +213,6 @@
             }
 
             yield return new Token(TokenType.EndOfStream, null);
-        }
-
-        private static bool IsSpecialChar(char c, out bool singleSpecial)
-        {
-            return SpecialChars.TryGetValue(c, out singleSpecial);
-        }
-
-        private static bool IsSymbolChar(char c)
-        {
-            return c == '#'
-                || c == '%'
-                || c == '-'
-                || c == '.'
-                || c == '$';
         }
 
         private Token EatToken()

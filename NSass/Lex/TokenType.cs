@@ -13,7 +13,6 @@
         LCurly,
         Colon,
         Comma,
-        Ampersand,
         Plus,
         Minus,
         Times,

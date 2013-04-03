@@ -105,7 +105,7 @@
             while (true)
             {
                 var token = parser.Tokens.Peek();
-                if (token.Type == TokenType.SymLit || token.Type == TokenType.Ampersand)
+                if (token.Type == TokenType.SymLit)
                 {
                     currentSelector.Add(token.Value);
                 }

@@ -150,7 +150,29 @@
         }
 
         [Fact]
-        public void AmpersandIsSeparateToken()
+        public void AmpersandIsSeparateTokenIfAlone()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input = "& hover";
+            var expected = new Token[]
+            {
+                Tokens.Begin(),
+                Tokens.Symbol("&"),
+                Tokens.WhiteSpace(),
+                Tokens.Symbol("hover"),
+                Tokens.End()
+            };
+
+            // Act
+            var tokens = lexer.ReadString(input).ToList();
+
+            // Assert
+            Assert.Equal(expected, tokens, new TokenComparer());
+        }
+
+        [Fact]
+        public void AmpersandIsCombinedIfPartOfASymbol()
         {
             // Arrange
             var lexer = new Lexer();
@@ -158,9 +180,7 @@
             var expected = new Token[]
             {
                 Tokens.Begin(),
-                Tokens.Ampersand(),
-                Tokens.Colon(),
-                Tokens.Symbol("hover"),
+                Tokens.Symbol("&:hover"),
                 Tokens.End()
             };
 
@@ -358,9 +378,7 @@
                 Tokens.Symbol("none"),
                 Tokens.SemiColon(),
                 Tokens.WhiteSpace(),
-                Tokens.Ampersand(),
-                Tokens.Colon(),
-                Tokens.Symbol("hover"),
+                Tokens.Symbol("&:hover"),
                 Tokens.WhiteSpace(),
                 Tokens.LCurly(),
                 Tokens.WhiteSpace(),
@@ -374,7 +392,7 @@
                 Tokens.WhiteSpace(),
                 Tokens.Symbol("body.firefox"),
                 Tokens.WhiteSpace(),
-                Tokens.Ampersand(),
+                Tokens.Symbol("&"),
                 Tokens.WhiteSpace(),
                 Tokens.LCurly(),
                 Tokens.WhiteSpace(),

@@ -55,6 +55,7 @@
     <Compile Include="Parse\Expressions\Node.cs" />
     <Compile Include="Parse\Expressions\NodeExtensions.cs" />
     <Compile Include="Parse\Expressions\Property.cs" />
+    <Compile Include="Parse\Expressions\PropertyExpression.cs" />
     <Compile Include="Parse\Expressions\Root.cs" />
     <Compile Include="Parse\Expressions\Rule.cs" />
     <Compile Include="Parse\Expressions\Statement.cs" />
@@ -66,15 +67,15 @@
     <Compile Include="Parse\Parselets\IInfixParselet.cs" />
     <Compile Include="Parse\Expressions\Name.cs" />
     <Compile Include="Parse\Parselets\NameParselet.cs" />
-    <Compile Include="Parse\Expressions\OperatorExpression.cs" />
+    <Compile Include="Parse\Expressions\BinaryOperator.cs" />
     <Compile Include="Parse\Parselets\BodyParselet.cs" />
     <Compile Include="Parse\Parselets\PropertyParselet.cs" />
     <Compile Include="Parse\Parser.cs" />
     <Compile Include="Parse\Parselets\IPrefixParselet.cs" />
     <Compile Include="Parse\Precedence.cs" />
-    <Compile Include="Parse\Expressions\PrefixExpression.cs" />
+    <Compile Include="Parse\Expressions\UnaryOperator.cs" />
     <Compile Include="Parse\Parselets\PrefixOperatorParselet.cs" />
-    <Compile Include="Parse\TokenTransform.cs" />
+    <Compile Include="Lex\TokenTransform.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Lex\Lexer.cs" />
     <Compile Include="Lex\LexerExtensions.cs" />

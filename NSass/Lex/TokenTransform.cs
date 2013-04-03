@@ -1,12 +1,11 @@
-﻿namespace NSass.Parse
+﻿namespace NSass.Lex
 {
     using System.Collections.Generic;
     using System.Linq;
-    using NSass.Lex;
 
     public static class TokenTransform
     {
-        public static IEnumerable<Token> CombineCompoundSelectors(this IEnumerable<Token> tokens)
+        public static IEnumerable<Token> CombineCompoundTokens(this IEnumerable<Token> tokens)
         {
             List<Token> lookAhead = new List<Token>(); // TODO: deque
 
@@ -18,10 +17,11 @@
                     continue;
                 }
 
-                if (IsLiteral(lookAhead[0]) && IsColon(lookAhead[1]) && IsLiteral(token))
+                if (IsJoinableName(lookAhead[0]) && IsNameJoinToken(lookAhead[1]) && IsJoinableName(token))
                 {
-                    yield return new Token(TokenType.SymLit, lookAhead[0].Value + ":" + token.Value);
+                    var joined = new Token(lookAhead[0].Type, string.Join(lookAhead[1].Value, lookAhead[0].Value, token.Value));
                     lookAhead.Clear();
+                    lookAhead.Add(joined);
                     continue;
                 }
 
@@ -44,15 +44,16 @@
                    select t;
         }
 
-        private static bool IsLiteral(Token token)
+        private static bool IsJoinableName(Token token)
         {
             return token.Type == TokenType.SymLit
-                || token.Type == TokenType.Ampersand; // TODO: should ampersands just be symlit?
+                || token.Type == TokenType.Variable;
         }
 
-        private static bool IsColon(Token token)
+        private static bool IsNameJoinToken(Token token)
         {
-            return token.Type == TokenType.Colon;
+            return token.Type == TokenType.Colon
+                || token.Type == TokenType.Minus;
         }
     }
 }

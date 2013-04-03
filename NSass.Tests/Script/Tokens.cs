@@ -59,11 +59,6 @@
             return new Token(TokenType.Comma, ",");
         }
 
-        public static Token Ampersand()
-        {
-            return new Token(TokenType.Ampersand, "&");
-        }
-
         public static Token Plus()
         {
             return new Token(TokenType.Plus, "+");
