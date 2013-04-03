@@ -1,4 +1,4 @@
-﻿namespace NSass.Tests.Script
+﻿namespace NSass.Tests.Parse
 {
     using System.Collections.Generic;
     using System.Linq;

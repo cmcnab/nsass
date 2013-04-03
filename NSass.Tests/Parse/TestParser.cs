@@ -1,6 +1,7 @@
-﻿namespace NSass.Tests.Script
+﻿namespace NSass.Tests.Parse
 {
     using NSass.Lex;
+    using NSass.Parse;
     using NSass.Util;
     using Xunit;
 
@@ -17,7 +18,7 @@
                             Expr.Rule("#main"));
                                 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert
@@ -41,7 +42,7 @@
                                     Expr.Literal("#00ff00"))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert
@@ -71,7 +72,7 @@
                                         Expr.Literal("none")))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert
@@ -101,7 +102,7 @@
                                         Expr.Literal("none")))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert
@@ -137,7 +138,7 @@
                                         Expr.Literal("left")))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert
@@ -161,7 +162,7 @@
                                     Expr.Literal("#00ff00"))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert
@@ -185,7 +186,7 @@
                                     Expr.Literal("#00ff00"))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert
@@ -218,7 +219,7 @@
                                     Expr.Literal("none"))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert
@@ -246,7 +247,7 @@
                                         Expr.Literal("solid")))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert
@@ -279,7 +280,7 @@
                                         Expr.Variable("$main-color")))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert
@@ -303,7 +304,7 @@
                                     Expr.Literal("none"))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert
@@ -333,7 +334,7 @@
                                         Expr.Literal("normal")))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert
@@ -363,7 +364,7 @@
                                         Expr.Literal("underline")))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert

@@ -1,6 +1,7 @@
-﻿namespace NSass.Tests.Script
+﻿namespace NSass.Tests.Parse
 {
     using NSass.Lex;
+    using NSass.Parse;
     using Xunit;
 
     public class TestParserComments
@@ -26,7 +27,7 @@
                                     Expr.Literal("none"))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert

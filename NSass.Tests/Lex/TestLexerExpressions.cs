@@ -1,4 +1,4 @@
-﻿namespace NSass.Tests.Script
+﻿namespace NSass.Tests.Lex
 {
     using System.Linq;
     using NSass.Lex;

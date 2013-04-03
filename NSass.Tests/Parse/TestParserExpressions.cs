@@ -1,6 +1,7 @@
-﻿namespace NSass.Tests.Script
+﻿namespace NSass.Tests.Parse
 {
     using NSass.Lex;
+    using NSass.Parse;
     using NSass.Parse.Expressions;
     using Xunit;
 
@@ -26,7 +27,7 @@
                                         Expr.Literal("8pt")))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert
@@ -55,7 +56,7 @@
                                 Expr.Literal("8pt"))))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert
@@ -85,7 +86,7 @@
                                             Expr.Literal("1"))))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert
@@ -115,7 +116,7 @@
                                             Expr.Literal("2"))))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert
@@ -145,7 +146,7 @@
                                         Expr.Literal("2")))));
 
             // Act
-            var parser = new Parse.Parser(lexer.ReadString(input));
+            var parser = new Parser(lexer.ReadString(input));
             var ast = parser.Parse();
 
             // Assert

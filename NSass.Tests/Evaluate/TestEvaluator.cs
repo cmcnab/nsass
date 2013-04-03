@@ -3,7 +3,7 @@
     using System.Linq;
     using NSass.Evaluate;
     using NSass.Parse.Expressions;
-    using NSass.Tests.Script;
+    using NSass.Tests.Parse;
     using NSass.Util;
     using Xunit;
 
