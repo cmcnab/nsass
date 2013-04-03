@@ -1,6 +1,7 @@
-﻿using System;
-namespace NSass.Parse.Values
+﻿namespace NSass.Parse.Values
 {
+    using System;
+
     public class Color : IValue
     {
         private readonly int red;

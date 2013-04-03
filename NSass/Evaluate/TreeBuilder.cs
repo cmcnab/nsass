@@ -6,11 +6,10 @@
 
     internal class TreeBuilder
     {
-        private readonly PropertyEvaluator evaluator = new PropertyEvaluator();
-
-        public INode VisitTree(INode tree)
+        public INode Build(INode tree)
         {
-            return this.Visit((dynamic)tree, new VisitData(null, 0));
+            this.Visit((dynamic)tree, new VisitData(null, 0, null));
+            return tree;
         }
 
         private static Node SetNode(Node node, VisitData arg)
@@ -49,23 +48,19 @@
             }
         }
 
-        private INode Visit(Body body, VisitData arg)
+        private void Visit(Body body, VisitData arg)
         {
+            body.Variables = new VariableScope(body, arg.Scope);
             SetNode(body, arg);
 
             var next = ShouldDescend(body)
-                ? arg.DescendFrom(body)
-                : arg.LevelWith(body);
+                ? arg.DescendFrom(body, body.Variables)
+                : arg.LevelWith(body, body.Variables);
 
-            foreach (var statement in body.Statements)
-            {
-                this.Visit((dynamic)statement, next);
-            }
-
-            return body;
+            this.VisitChildren(body, next);
         }
 
-        private INode Visit(Rule rule, VisitData arg)
+        private void Visit(Rule rule, VisitData arg)
         {
             SetNode(rule, arg);
 
@@ -75,48 +70,34 @@
                 rule.Selectors = PermuteSelectors(rule.Selectors, parentRule.Selectors).ToList();
             }
 
-            this.Visit(rule.Body, arg.LevelWith(rule));
-            return rule;
+            this.VisitChildren(rule, arg.LevelWith(rule));
         }
 
-        private INode Visit(Assignment assignment, VisitData arg)
+        private void Visit(Node node, VisitData arg)
         {
-            // TODO: parent is a body, evaluate the expression and add it to body's scope
-            return assignment;
+            SetNode(node, arg);
+            VisitChildren(node, arg.LevelWith(node));
         }
 
-        private INode Visit(Property property, VisitData arg)
+        private void VisitChildren(INode node, VisitData arg)
         {
-            SetNode(property, arg);
-
-            var body = property.Expression as Body;
-            if (body != null)
+            foreach (var child in node.Children)
             {
-                // Don't evaluate nested properties directly.
-                this.Visit(body, arg.LevelWith(property));
+                this.Visit((dynamic)child, arg);
             }
-            else
-            {
-                property.Value = this.evaluator.VisitTree(property.Expression);
-            }
-
-            return property;
-        }
-
-        private INode Visit(Node node, VisitData arg)
-        {
-            return SetNode(node, arg);
         }
 
         private struct VisitData
         {
             private readonly INode parent;
             private readonly int depth;
+            private readonly VariableScope scope;
 
-            public VisitData(INode parent, int depth)
+            public VisitData(INode parent, int depth, VariableScope scope)
             {
                 this.parent = parent;
                 this.depth = depth;
+                this.scope = scope;
             }
 
             public INode Parent
@@ -129,14 +110,24 @@
                 get { return this.depth; }
             }
 
-            public VisitData LevelWith(INode parent)
+            public VariableScope Scope
             {
-                return new VisitData(parent, this.depth);
+                get { return this.scope; }
             }
 
-            public VisitData DescendFrom(INode parent)
+            public VisitData LevelWith(INode parent)
             {
-                return new VisitData(parent, this.depth + 1);
+                return new VisitData(parent, this.depth, this.scope);
+            }
+
+            public VisitData LevelWith(INode parent, VariableScope scope)
+            {
+                return new VisitData(parent, this.depth, scope);
+            }
+
+            public VisitData DescendFrom(INode parent, VariableScope scope)
+            {
+                return new VisitData(parent, this.depth + 1, scope);
             }
         }
     }

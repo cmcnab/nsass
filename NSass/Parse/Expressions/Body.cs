@@ -1,6 +1,7 @@
 ﻿namespace NSass.Parse.Expressions
 {
     using System.Collections.Generic;
+    using NSass.Evaluate;
 
     /// <summary>
     /// Represents a collection of Statement nodes found inbetween braces or at the global scope.
@@ -14,9 +15,16 @@
             this.statements = statements;
         }
 
+        public override IEnumerable<INode> Children
+        {
+            get { return this.statements; }
+        }
+
         public IReadOnlyList<INode> Statements
         {
             get { return this.statements; }
         }
+
+        public VariableScope Variables { get; internal set; }
     }
 }

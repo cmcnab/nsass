@@ -24,6 +24,12 @@
             return null;
         }
 
+        public static T FindParentType<T>(this INode node) where T : class, INode
+        {
+            //return node.WalkForType<T>().Skip(1).FirstOrDefault();
+            return (T)node.FindParent(n => n is T);
+        }
+
         public static IEnumerable<INode> WalkToRoot(this INode node)
         {
             for (; node != null; node = node.Parent)

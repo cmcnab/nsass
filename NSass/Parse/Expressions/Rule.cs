@@ -20,6 +20,11 @@
             internal set { this.selectors = value; } // TODO: hmm can I restore immutability?
         }
 
+        public override IEnumerable<INode> Children
+        {
+            get { return Enumerable.Repeat(this.body, 1); }
+        }
+
         public Body Body
         {
             get { return this.body; }

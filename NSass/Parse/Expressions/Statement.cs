@@ -7,10 +7,7 @@
     {
         public Rule ParentRule
         {
-            get
-            {
-                return (Rule)this.FindParent(n => n is Rule);
-            }
+            get { return this.FindParentType<Rule>(); }
         }
     }
 }

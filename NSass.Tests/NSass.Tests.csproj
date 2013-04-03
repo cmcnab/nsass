@@ -42,7 +42,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Evaluate\TestEvaluator.cs" />
+    <Compile Include="Evaluate\TestTreeBuilder.cs" />
     <Compile Include="Evaluate\TestPropertyEvaluator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Parse\Expr.cs" />

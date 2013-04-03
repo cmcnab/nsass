@@ -2,12 +2,13 @@
 {
     using System.Collections.Generic;
     using NSass.Parse.Expressions;
+    using NSass.Parse.Values;
 
-    public class VariableScope
+    public class VariableScope : IVariableScope
     {
         private readonly VariableScope parentScope;
         private readonly Body owner;
-        private readonly Dictionary<string, string> variables;
+        private readonly Dictionary<string, IValue> variables;
 
         public VariableScope(Body owner)
             : this(owner, null)
@@ -18,15 +19,21 @@
         {
             this.owner = owner;
             this.parentScope = parentScope;
-            this.variables = new Dictionary<string, string>();
+            this.variables = new Dictionary<string, IValue>();
         }
 
-        public string Lookup(string variable)
+        public IVariableScope Assign(string variable, IValue value)
         {
-            string result = string.Empty;
+            this.variables[variable] = value;
+            return this;
+        }
+
+        public IValue Resolve(string variable)
+        {
+            IValue result = null;
             if (!this.variables.TryGetValue(variable, out result) && this.parentScope != null)
             {
-                result = this.parentScope.Lookup(variable);
+                result = this.parentScope.Resolve(variable);
             }
 
             return result;

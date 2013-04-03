@@ -7,7 +7,7 @@
     using NSass.Util;
     using Xunit;
 
-    public class TestEvaluator
+    public class TestTreeBuilder
     {
         [Fact]
         public void OneRuleAndPropertyParentsGetSet()
@@ -25,7 +25,7 @@
                                     Expr.Literal("#00ff00"))));
 
             // Act
-            var evald = ast.Evaluate();
+            var evald = ast.Process();
 
             // Assert
             var root = Assert.IsType<Root>(evald);
@@ -53,7 +53,7 @@
                                     Expr.Literal("#00ff00"))));
 
             // Act
-            var evald = ast.Evaluate();
+            var evald = ast.Process();
 
             // Assert
             var root = Assert.IsType<Root>(evald);
@@ -78,7 +78,7 @@
                                     Expr.Literal("#00ff00"))));
 
             // Act
-            var evald = ast.Evaluate();
+            var evald = ast.Process();
 
             // Assert
             var root = Assert.IsType<Root>(evald);
@@ -109,7 +109,7 @@
                                         Expr.Literal("none")))));
 
             // Act
-            var evald = ast.Evaluate();
+            var evald = ast.Process();
 
             // Assert
             var root = Assert.IsType<Root>(evald);
@@ -143,7 +143,7 @@
                                         Expr.Literal("none")))));
 
             // Act
-            var evald = ast.Evaluate();
+            var evald = ast.Process();
 
             // Assert
             var root = Assert.IsType<Root>(evald);
@@ -174,7 +174,7 @@
                                         Expr.Literal("solid")))));
 
             // Act
-            var evald = ast.Evaluate();
+            var evald = ast.Process();
 
             // Assert
             var root = Assert.IsType<Root>(evald);
@@ -225,7 +225,7 @@
                                             Expr.Literal("bold"))))));
 
             // Act
-            var evald = ast.Evaluate();
+            var evald = ast.Process();
 
             // Assert
             var root = Assert.IsType<Root>(evald);
@@ -264,7 +264,7 @@
                                             Expr.Literal("none"))))));
 
             // Act
-            var evald = ast.Evaluate();
+            var evald = ast.Process();
 
             // Assert
             var root = Assert.IsType<Root>(evald);
@@ -296,13 +296,42 @@
                                         Expr.Literal("underline")))));
 
             // Act
-            var evald = ast.Evaluate();
+            var evald = ast.Process();
 
             // Assert
             var root = Assert.IsType<Root>(evald);
             var ruleA = Assert.IsType<Rule>(root.Statements[0]);
             var ruleHover = Assert.IsType<Rule>(ruleA.Body.Statements[0]);
             Assert.Equal("a:hover", ruleHover.Selectors[0]);
+        }
+
+        [Fact]
+        public void VariableScopeIsSetOnBody()
+        {
+            // Arrange
+            //
+            // $main-color: #00ff00;
+            // #main {
+            //   color: $main-color;
+            // }
+            var ast = Expr.Root(
+                            Expr.Assignment(
+                                "$main-color",
+                                Expr.Literal("#00ff00")),
+                            Expr.Rule(
+                                "#main",
+                                Expr.Property(
+                                    "color",
+                                    Expr.Variable("$main-color"))));
+
+            // Act
+            var evald = ast.Process();
+
+            // Assert
+            var root = Assert.IsType<Root>(evald);
+            var rule = Assert.IsType<Rule>(root.Statements[1]);
+            Assert.NotNull(root.Variables);
+            Assert.NotNull(rule.Body.Variables);
         }
     }
 }

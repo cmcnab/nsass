@@ -1,5 +1,7 @@
 ﻿namespace NSass.Parse.Expressions
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using NSass.Parse.Values;
 
     public class Property : Statement
@@ -11,6 +13,11 @@
         {
             this.name = name;
             this.expression = expression;
+        }
+
+        public override IEnumerable<INode> Children
+        {
+            get { return Enumerable.Repeat(this.expression, 1); }
         }
 
         public string Name

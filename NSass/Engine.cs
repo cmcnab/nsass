@@ -17,7 +17,7 @@
             var lexer = new Lexer();
             var parser = new Parser(lexer.Read(input));
             var ast = parser.Parse();
-            ast.Evaluate().ToCss(output);
+            ast.Process().ToCss(output);
         }
     }
 }

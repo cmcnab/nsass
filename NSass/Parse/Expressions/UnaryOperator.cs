@@ -1,5 +1,7 @@
 ﻿namespace NSass.Parse.Expressions
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using NSass.Lex;
 
     public class UnaryOperator : PropertyExpression
@@ -11,6 +13,11 @@
         {
             this.type = type;
             this.operand = operand;
+        }
+
+        public override IEnumerable<INode> Children
+        {
+            get { return Enumerable.Repeat(this.operand, 1); }
         }
 
         public TokenType Type

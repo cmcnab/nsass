@@ -6,7 +6,7 @@
 
     internal class PropertyEvaluator
     {
-        public IValue VisitTree(INode tree)
+        public IValue Evaluate(INode tree)
         {
             return this.Visit((dynamic)tree);
         }
@@ -16,11 +16,16 @@
             switch (op.Type)
             {
                 case Lex.TokenType.Plus:
-                    return this.Add((dynamic)this.VisitTree(op.Left), (dynamic)this.VisitTree(op.Right));
+                    return this.Add((dynamic)this.Evaluate(op.Left), (dynamic)this.Evaluate(op.Right));
 
                 default:
                     throw new Exception("Unknown operation");
             }
+        }
+
+        private IValue Visit(Variable variable)
+        {
+            return variable.Resolve();
         }
 
         private IValue Visit(Literal literal)

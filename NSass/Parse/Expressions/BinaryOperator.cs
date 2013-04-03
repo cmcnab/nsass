@@ -1,6 +1,8 @@
 ﻿namespace NSass.Parse.Expressions
 {
+    using System.Collections.Generic;
     using NSass.Lex;
+    using NSass.Util;
 
     public class BinaryOperator : PropertyExpression
     {
@@ -13,6 +15,11 @@
             this.left = left;
             this.right = right;
             this.type = type;
+        }
+
+        public override IEnumerable<INode> Children
+        {
+            get { return Params.Get(this.left, this.right); }
         }
 
         public INode Left
