@@ -7,7 +7,7 @@
     using NSass.Tests.Parse;
     using Xunit;
 
-    public class TestPropertyEvaluator
+    public class TestExpressionEvaluator
     {
         [Fact]
         public void PixelAdditionEvaluatesCorrectly()

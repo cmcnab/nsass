@@ -1,56 +1,47 @@
 ﻿namespace NSass.Evaluate
 {
-    using System;
     using NSass.Parse.Expressions;
-    using NSass.Parse.Values;
 
     internal class PropertyEvaluator
     {
-        public IValue Evaluate(INode tree)
+        private readonly ExpressionEvaluator evaluator = new ExpressionEvaluator();
+
+        public INode Evaluate(INode tree)
         {
-            return this.Visit((dynamic)tree);
+           this.Visit((dynamic)tree);
+           return tree;
         }
 
-        private IValue Visit(BinaryOperator op)
+        private void Visit(Assignment assignment)
         {
-            switch (op.Type)
-            {
-                case Lex.TokenType.Plus:
-                    return this.Add((dynamic)this.Evaluate(op.Left), (dynamic)this.Evaluate(op.Right));
+            assignment.Assign(this.evaluator.Evaluate(assignment.Expression));
+        }
 
-                default:
-                    throw new Exception("Unknown operation");
+        private void Visit(Property property)
+        {
+            var body = property.Expression as Body;
+            if (body != null)
+            {
+                // Don't evaluate nested properties directly.
+                this.Visit(body);
+            }
+            else
+            {
+                property.Value = this.evaluator.Evaluate(property.Expression);
             }
         }
 
-        private IValue Visit(Variable variable)
+        private void Visit(INode node)
         {
-            return variable.Resolve();
+            this.VisitChildren(node);
         }
 
-        private IValue Visit(Literal literal)
+        private void VisitChildren(INode node)
         {
-            return literal.Parse();
-        }
-
-        private IValue Visit(Node node)
-        {
-            throw new Exception("Can't evaluate");
-        }
-
-        private IValue Add(Pixels a, Pixels b)
-        {
-            return a + b;
-        }
-
-        private IValue Add(Color a, Color b)
-        {
-            return a + b;
-        }
-
-        private IValue Add(IValue a, IValue b)
-        {
-            throw new NotSupportedException("Not supported");
+            foreach (var child in node.Children)
+            {
+                this.Visit((dynamic)child);
+            }
         }
     }
 }

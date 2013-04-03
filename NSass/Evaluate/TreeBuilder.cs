@@ -76,7 +76,7 @@
         private void Visit(Node node, VisitData arg)
         {
             SetNode(node, arg);
-            VisitChildren(node, arg.LevelWith(node));
+            this.VisitChildren(node, arg.LevelWith(node));
         }
 
         private void VisitChildren(INode node, VisitData arg)

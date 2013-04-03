@@ -45,8 +45,8 @@
     <Compile Include="Engine.cs" />
     <Compile Include="Evaluate\IVariableScope.cs" />
     <Compile Include="Evaluate\Processor.cs" />
+    <Compile Include="Evaluate\ExpressionEvaluator.cs" />
     <Compile Include="Evaluate\PropertyEvaluator.cs" />
-    <Compile Include="Evaluate\PropEvaluator.cs" />
     <Compile Include="Evaluate\TreeBuilder.cs" />
     <Compile Include="Evaluate\VariableScope.cs" />
     <Compile Include="ISassCompiler.cs" />

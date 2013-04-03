@@ -7,7 +7,7 @@
         public static INode Process(this INode tree)
         {
             var builder = new TreeBuilder();
-            var evaluator = new PropEvaluator();
+            var evaluator = new PropertyEvaluator();
             return evaluator.Evaluate(builder.Build(tree));
         }
     }

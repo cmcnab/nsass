@@ -26,7 +26,6 @@
 
         public static T FindParentType<T>(this INode node) where T : class, INode
         {
-            //return node.WalkForType<T>().Skip(1).FirstOrDefault();
             return (T)node.FindParent(n => n is T);
         }
 
