@@ -88,7 +88,6 @@
     <Compile Include="Render\RenderFunctions.cs" />
     <Compile Include="Render\ToCss.cs" />
     <Compile Include="Util\DictionaryExtensions.cs" />
-    <Compile Include="Util\ListExtensions.cs" />
     <Compile Include="Parse\ParseContext.cs" />
     <Compile Include="Parse\ParseContextExtensions.cs" />
     <Compile Include="Parse\SyntaxException.cs" />

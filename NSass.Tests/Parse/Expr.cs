@@ -82,6 +82,18 @@
             return Enumerable.SequenceEqual(body.Statements, otherBody.Statements, Comparer);
         }
 
+        private static bool ExpressionsEqual(Assignment assign, INode other)
+        {
+            var otherAssign = other as Assignment;
+            if (otherAssign == null)
+            {
+                return false;
+            }
+
+            return assign.Name == otherAssign.Name
+                && ExpressionsEqual((dynamic)assign.Expression, otherAssign.Expression);
+        }
+
         private static bool ExpressionsEqual(Property prop, INode other)
         {
             var otherProp = other as Property;

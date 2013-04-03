@@ -10,11 +10,6 @@
         private readonly Body owner;
         private readonly Dictionary<string, IValue> variables;
 
-        public VariableScope(Body owner)
-            : this(owner, null)
-        {
-        }
-
         public VariableScope(Body owner, VariableScope parentScope)
         {
             this.owner = owner;

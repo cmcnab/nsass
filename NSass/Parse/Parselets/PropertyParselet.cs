@@ -15,7 +15,7 @@
             var nameExp = (Name)left;
             var expression = parser.Parse();
             parser.Tokens.MoveNextIfNextIs(TokenType.SemiColon);
-            if (left is Assignment)
+            if (left is Variable)
             {
                 return new Assignment(nameExp.Text, expression);
             }
