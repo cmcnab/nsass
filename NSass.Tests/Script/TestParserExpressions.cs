@@ -33,7 +33,7 @@
             Assert.Equal(expected, ast, Expr.Comparer);
         }
 
-        [Fact(Skip = "Need to figure out how to deal with minus signs in property names.")]
+        [Fact]
         public void AdditionWithNegationParsesCorrectly()
         {
             // Arrange
@@ -42,12 +42,17 @@
 @"#main {
   font-size: 1in + -8pt;
 }";
-            var expected = new BinaryOperator(
-                                Expr.Literal("1in"),
-                                TokenType.Plus,
-                                new UnaryOperator(
-                                    TokenType.Minus,
-                                    Expr.Literal("-8pt")));
+            var expected = Expr.Root(
+                Expr.Rule(
+                    "#main",
+                    Expr.Property(
+                        "font-size",
+                        new BinaryOperator(
+                            Expr.Literal("1in"),
+                            TokenType.Plus,
+                            new UnaryOperator(
+                                TokenType.Minus,
+                                Expr.Literal("8pt"))))));
 
             // Act
             var parser = new Parse.Parser(lexer.ReadString(input));
@@ -57,20 +62,27 @@
             Assert.Equal(expected, ast, Expr.Comparer);
         }
 
-        [Fact(Skip = "Need to switch to root model.")]
+        [Fact]
         public void MultiplicationParsesCorrectly()
         {
             // Arrange
             var lexer = new Lexer();
             var input =
-@"8 * 9 * 1";
-            var expected = new BinaryOperator(
-                                Expr.Literal("8"),
-                                TokenType.Times,
-                                new BinaryOperator(
-                                    Expr.Literal("9"),
-                                    TokenType.Times,
-                                    Expr.Literal("1")));
+@"#main {
+  font-size: 8 * 9 * 1;
+}";
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "#main",
+                                Expr.Property(
+                                    "font-size",
+                                    new BinaryOperator(
+                                        Expr.Literal("8"),
+                                        TokenType.Times,
+                                        new BinaryOperator(
+                                            Expr.Literal("9"),
+                                            TokenType.Times,
+                                            Expr.Literal("1"))))));
 
             // Act
             var parser = new Parse.Parser(lexer.ReadString(input));
@@ -80,20 +92,27 @@
             Assert.Equal(expected, ast, Expr.Comparer);
         }
 
-        [Fact(Skip = "Need to switch to root model.")]
+        [Fact]
         public void MultiplicationHasCorrectPrecedence()
         {
             // Arrange
             var lexer = new Lexer();
             var input =
-@"8 + 9 * 2";
-            var expected = new BinaryOperator(
-                                Expr.Literal("8"),
-                                TokenType.Plus,
-                                new BinaryOperator(
-                                    Expr.Literal("9"),
-                                    TokenType.Times,
-                                    Expr.Literal("2")));
+@"#main {
+  font-size: 8 + 9 * 2;
+}";
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "#main",
+                                Expr.Property(
+                                    "font-size",
+                                    new BinaryOperator(
+                                        Expr.Literal("8"),
+                                        TokenType.Plus,
+                                        new BinaryOperator(
+                                            Expr.Literal("9"),
+                                            TokenType.Times,
+                                            Expr.Literal("2"))))));
 
             // Act
             var parser = new Parse.Parser(lexer.ReadString(input));
@@ -103,20 +122,27 @@
             Assert.Equal(expected, ast, Expr.Comparer);
         }
 
-        [Fact(Skip = "Need to switch to root model.")]
+        [Fact]
         public void ParenthesesGroupCorrectly()
         {
             // Arrange
             var lexer = new Lexer();
             var input =
-@"(8 + 9) * 2";
-            var expected = new BinaryOperator(
-                                new BinaryOperator(
-                                    Expr.Literal("8"),
-                                    TokenType.Plus,
-                                    Expr.Literal("9")),
-                                TokenType.Times,
-                                Expr.Literal("2"));
+@"#main {
+  font-size: (8 + 9) * 2;
+}";
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "#main",
+                                Expr.Property(
+                                    "font-size",
+                                    new BinaryOperator(
+                                        new BinaryOperator(
+                                            Expr.Literal("8"),
+                                            TokenType.Plus,
+                                            Expr.Literal("9")),
+                                        TokenType.Times,
+                                        Expr.Literal("2")))));
 
             // Act
             var parser = new Parse.Parser(lexer.ReadString(input));

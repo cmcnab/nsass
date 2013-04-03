@@ -30,7 +30,7 @@
             Assert.Equal(expected, tokens, new TokenComparer());
         }
 
-        [Fact(Skip = "Need to figure out how to deal with minus signs in property names.")]
+        [Fact]
         public void NegationLexesCorrectly()
         {
             // Arrange
