@@ -76,6 +76,7 @@
     <Compile Include="Parse\Expressions\UnaryOperator.cs" />
     <Compile Include="Parse\Parselets\PrefixOperatorParselet.cs" />
     <Compile Include="Lex\TokenTransform.cs" />
+    <Compile Include="Parse\Values\Color.cs" />
     <Compile Include="Parse\Values\IValue.cs" />
     <Compile Include="Parse\Values\Pixels.cs" />
     <Compile Include="Parse\Values\Text.cs" />

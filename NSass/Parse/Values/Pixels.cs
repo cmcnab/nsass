@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NSass.Parse.Values
+﻿namespace NSass.Parse.Values
 {
     public class Pixels : IValue
     {
@@ -18,6 +12,11 @@ namespace NSass.Parse.Values
         public int Value
         {
             get { return this.value; }
+        }
+
+        public static Pixels operator +(Pixels a, Pixels b)
+        {
+            return new Pixels(a.Value + b.Value);
         }
 
         public override string ToString()

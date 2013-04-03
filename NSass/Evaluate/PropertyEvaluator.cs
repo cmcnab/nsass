@@ -35,7 +35,12 @@
 
         private IValue Add(Pixels a, Pixels b)
         {
-            return new Pixels(a.Value + b.Value);
+            return a + b;
+        }
+
+        private IValue Add(Color a, Color b)
+        {
+            return a + b;
         }
 
         private IValue Add(IValue a, IValue b)
