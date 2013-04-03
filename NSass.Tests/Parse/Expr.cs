@@ -138,7 +138,7 @@
                 return false;
             }
 
-            return name.Value == otherName.Value;
+            return name.Text == otherName.Text;
         }
     }
 }

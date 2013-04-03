@@ -1,5 +1,7 @@
 ﻿namespace NSass.Parse.Expressions
 {
+    using NSass.Parse.Values;
+
     public class Property : Statement
     {
         private readonly string name;
@@ -21,6 +23,6 @@
             get { return this.expression; }
         }
 
-        public string Value { get; set; } // TODO: get calculated
+        public IValue Value { get; set; }
     }
 }

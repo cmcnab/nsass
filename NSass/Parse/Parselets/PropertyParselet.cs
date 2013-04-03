@@ -17,11 +17,11 @@
             parser.Tokens.MoveNextIfNextIs(TokenType.SemiColon);
             if (left is Assignment)
             {
-                return new Assignment(nameExp.Value, expression);
+                return new Assignment(nameExp.Text, expression);
             }
             else
             {
-                return new Property(nameExp.Value, expression);
+                return new Property(nameExp.Text, expression);
             }
         }
     }

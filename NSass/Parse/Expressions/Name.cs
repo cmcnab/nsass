@@ -2,16 +2,16 @@
 {
     public abstract class Name : PropertyExpression
     {
-        private readonly string value;
+        private readonly string text;
 
-        public Name(string value)
+        public Name(string text)
         {
-            this.value = value;
+            this.text = text;
         }
 
-        public string Value
+        public string Text
         {
-            get { return this.value; }
+            get { return this.text; }
         }
     }
 }

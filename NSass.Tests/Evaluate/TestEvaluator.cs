@@ -84,7 +84,7 @@
             var root = Assert.IsType<Root>(evald);
             var rule = Assert.IsType<Rule>(root.Statements.First());
             var prop = Assert.IsType<Property>(rule.Body.Statements.First());
-            Assert.Equal("#00ff00", prop.Value);
+            Assert.Equal("#00ff00", prop.Value.ToString());
         }
 
         [Fact]
