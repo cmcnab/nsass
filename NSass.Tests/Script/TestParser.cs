@@ -78,7 +78,7 @@
             Assert.Equal(expected, ast, Expr.Comparer);
         }
 
-        [Fact(Skip = "Need to switch to new parser.")]
+        [Fact]
         public void NestedRuleMissingSemiColonParsesCorrectly()
         {
             // Arrange
