@@ -4,6 +4,12 @@
 
     public interface ISassCompiler
     {
-        void Compile(TextReader input, TextWriter output);
+        string CompileFile(string inputFileName);
+
+        string CompileFile(string inputFileName, string outputFileName);
+
+        string Compile(string input);
+
+        TextWriter Compile(TextReader input, TextWriter output);
     }
 }

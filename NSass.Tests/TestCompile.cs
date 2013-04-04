@@ -3,7 +3,7 @@
     using System.IO;
     using Xunit;
 
-    public class TestEngine
+    public class TestCompile
     {
         [Fact]
         public void SingleRuleSampleOutputCorrectCss()
@@ -21,7 +21,7 @@
   height: 23px; }";
 
             // Act
-            var output = Compile(engine, input);
+            var output = engine.Compile(input);
 
             // Assert
             Assert.Equal(expected, output);
@@ -47,7 +47,7 @@
     list-style-type: none; }";
 
             // Act
-            var output = Compile(engine, input);
+            var output = engine.Compile(input);
 
             // Assert
             Assert.Equal(expected, output);
@@ -81,7 +81,7 @@
       font-weight: bold; }";
 
             // Act
-            var output = Compile(engine, input);
+            var output = engine.Compile(input);
 
             // Assert
             Assert.Equal(expected, output);
@@ -108,7 +108,7 @@
     text-decoration: none; }";
 
             // Act
-            var output = Compile(engine, input);
+            var output = engine.Compile(input);
 
             // Assert
             Assert.Equal(expected, output);
@@ -130,7 +130,7 @@
   border-style: solid; }";
 
             // Act
-            var output = Compile(engine, input);
+            var output = engine.Compile(input);
 
             // Assert
             Assert.Equal(expected, output);
@@ -164,7 +164,7 @@
   border-right-color: #ccc; }";
 
             // Act
-            var output = Compile(engine, input);
+            var output = engine.Compile(input);
 
             // Assert
             Assert.Equal(expected, output);
@@ -192,7 +192,7 @@
     font-weight: normal; }";
 
             // Act
-            var output = Compile(engine, input);
+            var output = engine.Compile(input);
 
             // Assert
             Assert.Equal(expected, output);
@@ -222,7 +222,7 @@
       third: three; }";
 
             // Act
-            var output = Compile(engine, input);
+            var output = engine.Compile(input);
 
             // Assert
             Assert.Equal(expected, output);
@@ -246,19 +246,10 @@ a {
   text-decoration: none; }";
 
             // Act
-            var output = Compile(engine, input);
+            var output = engine.Compile(input);
 
             // Assert
             Assert.Equal(expected, output);
-        }
-
-        private static string Compile(Engine engine, string input)
-        {
-            using (var output = new StringWriter())
-            {
-                engine.Compile(new StringReader(input), output);
-                return output.ToString();
-            }
         }
     }
 }
