@@ -8,13 +8,13 @@
         private readonly int offset;
         private readonly int position;
 
-        public Token(TokenType type, string value)
+        public Token(TokenType type, string value, int line)
         {
             this.type = type;
             this.value = value;
+            this.line = line;
 
             // TODO: set these
-            this.line = 0;
             this.offset = 0;
             this.position = 0;
         }

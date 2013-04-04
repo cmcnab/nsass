@@ -6,13 +6,20 @@
 
     public class ParseContext
     {
+        private readonly string fileName;
         private IEnumerator<Token> iterator;
         private List<Token> buffer; // TODO: deque
 
-        public ParseContext(IEnumerable<Token> tokens)
+        public ParseContext(string fileName, IEnumerable<Token> tokens)
         {
+            this.fileName = fileName;
             this.iterator = tokens.GetEnumerator();
             this.buffer = new List<Token>();
+        }
+
+        public string FileName
+        {
+            get { return this.fileName; }
         }
 
         public Token Current

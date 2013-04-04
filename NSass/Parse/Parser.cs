@@ -13,8 +13,13 @@
         private Dictionary<TokenType, IInfixParselet> infixParselets;
 
         public Parser(IEnumerable<Token> tokens)
+            : this("<stdin>", tokens)
         {
-            this.tokens = new ParseContext(tokens.RemoveWhiteSpace());
+        }
+
+        public Parser(string fileName, IEnumerable<Token> tokens)
+        {
+            this.tokens = new ParseContext(fileName, tokens.RemoveWhiteSpace());
             this.prefixParselets = new Dictionary<TokenType, IPrefixParselet>();
             this.infixParselets = new Dictionary<TokenType, IInfixParselet>();
             this.DefineGrammar();
@@ -32,18 +37,18 @@
 
         public INode Parse(int precedence)
         {
-            var token = this.Consume();
+            var token = this.tokens.MoveNext();
             var prefix = this.prefixParselets.GetOrDefault(token.Type);
             if (prefix == null)
             {
-                throw new SyntaxException();
+                throw new SyntaxException(this.tokens, "TODO");
             }
 
             var left = prefix.Parse(this, token);
 
             while (precedence < this.GetNextPrecedence())
             {
-                token = this.Consume();
+                token = this.tokens.MoveNext();
                 if (token == null)
                 {
                     break;
@@ -54,16 +59,6 @@
             }
 
             return left;
-        }
-
-        public Token Consume()
-        {
-            return this.tokens.MoveNext();
-        }
-
-        public Token Consume(TokenType type, string failMessage)
-        {
-            return this.tokens.AssertNextIs(type, failMessage);
         }
 
         private int GetNextPrecedence()

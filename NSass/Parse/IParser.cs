@@ -10,9 +10,5 @@
         INode Parse();
 
         INode Parse(int precedence);
-
-        Token Consume();
-
-        Token Consume(TokenType type, string failMessage);
     }
 }

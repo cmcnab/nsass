@@ -11,6 +11,7 @@
         private static readonly Dictionary<char, bool> SpecialChars;
 
         private StringBuilder currentToken;
+        private int lineNumber;
 
         static Lexer()
         {
@@ -45,6 +46,7 @@
         public Lexer()
         {
             this.currentToken = new StringBuilder();
+            this.lineNumber = 1;
         }
 
         private bool HasToken
@@ -84,7 +86,7 @@
 
         private IEnumerable<Token> ReadMain(TextReader input)
         {
-            yield return new Token(TokenType.BeginStream, null);
+            yield return this.MakeToken(TokenType.BeginStream, string.Empty);
 
             bool inBlockComment = false;
             bool inLineComment = false;
@@ -111,6 +113,7 @@
                     // TODO: better newline checking?
                     if (c == '\n')
                     {
+                        lineNumber += 1;
                         inLineComment = false;
                     }
 
@@ -191,6 +194,11 @@
                 }
                 else if (char.IsWhiteSpace(c))
                 {
+                    if (c == '\n')
+                    {
+                        lineNumber += 1;
+                    }
+
                     if (this.ShouldEatTokenWhiteSpace)
                     {
                         yield return this.EatToken();
@@ -212,7 +220,7 @@
                 yield return this.EatToken();
             }
 
-            yield return new Token(TokenType.EndOfStream, null);
+            yield return this.MakeToken(TokenType.EndOfStream, string.Empty);
         }
 
         private Token EatToken()
@@ -233,19 +241,24 @@
         {
             var str = this.currentToken.ToString();
             var type = this.GetTokenType(str);
-            return new Token(type, str);
+            return this.MakeToken(type, str);
         }
 
         private Token MakeToken(TokenType type)
         {
-            return new Token(type, this.currentToken.ToString());
+            return this.MakeToken(type, this.currentToken.ToString());
+        }
+
+        private Token MakeToken(TokenType type, string value)
+        {
+            return new Token(type, value, this.lineNumber);
         }
 
         private Token MakeSpecialToken(char c)
         {
             var str = c.ToString();
             var type = TokenTypes[str];
-            return new Token(type, str);
+            return this.MakeToken(type, str);
         }
 
         private TokenType GetTokenType(string str)
