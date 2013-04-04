@@ -4,9 +4,9 @@
 
     public interface ISassCompiler
     {
-        string CompileFile(string inputFileName);
+        string CompileFile(string inputFilePath);
 
-        string CompileFile(string inputFileName, string outputFileName);
+        string CompileFile(string inputFilePath, string outputFilePath);
 
         string Compile(string input);
 

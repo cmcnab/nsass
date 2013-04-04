@@ -1,6 +1,8 @@
 ﻿namespace NSass.Tests
 {
     using System.IO;
+    using Moq;
+    using NSass.FileSystem;
     using Xunit;
 
     public class TestCompile
@@ -9,7 +11,8 @@
         public void SingleRuleSampleOutputCorrectCss()
         {
             // Arrange
-            var engine = new Engine();
+            var fs = new Mock<IFileSystem>();
+            var engine = new Engine(fs.Object);
             var input =
 @"#navbar {
   width: 80%;
@@ -31,7 +34,8 @@
         public void NestedRuleSampleOutputCorrectCss()
         {
             // Arrange
-            var engine = new Engine();
+            var fs = new Mock<IFileSystem>();
+            var engine = new Engine(fs.Object);
             var input =
 @"#navbar {
   width: 80%;
@@ -57,7 +61,8 @@
         public void MultiNestedRulesSampleOutputCorrectCss()
         {
             // Arrange
-            var engine = new Engine();
+            var fs = new Mock<IFileSystem>();
+            var engine = new Engine(fs.Object);
             var input =
 @"#navbar {
   width: 80%;
@@ -91,7 +96,8 @@
         public void MultipleNestedRulesAndSelectorsSampleOutputCorrectCss()
         {
             // Arrange
-            var engine = new Engine();
+            var fs = new Mock<IFileSystem>();
+            var engine = new Engine(fs.Object);
             var input =
 @"#main div, body {
   color: #00ff00;
@@ -118,7 +124,8 @@
         public void NestedPropertySampleOutputCorrectCss()
         {
             // Arrange
-            var engine = new Engine();
+            var fs = new Mock<IFileSystem>();
+            var engine = new Engine(fs.Object);
             var input =
 @".fakeshadow {
   border: {
@@ -140,7 +147,8 @@
         public void MultipleNestedPropertiesSampleOutputCorrectCss()
         {
             // Arrange
-            var engine = new Engine();
+            var fs = new Mock<IFileSystem>();
+            var engine = new Engine(fs.Object);
             var input =
 @".fakeshadow {
   border: {
@@ -174,7 +182,8 @@
         public void BasicParentSelectorSampleOutputCorrectCss()
         {
             // Arrange
-            var engine = new Engine();
+            var fs = new Mock<IFileSystem>();
+            var engine = new Engine(fs.Object);
             var input =
 @"a {
   font-weight: bold;
@@ -202,7 +211,8 @@
         public void ComplexParentSelectorSampleOutputCorrectCss()
         {
             // Arrange
-            var engine = new Engine();
+            var fs = new Mock<IFileSystem>();
+            var engine = new Engine(fs.Object);
             var input =
 @"a, b {
     first: one;
@@ -232,7 +242,8 @@
         public void BlockCommentSampleOutputCorrectCss()
         {
             // Arrange
-            var engine = new Engine();
+            var fs = new Mock<IFileSystem>();
+            var engine = new Engine(fs.Object);
             var input =
 @"/* first line */
 a {

@@ -2,24 +2,38 @@
 {
     using System.IO;
     using NSass.Evaluate;
+    using NSass.FileSystem;
     using NSass.Lex;
     using NSass.Parse;
     using NSass.Render;
 
     public class Engine : ISassCompiler
     {
-        public Engine()
+        private const string CssFileExtension = ".css";
+
+        private readonly IFileSystem fileSystem;
+
+        public Engine(IFileSystem fileSystem)
         {
+            this.fileSystem = fileSystem;
         }
 
-        public string CompileFile(string inputFileName)
+        public string CompileFile(string inputFilePath)
         {
-            throw new System.NotImplementedException();
+            return this.CompileFile(inputFilePath, Path.ChangeExtension(inputFilePath, CssFileExtension));
         }
 
-        public string CompileFile(string inputFileName, string outputFileName)
+        public string CompileFile(string inputFilePath, string outputFilePath)
         {
-            throw new System.NotImplementedException();
+            using (var inputFile = new StreamReader(this.fileSystem.OpenFile(inputFilePath, FileMode.Open, FileAccess.Read)))
+            {
+                using (var outputFile = new StreamWriter(this.fileSystem.OpenFile(outputFilePath, FileMode.Create, FileAccess.Write)))
+                {
+                    this.Compile(inputFile, outputFile);
+                }
+            }
+
+            return outputFilePath;
         }
 
         public string Compile(string input)

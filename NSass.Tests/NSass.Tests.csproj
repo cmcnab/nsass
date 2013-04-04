@@ -30,6 +30,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq">
+      <HintPath>..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -54,6 +57,7 @@
     <Compile Include="Parse\TestParserExpressions.cs" />
     <Compile Include="Lex\TokenComparer.cs" />
     <Compile Include="Lex\Tokens.cs" />
+    <Compile Include="TestCompile.cs" />
     <Compile Include="TestEngine.cs" />
   </ItemGroup>
   <ItemGroup>

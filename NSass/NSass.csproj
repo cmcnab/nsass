@@ -49,6 +49,8 @@
     <Compile Include="Evaluate\PropertyEvaluator.cs" />
     <Compile Include="Evaluate\TreeBuilder.cs" />
     <Compile Include="Evaluate\VariableScope.cs" />
+    <Compile Include="FileSystem\FileSystem.cs" />
+    <Compile Include="FileSystem\IFileSystem.cs" />
     <Compile Include="ISassCompiler.cs" />
     <Compile Include="Parse\Expressions\Assignment.cs" />
     <Compile Include="Parse\Expressions\Body.cs" />

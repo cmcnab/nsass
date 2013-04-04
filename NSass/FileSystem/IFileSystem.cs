@@ -2,7 +2,7 @@
 {
     using System.IO;
 
-    internal interface IFileSystem
+    public interface IFileSystem
     {
         Stream OpenFile(string filePath, FileMode mode);
 
