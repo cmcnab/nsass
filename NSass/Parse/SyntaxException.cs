@@ -3,7 +3,7 @@
     using System;
 
     [Serializable]
-    public class SyntaxException : Exception
+    public class SyntaxException : SassException
     {
         public SyntaxException()
         {

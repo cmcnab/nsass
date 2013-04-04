@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Console.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Evaluate\IVariableScope.cs" />
     <Compile Include="Evaluate\Processor.cs" />
@@ -89,6 +90,7 @@
     <Compile Include="Lex\LexerExtensions.cs" />
     <Compile Include="Render\RenderFunctions.cs" />
     <Compile Include="Render\ToCss.cs" />
+    <Compile Include="SassException.cs" />
     <Compile Include="Util\DictionaryExtensions.cs" />
     <Compile Include="Parse\ParseContext.cs" />
     <Compile Include="Parse\ParseContextExtensions.cs" />

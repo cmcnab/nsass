@@ -43,6 +43,23 @@
         }
 
         [Fact]
+        public void OutFileFileSpecifiedEmptyActualOutFileIsCorrect()
+        {
+            // Arrange
+            var fs = new Mock<IFileSystem>();
+            var engine = new Engine(fs.Object);
+            const string InputFileName = @"test.scss";
+            const string ExpectedOutputFileName = @"test.css";
+            SetupDummyStreams(fs, InputFileName, ExpectedOutputFileName);
+
+            // Act
+            var actualOutputFileName = engine.CompileFile(InputFileName, string.Empty);
+
+            // Assert
+            Assert.Equal(ExpectedOutputFileName, actualOutputFileName);
+        }
+
+        [Fact]
         public void InputFileIsOpenedForReading()
         {
             // Arrange

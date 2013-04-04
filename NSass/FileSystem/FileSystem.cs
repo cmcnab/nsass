@@ -2,7 +2,7 @@
 {
     using System.IO;
 
-    internal class FileSystem
+    internal class FileSystem : IFileSystem
     {
         public Stream OpenFile(string filePath, FileMode mode)
         {
