@@ -19,7 +19,7 @@
             var console = new Console(io.Object, fs.Object, engine.Object);
 
             const string InputFileName = "input.scss";
-            fs.Setup(f => f.OpenFile(InputFileName, It.IsAny<FileMode>(), It.IsAny<FileAccess>())).Returns(new MemoryStream());
+            SetDummyFile(fs, InputFileName);
 
             // Act
             console.Run(Params.Get(InputFileName));
@@ -38,9 +38,9 @@
             var console = new Console(io.Object, fs.Object, engine.Object);
 
             const string InputFileName = "input.scss";
-            fs.Setup(f => f.OpenFile(InputFileName, It.IsAny<FileMode>(), It.IsAny<FileAccess>())).Returns(new MemoryStream());
+            SetDummyFile(fs, InputFileName);
             const string OutputFileName = "output.scss";
-            fs.Setup(f => f.OpenFile(OutputFileName, It.IsAny<FileMode>(), It.IsAny<FileAccess>())).Returns(new MemoryStream());
+            SetDummyFile(fs, OutputFileName);
 
             // Act
             console.Run(Params.Get(InputFileName, OutputFileName));
@@ -58,8 +58,7 @@
             var engine = new Mock<ISassCompiler>();
             var console = new Console(io.Object, fs.Object, engine.Object);
 
-            TextReader stdIn = new StreamReader(new MemoryStream());
-            io.Setup(i => i.In).Returns(stdIn);
+            var stdIn = SetDummyStdIn(io);
 
             // Act
             console.Run(new string[] { });
@@ -78,9 +77,8 @@
             var console = new Console(io.Object, fs.Object, engine.Object);
 
             const string InputFileName = "input.scss";
-            fs.Setup(f => f.OpenFile(InputFileName, It.IsAny<FileMode>(), It.IsAny<FileAccess>())).Returns(new MemoryStream());
-            TextWriter stdOut = new StreamWriter(new MemoryStream());
-            io.Setup(i => i.Out).Returns(stdOut);
+            SetDummyFile(fs, InputFileName);
+            var stdOut = SetDummyStdOut(io);
 
             // Act
             console.Run(Params.Get(InputFileName));
@@ -99,24 +97,22 @@
             var console = new Console(io.Object, fs.Object, engine.Object);
 
             const string InputFileName = "input.scss";
-            fs.Setup(f => f.OpenFile(InputFileName, It.IsAny<FileMode>(), It.IsAny<FileAccess>())).Returns(new MemoryStream());
+            SetDummyFile(fs, InputFileName);
             const string OutputFileName = "output.scss";
-            fs.Setup(f => f.OpenFile(OutputFileName, It.IsAny<FileMode>(), It.IsAny<FileAccess>())).Returns(new MemoryStream());
+            SetDummyFile(fs, OutputFileName);
 
             const string ParseExceptionMessage = "message";
             engine.Setup(e => e.Compile(It.IsAny<TextReader>(), It.IsAny<TextWriter>())).Throws(new SassException(ParseExceptionMessage));
 
-            var errorCapture = new CaptureMemoryStream();
-            var stdError = new StreamWriter(errorCapture);
-            io.Setup(i => i.Error).Returns(stdError);
+            var err = CaptureStdError(io);
 
             // Act
             console.Run(Params.Get(InputFileName, OutputFileName));
-            stdError.Dispose();
+            err.Item1.Dispose();
 
             // Assert
-            var expected = ParseExceptionMessage + stdError.NewLine;
-            Assert.Equal(expected, errorCapture.CapturedString);
+            var expected = ParseExceptionMessage + err.Item1.NewLine;
+            Assert.Equal(expected, err.Item2.CapturedString);
         }
 
         [Fact]
@@ -132,17 +128,47 @@
             var inputException = new IOException("message");
             fs.Setup(f => f.OpenFile(InputFileName, It.IsAny<FileMode>(), It.IsAny<FileAccess>())).Throws(inputException);
 
-            var errorCapture = new CaptureMemoryStream();
-            var stdError = new StreamWriter(errorCapture);
-            io.Setup(i => i.Error).Returns(stdError);
+            var err = CaptureStdError(io);
 
             // Act
             console.Run(Params.Get(InputFileName));
-            stdError.Dispose();
+            err.Item1.Dispose();
 
             // Assert
-            var expected = inputException.ToString() + stdError.NewLine;
-            Assert.Equal(expected, errorCapture.CapturedString);
+            var expected = inputException.ToString() + err.Item1.NewLine;
+            Assert.Equal(expected, err.Item2.CapturedString);
+        }
+
+        private static void SetDummyFile(Mock<IFileSystem> fs, string inputFileName)
+        {
+            fs.Setup(f => f.OpenFile(inputFileName, It.IsAny<FileMode>(), It.IsAny<FileAccess>())).Returns(new MemoryStream());
+        }
+
+        private static void SetDummyOutputFile(Mock<IFileSystem> fs, string outputFileName)
+        {
+            fs.Setup(f => f.OpenFile(outputFileName, It.IsAny<FileMode>(), It.IsAny<FileAccess>())).Returns(new MemoryStream());
+        }
+
+        private static TextReader SetDummyStdIn(Mock<IConsoleIO> io)
+        {
+            var stdIn = new StreamReader(new MemoryStream());
+            io.Setup(i => i.In).Returns(stdIn);
+            return stdIn;
+        }
+
+        private static TextWriter SetDummyStdOut(Mock<IConsoleIO> io)
+        {
+            var stdOut = new StreamWriter(new MemoryStream());
+            io.Setup(i => i.Out).Returns(stdOut);
+            return stdOut;
+        }
+
+        private static System.Tuple<StreamWriter, CaptureMemoryStream> CaptureStdError(Mock<IConsoleIO> io)
+        {
+            var errorCapture = new CaptureMemoryStream();
+            var stdError = new StreamWriter(errorCapture);
+            io.Setup(i => i.Error).Returns(stdError);
+            return System.Tuple.Create(stdError, errorCapture);
         }
     }
 }
