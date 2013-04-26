@@ -47,6 +47,7 @@
   <ItemGroup>
     <Compile Include="Evaluate\TestTreeBuilder.cs" />
     <Compile Include="Evaluate\TestExpressionEvaluator.cs" />
+    <Compile Include="Parse\LambdaComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Parse\Expr.cs" />
     <Compile Include="Lex\TestLexer.cs" />

@@ -1,7 +1,9 @@
 ﻿namespace NSass.Shell
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
 
+    [ExcludeFromCodeCoverage]
     internal class ConsoleIO : IConsoleIO
     {
         public TextReader In

@@ -1,6 +1,7 @@
 ﻿namespace NSass.Shell
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using NSass.FileSystem;
 
@@ -12,6 +13,7 @@
         private readonly IFileSystem fileSystem;
         private readonly ISassCompiler engine;
 
+        [ExcludeFromCodeCoverage]
         public Console()
             : this(new ConsoleIO(), new FileSystem(), new Engine())
         {

@@ -1,7 +1,8 @@
-﻿namespace NSass.Util
+﻿namespace NSass.Tests.Parse
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
     public class LambdaComparer<T> : IEqualityComparer<T>
     {
@@ -24,6 +25,7 @@
             return this.equality(x, y);
         }
 
+        [ExcludeFromCodeCoverage]
         public int GetHashCode(T obj)
         {
             return this.hashCode(obj);

@@ -99,7 +99,6 @@
     <Compile Include="Parse\SyntaxException.cs" />
     <Compile Include="Lex\Token.cs" />
     <Compile Include="Lex\TokenType.cs" />
-    <Compile Include="Util\LambdaComparer.cs" />
     <Compile Include="Util\Params.cs" />
   </ItemGroup>
   <ItemGroup />
