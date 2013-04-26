@@ -7,8 +7,6 @@
 
     public class Console
     {
-        private const string CssFileExtension = ".css";
-
         private readonly IConsoleIO io;
         private readonly IFileSystem fileSystem;
         private readonly ISassCompiler engine;
@@ -43,6 +41,7 @@
             catch (SassException ex)
             {
                 // "Normal" exceptions are wrapped in a SassException.
+                // TODO: FileNotFoundExceptions are probably "normal" too.
                 this.io.Error.WriteLine(ex.Message);
                 return -1;
             }
@@ -79,10 +78,5 @@
                 ? this.io.Out
                 : new StreamWriter(this.fileSystem.OpenFile(outputFilePath, FileMode.Create, FileAccess.Write));
         }
-
-        //private static string GetOutputFilePath(string inputFilePath)
-        //{
-        //    return Path.ChangeExtension(inputFilePath, CssFileExtension);
-        //}
     }
 }

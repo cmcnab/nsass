@@ -89,55 +89,60 @@
             engine.Verify(e => e.Compile(It.IsAny<TextReader>(), stdOut));
         }
 
-        //[Fact]
-        //public void JustInFileSpecifiedOutFileHasSameNameCssExtension()
-        //{
-        //    // Arrange
-        //    var fs = new Mock<IFileSystem>();
-        //    var engine = new Engine(fs.Object);
-        //    const string InputFileName = @"test.scss";
-        //    const string ExpectedOutputFileName = @"test.css";
-        //    SetupDummyStreams(fs, InputFileName, ExpectedOutputFileName);
+        [Fact]
+        public void ParseExceptionMessagePrintedToStdError()
+        {
+            // Arrange
+            var io = new Mock<IConsoleIO>();
+            var fs = new Mock<IFileSystem>();
+            var engine = new Mock<ISassCompiler>();
+            var console = new Console(io.Object, fs.Object, engine.Object);
 
-        //    // Act
-        //    var actualOutputFileName = engine.CompileFile(InputFileName);
+            const string InputFileName = "input.scss";
+            fs.Setup(f => f.OpenFile(InputFileName, It.IsAny<FileMode>(), It.IsAny<FileAccess>())).Returns(new MemoryStream());
+            const string OutputFileName = "output.scss";
+            fs.Setup(f => f.OpenFile(OutputFileName, It.IsAny<FileMode>(), It.IsAny<FileAccess>())).Returns(new MemoryStream());
 
-        //    // Assert
-        //    Assert.Equal(ExpectedOutputFileName, actualOutputFileName);
-        //}
+            const string ParseExceptionMessage = "message";
+            engine.Setup(e => e.Compile(It.IsAny<TextReader>(), It.IsAny<TextWriter>())).Throws(new SassException(ParseExceptionMessage));
 
-        //[Fact]
-        //public void JustInPathSpecifiedOutPathHasSameNameCssExtension()
-        //{
-        //    // Arrange
-        //    var fs = new Mock<IFileSystem>();
-        //    var engine = new Engine(fs.Object);
-        //    const string InputFileName = @"..\foo\test.scss";
-        //    const string ExpectedOutputFileName = @"..\foo\test.css";
-        //    SetupDummyStreams(fs, InputFileName, ExpectedOutputFileName);
+            var errorCapture = new CaptureMemoryStream();
+            var stdError = new StreamWriter(errorCapture);
+            io.Setup(i => i.Error).Returns(stdError);
 
-        //    // Act
-        //    var actualOutputFileName = engine.CompileFile(InputFileName);
+            // Act
+            console.Run(Params.Get(InputFileName, OutputFileName));
+            stdError.Dispose();
 
-        //    // Assert
-        //    Assert.Equal(ExpectedOutputFileName, actualOutputFileName);
-        //}
+            // Assert
+            var expected = ParseExceptionMessage + stdError.NewLine;
+            Assert.Equal(expected, errorCapture.CapturedString);
+        }
 
-        //[Fact]
-        //public void OutFileFileSpecifiedEmptyActualOutFileIsCorrect()
-        //{
-        //    // Arrange
-        //    var fs = new Mock<IFileSystem>();
-        //    var engine = new Engine(fs.Object);
-        //    const string InputFileName = @"test.scss";
-        //    const string ExpectedOutputFileName = @"test.css";
-        //    SetupDummyStreams(fs, InputFileName, ExpectedOutputFileName);
+        [Fact]
+        public void UnexpectedExceptionOpeningInputFilePrintedToStdError()
+        {
+            // Arrange
+            var io = new Mock<IConsoleIO>();
+            var fs = new Mock<IFileSystem>();
+            var engine = new Mock<ISassCompiler>();
+            var console = new Console(io.Object, fs.Object, engine.Object);
 
-        //    // Act
-        //    var actualOutputFileName = engine.CompileFile(InputFileName, string.Empty);
+            const string InputFileName = "input.scss";
+            var inputException = new IOException("message");
+            fs.Setup(f => f.OpenFile(InputFileName, It.IsAny<FileMode>(), It.IsAny<FileAccess>())).Throws(inputException);
 
-        //    // Assert
-        //    Assert.Equal(ExpectedOutputFileName, actualOutputFileName);
-        //}
+            var errorCapture = new CaptureMemoryStream();
+            var stdError = new StreamWriter(errorCapture);
+            io.Setup(i => i.Error).Returns(stdError);
+
+            // Act
+            console.Run(Params.Get(InputFileName));
+            stdError.Dispose();
+
+            // Assert
+            var expected = inputException.ToString() + stdError.NewLine;
+            Assert.Equal(expected, errorCapture.CapturedString);
+        }
     }
 }

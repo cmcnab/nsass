@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
+    [ExcludeFromCodeCoverage]
     public class LambdaComparer<T> : IEqualityComparer<T>
     {
         private readonly Func<T, T, bool> equality;
@@ -25,7 +26,6 @@
             return this.equality(x, y);
         }
 
-        [ExcludeFromCodeCoverage]
         public int GetHashCode(T obj)
         {
             return this.hashCode(obj);

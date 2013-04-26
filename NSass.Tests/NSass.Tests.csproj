@@ -45,6 +45,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CaptureMemoryStream.cs" />
     <Compile Include="Evaluate\TestTreeBuilder.cs" />
     <Compile Include="Evaluate\TestExpressionEvaluator.cs" />
     <Compile Include="Parse\LambdaComparer.cs" />
