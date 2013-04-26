@@ -1,8 +1,10 @@
 ﻿namespace NSass.Parse
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     [Serializable]
+    [ExcludeFromCodeCoverage]
     public class SyntaxException : SassException
     {
         public SyntaxException()

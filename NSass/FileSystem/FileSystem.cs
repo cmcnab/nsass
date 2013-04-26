@@ -1,7 +1,9 @@
 ﻿namespace NSass.FileSystem
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
 
+    [ExcludeFromCodeCoverage]
     internal class FileSystem : IFileSystem
     {
         public Stream OpenFile(string filePath, FileMode mode)
