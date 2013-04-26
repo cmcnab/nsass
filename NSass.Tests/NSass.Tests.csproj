@@ -58,6 +58,7 @@
     <Compile Include="Lex\TokenComparer.cs" />
     <Compile Include="Lex\Tokens.cs" />
     <Compile Include="TestCompile.cs" />
+    <Compile Include="Shell\TestConsole.cs" />
     <Compile Include="TestEngine.cs" />
   </ItemGroup>
   <ItemGroup>

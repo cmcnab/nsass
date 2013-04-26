@@ -42,7 +42,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Console.cs" />
+    <Compile Include="Shell\Console.cs" />
+    <Compile Include="Shell\IConsoleIO.cs" />
+    <Compile Include="Shell\ConsoleIO.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Evaluate\IVariableScope.cs" />
     <Compile Include="Evaluate\Processor.cs" />

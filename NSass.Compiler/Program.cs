@@ -6,7 +6,7 @@
     {
         public static void Main(string[] args)
         {
-            Environment.Exit(new NSass.Console().Run(args));
+            Environment.Exit(new NSass.Shell.Console().Run(args));
         }
     }
 }
