@@ -6,15 +6,45 @@
     public class TestSyntaxExceptions
     {
         [Fact]
-        public void MissingCloseParenThrowsSyntaxException()
+        public void MissingCloseParenExceptionHasLineContext()
         {
             // Arrange
             var engine = new Engine();
-            var input = @"#main {";
+            var input =
+@"#main {
+  one: two;";
 
             // Act/Assert
             var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
-            Assert.Equal(FormatErrorMessage("#main {", "}", string.Empty), ex.Message);
+            Assert.Equal("  one: two;", ex.LineContext);
+        }
+
+        [Fact]
+        public void MissingCloseParenExceptionHasLineNumber()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"#main {
+  one: two;";
+
+            // Act/Assert
+            var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
+            Assert.Equal(2, ex.LineNumber);
+        }
+
+        [Fact]
+        public void MissingCloseParenExceptionHasCorrectMessage()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"#main {
+  one: two;";
+
+            // Act/Assert
+            var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
+            Assert.Equal(FormatErrorMessage("  one: two;", "}", string.Empty), ex.Message);
         }
 
         private static string FormatErrorMessage(string context, string expected, string actual)

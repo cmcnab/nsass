@@ -9,14 +9,14 @@
         private readonly int offset;
         private readonly int position;
 
-        public Token(TokenType type, string value, string lineContext)
+        public Token(TokenType type, string value, string lineContext, int lineNumber)
         {
             this.type = type;
             this.value = value;
             this.lineContext = lineContext;
+            this.lineNumber = lineNumber;
 
             // TODO: set these
-            this.lineNumber = 0;
             this.offset = 0;
             this.position = 0;
         }

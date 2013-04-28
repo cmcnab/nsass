@@ -12,6 +12,7 @@
 
         private StringBuilder currentToken;
         private StringBuilder currentLine;
+        private int currentLineNumber;
 
         static Lexer()
         {
@@ -47,6 +48,7 @@
         {
             this.currentToken = new StringBuilder();
             this.currentLine = new StringBuilder();
+            this.currentLineNumber = 1;
         }
 
         private bool HasToken
@@ -86,7 +88,7 @@
 
         private IEnumerable<Token> ReadMain(TextReader input)
         {
-            yield return new Token(TokenType.BeginStream, null, null);
+            yield return this.NewToken(TokenType.BeginStream, null);
 
             bool inBlockComment = false;
             bool inLineComment = false;
@@ -222,17 +224,20 @@
                 yield return this.EatToken();
             }
 
-            yield return new Token(TokenType.EndOfStream, null, null);
+            yield return this.NewToken(TokenType.EndOfStream, null);
         }
 
         private void NewLine()
         {
             this.currentLine.Clear();
+            this.currentLineNumber += 1;
         }
 
         private string GetLineContext(string tokenValue)
         {
-            return this.currentLine.ToString();
+            return tokenValue == null
+                ? null
+                : this.currentLine.ToString();
         }
 
         private Token EatToken()
@@ -253,20 +258,29 @@
         {
             var str = this.currentToken.ToString();
             var type = this.GetTokenType(str);
-            return new Token(type, str, this.GetLineContext(str));
+            return this.NewToken(type, str);
         }
 
         private Token MakeToken(TokenType type)
         {
             var str = this.currentToken.ToString();
-            return new Token(type, str, this.GetLineContext(str));
+            return this.NewToken(type, str);
         }
 
         private Token MakeSpecialToken(char c)
         {
             var str = c.ToString();
             var type = TokenTypes[str];
-            return new Token(type, str, this.GetLineContext(str));
+            return this.NewToken(type, str);
+        }
+
+        private Token NewToken(TokenType type, string value)
+        {
+            return new Token(
+                type,
+                value,
+                this.GetLineContext(value),
+                this.currentLineNumber);
         }
 
         private TokenType GetTokenType(string str)
