@@ -11,6 +11,7 @@
         private static readonly Dictionary<char, bool> SpecialChars;
 
         private StringBuilder currentToken;
+        private StringBuilder currentLine;
 
         static Lexer()
         {
@@ -45,6 +46,7 @@
         public Lexer()
         {
             this.currentToken = new StringBuilder();
+            this.currentLine = new StringBuilder();
         }
 
         private bool HasToken
@@ -84,7 +86,7 @@
 
         private IEnumerable<Token> ReadMain(TextReader input)
         {
-            yield return new Token(TokenType.BeginStream, null);
+            yield return new Token(TokenType.BeginStream, null, null);
 
             bool inBlockComment = false;
             bool inLineComment = false;
@@ -99,6 +101,7 @@
                 }
 
                 char c = (char)ret;
+                this.currentLine.Append(c);
 
                 // Special handling while in comments.
                 if (inBlockComment && c != '/')
@@ -112,6 +115,7 @@
                     if (c == '\n')
                     {
                         inLineComment = false;
+                        this.NewLine();
                     }
 
                     continue;
@@ -196,6 +200,12 @@
                         yield return this.EatToken();
                     }
 
+                    // TODO: better newline checking?
+                    if (c == '\n')
+                    {
+                        this.NewLine();
+                    }
+
                     this.currentToken.Append(c);
                 }
                 else
@@ -212,7 +222,17 @@
                 yield return this.EatToken();
             }
 
-            yield return new Token(TokenType.EndOfStream, null);
+            yield return new Token(TokenType.EndOfStream, null, null);
+        }
+
+        private void NewLine()
+        {
+            this.currentLine.Clear();
+        }
+
+        private string GetLineContext(string tokenValue)
+        {
+            return this.currentLine.ToString();
         }
 
         private Token EatToken()
@@ -233,19 +253,20 @@
         {
             var str = this.currentToken.ToString();
             var type = this.GetTokenType(str);
-            return new Token(type, str);
+            return new Token(type, str, this.GetLineContext(str));
         }
 
         private Token MakeToken(TokenType type)
         {
-            return new Token(type, this.currentToken.ToString());
+            var str = this.currentToken.ToString();
+            return new Token(type, str, this.GetLineContext(str));
         }
 
         private Token MakeSpecialToken(char c)
         {
             var str = c.ToString();
             var type = TokenTypes[str];
-            return new Token(type, str);
+            return new Token(type, str, this.GetLineContext(str));
         }
 
         private TokenType GetTokenType(string str)

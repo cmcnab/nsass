@@ -474,5 +474,25 @@
             // Assert
             Assert.Equal(expected, tokens, new TokenComparer());
         }
+
+        [Fact]
+        public void TokensContainCurrentLineContext()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input =
+@"#main {
+  width: 97%;
+}";
+
+            // Act
+            var tokens = lexer.ReadString(input).ToList();
+
+            // Assert
+            var openCurly = tokens[3];
+            Assert.Equal("#main {", openCurly.LineContext);
+            var semiColon = tokens[9];
+            Assert.Equal("  width: 97%;", semiColon.LineContext);
+        }
     }
 }

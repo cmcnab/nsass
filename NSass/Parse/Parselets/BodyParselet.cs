@@ -35,7 +35,7 @@
 
             if (!this.isRoot)
             {
-                parser.Tokens.AssertNextIs(TokenType.EndInterpolation, "Expecting '}'");
+                parser.Tokens.AssertNextIs(TokenType.EndInterpolation, "}");
                 return new Body(statements);
             }
             else

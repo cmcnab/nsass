@@ -61,11 +61,6 @@
             return this.tokens.MoveNext();
         }
 
-        public Token Consume(TokenType type, string failMessage)
-        {
-            return this.tokens.AssertNextIs(type, failMessage);
-        }
-
         private int GetNextPrecedence()
         {
             var next = this.tokens.Peek();

@@ -4,17 +4,19 @@
     {
         private readonly TokenType type;
         private readonly string value;
-        private readonly int line;
+        private readonly string lineContext;
+        private readonly int lineNumber;
         private readonly int offset;
         private readonly int position;
 
-        public Token(TokenType type, string value)
+        public Token(TokenType type, string value, string lineContext)
         {
             this.type = type;
             this.value = value;
+            this.lineContext = lineContext;
 
             // TODO: set these
-            this.line = 0;
+            this.lineNumber = 0;
             this.offset = 0;
             this.position = 0;
         }
@@ -29,9 +31,14 @@
             get { return this.value; }
         }
 
-        public int Line
+        public string LineContext
         {
-            get { return this.line; }
+            get { return this.lineContext; }
+        }
+
+        public int LineNumber
+        {
+            get { return this.lineNumber; }
         }
 
         public int Offset

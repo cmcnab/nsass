@@ -19,7 +19,7 @@
 
                 if (IsJoinableName(lookAhead[0]) && IsNameJoinToken(lookAhead[1]) && IsJoinableName(token))
                 {
-                    var joined = new Token(lookAhead[0].Type, string.Join(lookAhead[1].Value, lookAhead[0].Value, token.Value));
+                    var joined = new Token(lookAhead[0].Type, string.Join(lookAhead[1].Value, lookAhead[0].Value, token.Value), lookAhead[0].LineContext);
                     lookAhead.Clear();
                     lookAhead.Add(joined);
                     continue;

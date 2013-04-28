@@ -5,12 +5,14 @@
 
     public static class ParseContextExtensions
     {
-        public static Token AssertNextIs(this ParseContext context, TokenType type, string failMessage)
+        public static Token AssertNextIs(this ParseContext context, TokenType type, string expectedValue)
         {
+            var current = context.Current;
             var token = context.MoveNext();
             if (token == null || token.Type != type)
             {
-                throw new SyntaxException(failMessage);
+                // TODO: could I look up the expectedValue string from the TokenType?
+                throw new SyntaxException(current, expectedValue);
             }
 
             return token;
