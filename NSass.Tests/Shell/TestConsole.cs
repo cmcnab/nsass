@@ -139,14 +139,9 @@
             Assert.Equal(expected, err.Item2.CapturedString);
         }
 
-        private static void SetDummyFile(Mock<IFileSystem> fs, string inputFileName)
+        private static void SetDummyFile(Mock<IFileSystem> fs, string fileName)
         {
-            fs.Setup(f => f.OpenFile(inputFileName, It.IsAny<FileMode>(), It.IsAny<FileAccess>())).Returns(new MemoryStream());
-        }
-
-        private static void SetDummyOutputFile(Mock<IFileSystem> fs, string outputFileName)
-        {
-            fs.Setup(f => f.OpenFile(outputFileName, It.IsAny<FileMode>(), It.IsAny<FileAccess>())).Returns(new MemoryStream());
+            fs.Setup(f => f.OpenFile(fileName, It.IsAny<FileMode>(), It.IsAny<FileAccess>())).Returns(new MemoryStream());
         }
 
         private static TextReader SetDummyStdIn(Mock<IConsoleIO> io)
