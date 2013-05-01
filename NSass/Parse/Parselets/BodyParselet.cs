@@ -94,6 +94,7 @@
             var selectors = this.GatherSelectors(parser).ToList();
 
             // End one before the LCurly so it will invoke the body parser again.
+            parser.Tokens.AssertPeekIs(TokenType.LCurly, "{");
             var body = parser.Parse();
             return new Rule(selectors, (Body)body);
         }

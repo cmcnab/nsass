@@ -516,5 +516,24 @@
             var closeCurly = tokens[11];
             Assert.Equal(3, closeCurly.LineNumber);
         }
+
+        [Fact]
+        public void LineContextOnlyIncludesUpToCurrentToken()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input =
+@"#main {
+  one two;
+}";
+
+            // Act
+            var tokens = lexer.ReadString(input).ToList();
+
+            // Assert
+            var two = tokens[7];
+            Assert.Equal("  one two", two.LineContext);
+            
+        }
     }
 }

@@ -47,6 +47,21 @@
             Assert.Equal(FormatErrorMessage("  one: two;", "}", string.Empty), ex.Message);
         }
 
+        [Fact]
+        public void MissingColonExceptionHasCorrectMessage()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"#main {
+  one two;
+}";
+
+            // Act/Assert
+            var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
+            Assert.Equal(FormatErrorMessage("  one two", "{", ";"), ex.Message);
+        }
+
         private static string FormatErrorMessage(string context, string expected, string actual)
         {
             return string.Format(

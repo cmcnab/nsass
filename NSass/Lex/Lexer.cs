@@ -103,12 +103,11 @@
                 }
 
                 char c = (char)ret;
-                this.currentLine.Append(c);
 
                 // Special handling while in comments.
                 if (inBlockComment && c != '/')
                 {
-                    this.currentToken.Append(c);
+                    this.Append(c);
                     continue;
                 }
                 else if (inLineComment)
@@ -138,13 +137,13 @@
                             {
                                 if (this.currentToken.Length > 0 && this.currentToken[this.currentToken.Length - 1] == '*')
                                 {
-                                    this.currentToken.Append(c);
+                                    this.Append(c);
                                     inBlockComment = false;
                                     yield return this.EatToken(TokenType.Comment);
                                 }
                                 else
                                 {
-                                    this.currentToken.Append(c);
+                                    this.Append(c);
                                 }
                             }
                             else
@@ -162,7 +161,7 @@
                                         yield return this.EatToken();
                                     }
 
-                                    this.currentToken.Append(c);
+                                    this.Append(c);
                                 }
                             }
 
@@ -171,7 +170,7 @@
                         case '*':
                             if (this.currentToken.Length == 1 && this.currentToken[0] == '/')
                             {
-                                this.currentToken.Append(c);
+                                this.Append(c);
                                 inBlockComment = true;
                             }
                             else
@@ -193,7 +192,7 @@
                         yield return this.EatToken();
                     }
 
-                    this.currentToken.Append(c);
+                    this.Append(c);
                 }
                 else if (char.IsWhiteSpace(c))
                 {
@@ -206,9 +205,10 @@
                     if (c == '\n')
                     {
                         this.NewLine();
+                        continue;
                     }
 
-                    this.currentToken.Append(c);
+                    this.Append(c);
                 }
                 else
                 {
@@ -231,6 +231,12 @@
         {
             this.currentLine.Clear();
             this.currentLineNumber += 1;
+        }
+
+        private void Append(char c)
+        {
+            this.currentToken.Append(c);
+            this.currentLine.Append(c);
         }
 
         private string GetLineContext(string tokenValue)
@@ -269,6 +275,7 @@
 
         private Token MakeSpecialToken(char c)
         {
+            this.currentLine.Append(c);
             var str = c.ToString();
             var type = TokenTypes[str];
             return this.NewToken(type, str);

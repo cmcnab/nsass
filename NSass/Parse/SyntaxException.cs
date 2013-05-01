@@ -33,8 +33,8 @@
             this.lineNumber = 0;
         }
 
-        public SyntaxException(Token currentToken, string expectedValue)
-            : base(FormatMessage(currentToken, expectedValue))
+        public SyntaxException(Token currentToken, string expectedValue, string encounteredValue)
+            : base(FormatMessage(currentToken, expectedValue, encounteredValue))
         {
             this.lineContext = currentToken.LineContext;
             this.lineNumber = currentToken.LineNumber;
@@ -50,13 +50,13 @@
             get { return this.lineNumber; }
         }
 
-        private static string FormatMessage(Token currentToken, string expectedValue)
+        private static string FormatMessage(Token currentToken, string expectedValue, string encounteredValue)
         {
             return string.Format(
                 "Syntax error: Invalid CSS after \"{0}\": expected \"{1}\", was \"{2}\"",
                 currentToken.LineContext,
                 expectedValue,
-                string.Empty); // TODO: 
+                encounteredValue);
         }
     }
 }
