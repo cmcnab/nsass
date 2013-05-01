@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="InputSource.cs" />
     <Compile Include="Shell\Console.cs" />
     <Compile Include="Shell\IConsoleIO.cs" />
     <Compile Include="Shell\ConsoleIO.cs" />

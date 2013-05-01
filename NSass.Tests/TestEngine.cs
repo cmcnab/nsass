@@ -24,7 +24,7 @@
 
                 // Act
                 var compileStringResults = engine.Compile(InputText);
-                engine.Compile(inputStream, outputStream);
+                engine.Compile(InputSource.FromStream(inputStream), outputStream);
                 outputStream.Dispose();
 
                 // Assert

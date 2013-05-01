@@ -26,7 +26,7 @@
 
         public int Run(string[] args)
         {
-            TextReader input = null;
+            InputSource input = null;
             TextWriter output = null;
 
             try
@@ -55,7 +55,7 @@
             {
                 if (input != null)
                 {
-                    input.Dispose();
+                    input.Reader.Dispose();
                 }
 
                 if (output != null)
@@ -65,11 +65,18 @@
             }
         }
 
-        private TextReader GetInput(string inputFilePath)
+        private InputSource GetInput(string inputFilePath)
         {
-            return string.IsNullOrEmpty(inputFilePath)
-                ? this.io.In
-                : new StreamReader(this.fileSystem.OpenFile(inputFilePath, FileMode.Open, FileAccess.Read));
+            if (string.IsNullOrEmpty(inputFilePath))
+            {
+                return InputSource.FromStream(this.io.In);
+            }
+            else
+            {
+                return new InputSource(
+                    inputFilePath, 
+                    new StreamReader(this.fileSystem.OpenFile(inputFilePath, FileMode.Open, FileAccess.Read)));
+            }
         }
 
         private TextWriter GetOutput(string outputFilePath)

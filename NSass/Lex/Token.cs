@@ -5,15 +5,17 @@
         private readonly TokenType type;
         private readonly string value;
         private readonly string lineContext;
+        private readonly string fileName;
         private readonly int lineNumber;
         private readonly int offset;
         private readonly int position;
 
-        public Token(TokenType type, string value, string lineContext, int lineNumber)
+        public Token(TokenType type, string value, string lineContext, string fileName, int lineNumber)
         {
             this.type = type;
             this.value = value;
             this.lineContext = lineContext;
+            this.fileName = fileName;
             this.lineNumber = lineNumber;
 
             // TODO: set these
@@ -34,6 +36,11 @@
         public string LineContext
         {
             get { return this.lineContext; }
+        }
+
+        public string FileName
+        {
+            get { return this.fileName; }
         }
 
         public int LineNumber

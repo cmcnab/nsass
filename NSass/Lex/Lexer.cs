@@ -10,6 +10,7 @@
         private static readonly Dictionary<string, TokenType> TokenTypes;
         private static readonly Dictionary<char, bool> SpecialChars;
 
+        private InputSource input;
         private StringBuilder currentToken;
         private StringBuilder currentLine;
         private int currentLineNumber;
@@ -66,9 +67,10 @@
             get { return this.HasToken && !char.IsWhiteSpace(this.currentToken[0]); }
         }
 
-        public IEnumerable<Token> Read(TextReader input)
+        public IEnumerable<Token> Read(InputSource input)
         {
-            return this.ReadMain(input).CombineCompoundTokens();
+            this.input = input;
+            return this.ReadMain().CombineCompoundTokens();
         }
 
         private static bool IsSpecialChar(char c, out bool singleSpecial)
@@ -86,7 +88,7 @@
                 || c == '&';
         }
 
-        private IEnumerable<Token> ReadMain(TextReader input)
+        private IEnumerable<Token> ReadMain()
         {
             yield return this.NewToken(TokenType.BeginStream, null);
 
@@ -96,7 +98,7 @@
 
             while (true)
             {
-                int ret = input.Read();
+                int ret = this.input.Reader.Read();
                 if (ret == -1)
                 {
                     break;
@@ -287,6 +289,7 @@
                 type,
                 value,
                 this.GetLineContext(value),
+                this.input.FileName,
                 this.currentLineNumber);
         }
 

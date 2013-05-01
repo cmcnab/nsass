@@ -53,10 +53,13 @@
         private static string FormatMessage(Token currentToken, string expectedValue, string encounteredValue)
         {
             return string.Format(
-                "Syntax error: Invalid CSS after \"{0}\": expected \"{1}\", was \"{2}\"",
+                "Syntax error: Invalid CSS after \"{0}\": expected \"{1}\", was \"{2}\"{3}        on line {4} of {5}",
                 currentToken.LineContext,
                 expectedValue,
-                encounteredValue);
+                encounteredValue,
+                Environment.NewLine,
+                currentToken.LineNumber,
+                currentToken.FileName);
         }
     }
 }

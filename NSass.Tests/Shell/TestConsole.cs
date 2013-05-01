@@ -59,12 +59,15 @@
             var console = new Console(io.Object, fs.Object, engine.Object);
 
             var stdIn = SetDummyStdIn(io);
+            TextReader actualInput = null;
+            engine.Setup(e => e.Compile(It.IsAny<InputSource>(), It.IsAny<TextWriter>()))
+                .Callback<InputSource, TextWriter>((i, o) => actualInput = i.Reader);
 
             // Act
             console.Run(new string[] { });
 
             // Assert
-            engine.Verify(e => e.Compile(stdIn, It.IsAny<TextWriter>()));
+            Assert.Equal(stdIn.Reader, actualInput);
         }
 
         [Fact]
@@ -84,7 +87,7 @@
             console.Run(Params.Get(InputFileName));
 
             // Assert
-            engine.Verify(e => e.Compile(It.IsAny<TextReader>(), stdOut));
+            engine.Verify(e => e.Compile(It.IsAny<InputSource>(), stdOut));
         }
 
         [Fact]
@@ -102,7 +105,7 @@
             SetDummyFile(fs, OutputFileName);
 
             const string ParseExceptionMessage = "message";
-            engine.Setup(e => e.Compile(It.IsAny<TextReader>(), It.IsAny<TextWriter>())).Throws(new SassException(ParseExceptionMessage));
+            engine.Setup(e => e.Compile(It.IsAny<InputSource>(), It.IsAny<TextWriter>())).Throws(new SassException(ParseExceptionMessage));
 
             var err = CaptureStdError(io);
 
@@ -144,11 +147,12 @@
             fs.Setup(f => f.OpenFile(fileName, It.IsAny<FileMode>(), It.IsAny<FileAccess>())).Returns(new MemoryStream());
         }
 
-        private static TextReader SetDummyStdIn(Mock<IConsoleIO> io)
+        private static InputSource SetDummyStdIn(Mock<IConsoleIO> io)
         {
             var stdIn = new StreamReader(new MemoryStream());
+            var source = InputSource.FromStream(stdIn);
             io.Setup(i => i.In).Returns(stdIn);
-            return stdIn;
+            return source;
         }
 
         private static TextWriter SetDummyStdOut(Mock<IConsoleIO> io)

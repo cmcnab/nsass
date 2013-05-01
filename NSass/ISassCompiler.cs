@@ -6,6 +6,6 @@
     {
         string Compile(string input);
 
-        TextWriter Compile(TextReader input, TextWriter output);
+        TextWriter Compile(InputSource input, TextWriter output);
     }
 }

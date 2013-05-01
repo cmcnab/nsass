@@ -1,5 +1,6 @@
 ﻿namespace NSass.Tests
 {
+    using System.Text;
     using NSass.Parse;
     using Xunit;
 
@@ -44,7 +45,7 @@
 
             // Act/Assert
             var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
-            Assert.Equal(FormatErrorMessage("  one: two;", "}", string.Empty), ex.Message);
+            Assert.Equal(FormatErrorMessage("  one: two;", "}", string.Empty, 2, InputSource.StdInFileName), ex.Message);
         }
 
         [Fact]
@@ -59,16 +60,24 @@
 
             // Act/Assert
             var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
-            Assert.Equal(FormatErrorMessage("  one two", "{", ";"), ex.Message);
+            Assert.Equal(FormatErrorMessage("  one two", "{", ";", 2, InputSource.StdInFileName), ex.Message);
         }
 
-        private static string FormatErrorMessage(string context, string expected, string actual)
+        private static string FormatErrorMessage(string context, string expected, string actual, int lineNumber, string fileName)
         {
-            return string.Format(
-                "Syntax error: Invalid CSS after \"{0}\": expected \"{1}\", was \"{2}\"",
-                context,
-                expected,
-                actual);
+            var sb = new StringBuilder();
+            sb.AppendLine(
+                string.Format(
+                    "Syntax error: Invalid CSS after \"{0}\": expected \"{1}\", was \"{2}\"",
+                    context,
+                    expected,
+                    actual));
+            sb.Append("        "); // 8 spaces
+            sb.Append(
+                string.Format("on line {0} of {1}",
+                    lineNumber,
+                    fileName));
+            return sb.ToString();
         }
     }
 }

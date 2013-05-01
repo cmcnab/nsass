@@ -16,12 +16,12 @@
         {
             using (var output = new StringWriter())
             {
-                this.Compile(new StringReader(input), output);
+                this.Compile(InputSource.FromString(input), output);
                 return output.ToString();
             }
         }
 
-        public TextWriter Compile(TextReader input, TextWriter output)
+        public TextWriter Compile(InputSource input, TextWriter output)
         {
             var lexer = new Lexer();
             var parser = new Parser(lexer.Read(input));

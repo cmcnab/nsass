@@ -86,7 +86,7 @@
 
         private static Token MakeToken(TokenType type, string value)
         {
-            return new Token(type, value, string.Empty, 0);
+            return new Token(type, value, string.Empty, string.Empty, 0);
         }
     }
 }
