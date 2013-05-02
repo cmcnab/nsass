@@ -61,9 +61,6 @@
                     parser.Tokens.MoveNext();
                     return new Comment(parser.Tokens.Current.Value);
 
-                case TokenType.EndInterpolation:
-                    return null;
-
                 default:
                     break;
             }
