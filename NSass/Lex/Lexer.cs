@@ -8,6 +8,7 @@
     public class Lexer
     {
         private static readonly Dictionary<string, TokenType> TokenTypes;
+        private static readonly Dictionary<TokenType, string> TokenTypeStrings;
         private static readonly Dictionary<char, bool> SpecialChars;
 
         private InputSource input;
@@ -18,18 +19,19 @@
         static Lexer()
         {
             TokenTypes = new Dictionary<string, TokenType>();
-            TokenTypes.Add("/*", TokenType.Comment);
-            TokenTypes.Add("{", TokenType.LCurly);
-            TokenTypes.Add("}", TokenType.EndInterpolation);
-            TokenTypes.Add(":", TokenType.Colon);
-            TokenTypes.Add(";", TokenType.SemiColon);
-            TokenTypes.Add(",", TokenType.Comma);
-            TokenTypes.Add("+", TokenType.Plus);
-            TokenTypes.Add("-", TokenType.Minus);
-            TokenTypes.Add("/", TokenType.Div);
-            TokenTypes.Add("*", TokenType.Times);
-            TokenTypes.Add("(", TokenType.LParen);
-            TokenTypes.Add(")", TokenType.RParen);
+            TokenTypeStrings = new Dictionary<TokenType, string>();
+            AddTokenType("/*", TokenType.Comment);
+            AddTokenType("{", TokenType.LCurly);
+            AddTokenType("}", TokenType.EndInterpolation);
+            AddTokenType(":", TokenType.Colon);
+            AddTokenType(";", TokenType.SemiColon);
+            AddTokenType(",", TokenType.Comma);
+            AddTokenType("+", TokenType.Plus);
+            AddTokenType("-", TokenType.Minus);
+            AddTokenType("/", TokenType.Div);
+            AddTokenType("*", TokenType.Times);
+            AddTokenType("(", TokenType.LParen);
+            AddTokenType(")", TokenType.RParen);
 
             SpecialChars = new Dictionary<char, bool>();
             SpecialChars.Add('{', true);
@@ -50,6 +52,11 @@
             this.currentToken = new StringBuilder();
             this.currentLine = new StringBuilder();
             this.currentLineNumber = 1;
+        }
+
+        public static string GetTokenTypeValue(TokenType type)
+        {
+            return TokenTypeStrings[type];
         }
 
         private bool HasToken
@@ -73,6 +80,12 @@
             return this.ReadMain().CombineCompoundTokens();
         }
 
+        private static void AddTokenType(string value, TokenType type)
+        {
+            TokenTypes.Add(value, type);
+            TokenTypeStrings.Add(type, value);
+        }
+
         private static bool IsSpecialChar(char c, out bool singleSpecial)
         {
             return SpecialChars.TryGetValue(c, out singleSpecial);
@@ -90,7 +103,7 @@
 
         private IEnumerable<Token> ReadMain()
         {
-            yield return this.NewToken(TokenType.BeginStream, null);
+            yield return this.NewToken(TokenType.BeginStream, string.Empty);
 
             bool inBlockComment = false;
             bool inLineComment = false;
@@ -226,7 +239,7 @@
                 yield return this.EatToken();
             }
 
-            yield return this.NewToken(TokenType.EndOfStream, null);
+            yield return this.NewToken(TokenType.EndOfStream, string.Empty);
         }
 
         private void NewLine()

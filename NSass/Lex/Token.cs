@@ -42,7 +42,7 @@
         {
             get
             {
-                return this.LineContext.EndsWith(this.Value)
+                return !string.IsNullOrEmpty(this.Value) && this.LineContext.EndsWith(this.Value)
                     ? this.LineContext.Remove(this.LineContext.Length - this.Value.Length)
                     : this.LineContext;
             }

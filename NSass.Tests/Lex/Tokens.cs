@@ -6,12 +6,12 @@
     {
         public static Token Begin()
         {
-            return MakeToken(TokenType.BeginStream, null);
+            return MakeToken(TokenType.BeginStream, string.Empty);
         }
 
         public static Token End()
         {
-            return MakeToken(TokenType.EndOfStream, null);
+            return MakeToken(TokenType.EndOfStream, string.Empty);
         }
 
         public static Token WhiteSpace()
