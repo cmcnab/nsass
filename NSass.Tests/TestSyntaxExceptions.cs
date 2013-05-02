@@ -89,7 +89,7 @@
 
             // Act/Assert
             var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
-            Assert.Equal(FormatErrorMessage("  one", "{", "", 2, InputSource.StdInFileName), ex.Message);
+            Assert.Equal(FormatErrorMessage("  one", "{", string.Empty, 2, InputSource.StdInFileName), ex.Message);
         }
 
         [Fact]
@@ -106,7 +106,7 @@
 
             // Act/Assert
             var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
-            Assert.Equal(FormatErrorMessage("  one", "{", "", 5, InputSource.StdInFileName), ex.Message);
+            Assert.Equal(FormatErrorMessage("  one", "{", string.Empty, 5, InputSource.StdInFileName), ex.Message);
         }
 
         [Fact]
@@ -133,7 +133,8 @@
                     actual));
             sb.Append("        "); // 8 spaces
             sb.Append(
-                string.Format("on line {0} of {1}",
+                string.Format(
+                    "on line {0} of {1}",
                     lineNumber,
                     fileName));
             return sb.ToString();

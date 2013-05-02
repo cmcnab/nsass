@@ -533,7 +533,6 @@
             // Assert
             var two = tokens[7];
             Assert.Equal("  one two", two.LineContext);
-            
         }
     }
 }

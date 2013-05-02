@@ -54,11 +54,6 @@
             this.currentLineNumber = 1;
         }
 
-        public static string GetTokenTypeValue(TokenType type)
-        {
-            return TokenTypeStrings[type];
-        }
-
         private bool HasToken
         {
             get { return this.currentToken.Length > 0; }
@@ -72,6 +67,11 @@
         private bool ShouldEatTokenWhiteSpace
         {
             get { return this.HasToken && !char.IsWhiteSpace(this.currentToken[0]); }
+        }
+
+        public static string GetTokenTypeValue(TokenType type)
+        {
+            return TokenTypeStrings[type];
         }
 
         public IEnumerable<Token> Read(InputSource input)

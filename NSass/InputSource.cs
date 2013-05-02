@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NSass
+﻿namespace NSass
 {
+    using System.IO;
+
     public class InputSource
     {
         public const string StdInFileName = "standard input";
@@ -20,16 +15,6 @@ namespace NSass
             this.reader = reader;
         }
 
-        public static InputSource FromString(string input)
-        {
-            return FromStream(new StringReader(input));
-        }
-
-        public static InputSource FromStream(TextReader input)
-        {
-            return new InputSource(StdInFileName, input);
-        }
-
         public string FileName
         {
             get { return this.fileName; }
@@ -38,6 +23,16 @@ namespace NSass
         public TextReader Reader
         {
             get { return this.reader; }
+        }
+
+        public static InputSource FromString(string input)
+        {
+            return FromStream(new StringReader(input));
+        }
+
+        public static InputSource FromStream(TextReader input)
+        {
+            return new InputSource(StdInFileName, input);
         }
     }
 }

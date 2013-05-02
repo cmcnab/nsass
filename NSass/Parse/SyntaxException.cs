@@ -40,6 +40,16 @@
             this.lineNumber = at.LineNumber;
         }
 
+        public string LineContext
+        {
+            get { return this.lineContext; }
+        }
+
+        public int LineNumber
+        {
+            get { return this.lineNumber; }
+        }
+
         public static SyntaxException Expecting(TokenType expectedType, Token context, Token at)
         {
             var lineContext = context.LineNumber == at.LineNumber
@@ -49,16 +59,6 @@
                 ? string.Empty
                 : at.Value;
             return new SyntaxException(lineContext, Lexer.GetTokenTypeValue(expectedType), value, at ?? context);
-        }
-
-        public string LineContext
-        {
-            get { return this.lineContext; }
-        }
-
-        public int LineNumber
-        {
-            get { return this.lineNumber; }
         }
 
         private static string FormatMessage(string lineContext, string expectedValue, string encounteredValue, Token at)
