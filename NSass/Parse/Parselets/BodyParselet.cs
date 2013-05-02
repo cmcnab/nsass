@@ -78,12 +78,13 @@
                     return property;
 
                 case TokenType.EndInterpolation:
-                    parser.Tokens.MoveNext();
-                    return null;
+                    var context = first.LineNumber == second.LineNumber
+                        ? second.LeadingLineContext
+                        : first.LineContext;
+                    throw new SyntaxException(context, "{", "}", second);
 
                 case TokenType.EndOfStream:
-                    parser.Tokens.MoveNext();
-                    return null;
+                    throw new SyntaxException(first.LineContext, "{", "", second);
 
                 default:
                     break;

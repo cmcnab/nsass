@@ -34,7 +34,7 @@
             {
                 var encounteredValue = next == null ? string.Empty : next.Value;
                 // TODO: could I look up the expectedValue string from the TokenType?
-                throw new SyntaxException(current, expectedValue, encounteredValue);
+                throw new SyntaxException(current.LineContext, expectedValue, encounteredValue, current);
             }
 
             return next;

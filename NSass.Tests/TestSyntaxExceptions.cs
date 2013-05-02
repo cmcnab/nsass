@@ -63,6 +63,65 @@
             Assert.Equal(FormatErrorMessage("  one two", "{", ";", 2, InputSource.StdInFileName), ex.Message);
         }
 
+        [Fact]
+        public void CloseScopeUnfinishedPropertyHasCorrectMessage()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"#main {
+  one
+}";
+
+            // Act/Assert
+            var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
+            Assert.Equal(FormatErrorMessage("  one", "{", "}", 3, InputSource.StdInFileName), ex.Message);
+        }
+
+        [Fact]
+        public void EndOfFileUnfinishedPropertyHasCorrectMessage()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"#main {
+  one";
+
+            // Act/Assert
+            var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
+            Assert.Equal(FormatErrorMessage("  one", "{", "", 2, InputSource.StdInFileName), ex.Message);
+        }
+
+        [Fact]
+        public void EndOfFileUnfinishedPropertyWithExtraLinesHasCorrectMessage()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"#main {
+  one
+
+
+";
+
+            // Act/Assert
+            var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
+            Assert.Equal(FormatErrorMessage("  one", "{", "", 5, InputSource.StdInFileName), ex.Message);
+        }
+
+        [Fact]
+        public void CloseScopeUnfinishedRuleHasCorrectMessage()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"#main }";
+
+            // Act/Assert
+            var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
+            Assert.Equal(FormatErrorMessage("#main ", "{", "}", 1, InputSource.StdInFileName), ex.Message);
+        }
+
         private static string FormatErrorMessage(string context, string expected, string actual, int lineNumber, string fileName)
         {
             var sb = new StringBuilder();

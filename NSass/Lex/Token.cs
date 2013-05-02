@@ -38,6 +38,16 @@
             get { return this.lineContext; }
         }
 
+        public string LeadingLineContext
+        {
+            get
+            {
+                return this.LineContext.EndsWith(this.Value)
+                    ? this.LineContext.Remove(this.LineContext.Length - this.Value.Length)
+                    : this.LineContext;
+            }
+        }
+
         public string FileName
         {
             get { return this.fileName; }
