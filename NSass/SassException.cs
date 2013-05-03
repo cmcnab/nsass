@@ -1,10 +1,12 @@
 ﻿namespace NSass
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
 
     [Serializable]
     public class SassException : Exception
     {
+        [ExcludeFromCodeCoverage]
         public SassException()
         {
         }
@@ -14,6 +16,7 @@
         {
         }
 
+        [ExcludeFromCodeCoverage]
         public SassException(string message, Exception innerException)
             : base(message, innerException)
         {

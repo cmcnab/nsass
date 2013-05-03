@@ -1,6 +1,7 @@
 ﻿namespace NSass.Tests.Lex
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using NSass.Lex;
 
     public class TokenComparer : IEqualityComparer<Token>
@@ -18,6 +19,7 @@
             }
         }
 
+        [ExcludeFromCodeCoverage]
         public int GetHashCode(Token token)
         {
             unchecked

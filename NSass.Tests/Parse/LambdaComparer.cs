@@ -1,8 +1,10 @@
-﻿namespace NSass.Util
+﻿namespace NSass.Tests.Parse
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
 
+    [ExcludeFromCodeCoverage]
     public class LambdaComparer<T> : IEqualityComparer<T>
     {
         private readonly Func<T, T, bool> equality;

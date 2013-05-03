@@ -474,5 +474,65 @@
             // Assert
             Assert.Equal(expected, tokens, new TokenComparer());
         }
+
+        [Fact]
+        public void TokensContainCurrentLineContext()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input =
+@"#main {
+  width: 97%;
+}";
+
+            // Act
+            var tokens = lexer.ReadString(input).ToList();
+
+            // Assert
+            var openCurly = tokens[3];
+            Assert.Equal("#main {", openCurly.LineContext);
+            var semiColon = tokens[9];
+            Assert.Equal("  width: 97%;", semiColon.LineContext);
+        }
+
+        [Fact]
+        public void TokensContainCurrentLineNumber()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input =
+@"#main {
+  width: 97%;
+}";
+
+            // Act
+            var tokens = lexer.ReadString(input).ToList();
+
+            // Assert
+            var openCurly = tokens[3];
+            Assert.Equal(1, openCurly.LineNumber);
+            var semiColon = tokens[9];
+            Assert.Equal(2, semiColon.LineNumber);
+            var closeCurly = tokens[11];
+            Assert.Equal(3, closeCurly.LineNumber);
+        }
+
+        [Fact]
+        public void LineContextOnlyIncludesUpToCurrentToken()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input =
+@"#main {
+  one two;
+}";
+
+            // Act
+            var tokens = lexer.ReadString(input).ToList();
+
+            // Assert
+            var two = tokens[7];
+            Assert.Equal("  one two", two.LineContext);
+        }
     }
 }

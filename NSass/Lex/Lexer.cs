@@ -8,26 +8,30 @@
     public class Lexer
     {
         private static readonly Dictionary<string, TokenType> TokenTypes;
+        private static readonly Dictionary<TokenType, string> TokenTypeStrings;
         private static readonly Dictionary<char, bool> SpecialChars;
 
+        private InputSource input;
         private StringBuilder currentToken;
-        private int lineNumber;
+        private StringBuilder currentLine;
+        private int currentLineNumber;
 
         static Lexer()
         {
             TokenTypes = new Dictionary<string, TokenType>();
-            TokenTypes.Add("/*", TokenType.Comment);
-            TokenTypes.Add("{", TokenType.LCurly);
-            TokenTypes.Add("}", TokenType.EndInterpolation);
-            TokenTypes.Add(":", TokenType.Colon);
-            TokenTypes.Add(";", TokenType.SemiColon);
-            TokenTypes.Add(",", TokenType.Comma);
-            TokenTypes.Add("+", TokenType.Plus);
-            TokenTypes.Add("-", TokenType.Minus);
-            TokenTypes.Add("/", TokenType.Div);
-            TokenTypes.Add("*", TokenType.Times);
-            TokenTypes.Add("(", TokenType.LParen);
-            TokenTypes.Add(")", TokenType.RParen);
+            TokenTypeStrings = new Dictionary<TokenType, string>();
+            AddTokenType("/*", TokenType.Comment);
+            AddTokenType("{", TokenType.LCurly);
+            AddTokenType("}", TokenType.EndInterpolation);
+            AddTokenType(":", TokenType.Colon);
+            AddTokenType(";", TokenType.SemiColon);
+            AddTokenType(",", TokenType.Comma);
+            AddTokenType("+", TokenType.Plus);
+            AddTokenType("-", TokenType.Minus);
+            AddTokenType("/", TokenType.Div);
+            AddTokenType("*", TokenType.Times);
+            AddTokenType("(", TokenType.LParen);
+            AddTokenType(")", TokenType.RParen);
 
             SpecialChars = new Dictionary<char, bool>();
             SpecialChars.Add('{', true);
@@ -46,7 +50,8 @@
         public Lexer()
         {
             this.currentToken = new StringBuilder();
-            this.lineNumber = 1;
+            this.currentLine = new StringBuilder();
+            this.currentLineNumber = 1;
         }
 
         private bool HasToken
@@ -64,9 +69,21 @@
             get { return this.HasToken && !char.IsWhiteSpace(this.currentToken[0]); }
         }
 
-        public IEnumerable<Token> Read(TextReader input)
+        public static string GetTokenTypeValue(TokenType type)
         {
-            return this.ReadMain(input).CombineCompoundTokens();
+            return TokenTypeStrings[type];
+        }
+
+        public IEnumerable<Token> Read(InputSource input)
+        {
+            this.input = input;
+            return this.ReadMain().CombineCompoundTokens();
+        }
+
+        private static void AddTokenType(string value, TokenType type)
+        {
+            TokenTypes.Add(value, type);
+            TokenTypeStrings.Add(type, value);
         }
 
         private static bool IsSpecialChar(char c, out bool singleSpecial)
@@ -84,9 +101,9 @@
                 || c == '&';
         }
 
-        private IEnumerable<Token> ReadMain(TextReader input)
+        private IEnumerable<Token> ReadMain()
         {
-            yield return this.MakeToken(TokenType.BeginStream, string.Empty);
+            yield return this.NewToken(TokenType.BeginStream, string.Empty);
 
             bool inBlockComment = false;
             bool inLineComment = false;
@@ -94,7 +111,7 @@
 
             while (true)
             {
-                int ret = input.Read();
+                int ret = this.input.Reader.Read();
                 if (ret == -1)
                 {
                     break;
@@ -105,7 +122,7 @@
                 // Special handling while in comments.
                 if (inBlockComment && c != '/')
                 {
-                    this.currentToken.Append(c);
+                    this.Append(c);
                     continue;
                 }
                 else if (inLineComment)
@@ -113,8 +130,8 @@
                     // TODO: better newline checking?
                     if (c == '\n')
                     {
-                        lineNumber += 1;
                         inLineComment = false;
+                        this.NewLine();
                     }
 
                     continue;
@@ -135,13 +152,13 @@
                             {
                                 if (this.currentToken.Length > 0 && this.currentToken[this.currentToken.Length - 1] == '*')
                                 {
-                                    this.currentToken.Append(c);
+                                    this.Append(c);
                                     inBlockComment = false;
                                     yield return this.EatToken(TokenType.Comment);
                                 }
                                 else
                                 {
-                                    this.currentToken.Append(c);
+                                    this.Append(c);
                                 }
                             }
                             else
@@ -159,7 +176,7 @@
                                         yield return this.EatToken();
                                     }
 
-                                    this.currentToken.Append(c);
+                                    this.Append(c);
                                 }
                             }
 
@@ -168,7 +185,7 @@
                         case '*':
                             if (this.currentToken.Length == 1 && this.currentToken[0] == '/')
                             {
-                                this.currentToken.Append(c);
+                                this.Append(c);
                                 inBlockComment = true;
                             }
                             else
@@ -190,21 +207,23 @@
                         yield return this.EatToken();
                     }
 
-                    this.currentToken.Append(c);
+                    this.Append(c);
                 }
                 else if (char.IsWhiteSpace(c))
                 {
-                    if (c == '\n')
-                    {
-                        lineNumber += 1;
-                    }
-
                     if (this.ShouldEatTokenWhiteSpace)
                     {
                         yield return this.EatToken();
                     }
 
-                    this.currentToken.Append(c);
+                    // TODO: better newline checking?
+                    if (c == '\n')
+                    {
+                        this.NewLine();
+                        continue;
+                    }
+
+                    this.Append(c);
                 }
                 else
                 {
@@ -220,7 +239,26 @@
                 yield return this.EatToken();
             }
 
-            yield return this.MakeToken(TokenType.EndOfStream, string.Empty);
+            yield return this.NewToken(TokenType.EndOfStream, string.Empty);
+        }
+
+        private void NewLine()
+        {
+            this.currentLine.Clear();
+            this.currentLineNumber += 1;
+        }
+
+        private void Append(char c)
+        {
+            this.currentToken.Append(c);
+            this.currentLine.Append(c);
+        }
+
+        private string GetLineContext(string tokenValue)
+        {
+            return tokenValue == null
+                ? null
+                : this.currentLine.ToString();
         }
 
         private Token EatToken()
@@ -241,24 +279,31 @@
         {
             var str = this.currentToken.ToString();
             var type = this.GetTokenType(str);
-            return this.MakeToken(type, str);
+            return this.NewToken(type, str);
         }
 
         private Token MakeToken(TokenType type)
         {
-            return this.MakeToken(type, this.currentToken.ToString());
-        }
-
-        private Token MakeToken(TokenType type, string value)
-        {
-            return new Token(type, value, this.lineNumber);
+            var str = this.currentToken.ToString();
+            return this.NewToken(type, str);
         }
 
         private Token MakeSpecialToken(char c)
         {
+            this.currentLine.Append(c);
             var str = c.ToString();
             var type = TokenTypes[str];
-            return this.MakeToken(type, str);
+            return this.NewToken(type, str);
+        }
+
+        private Token NewToken(TokenType type, string value)
+        {
+            return new Token(
+                type,
+                value,
+                this.GetLineContext(value),
+                this.input.FileName,
+                this.currentLineNumber);
         }
 
         private TokenType GetTokenType(string str)

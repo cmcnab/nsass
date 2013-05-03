@@ -45,9 +45,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CaptureMemoryStream.cs" />
     <Compile Include="Evaluate\TestTreeBuilder.cs" />
     <Compile Include="Evaluate\TestExpressionEvaluator.cs" />
-    <Compile Include="Parse\TestParserErrors.cs" />
+    <Compile Include="Parse\LambdaComparer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Parse\Expr.cs" />
     <Compile Include="Lex\TestLexer.cs" />
@@ -59,7 +60,9 @@
     <Compile Include="Lex\TokenComparer.cs" />
     <Compile Include="Lex\Tokens.cs" />
     <Compile Include="TestCompile.cs" />
+    <Compile Include="Shell\TestConsole.cs" />
     <Compile Include="TestEngine.cs" />
+    <Compile Include="TestSyntaxExceptions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

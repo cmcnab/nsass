@@ -10,5 +10,7 @@
         INode Parse();
 
         INode Parse(int precedence);
+
+        Token Consume();
     }
 }

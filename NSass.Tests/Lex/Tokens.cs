@@ -4,86 +4,89 @@
 
     public static class Tokens
     {
-        private const int DefaultLineNumber = 1;
-
         public static Token Begin()
         {
-            return new Token(TokenType.BeginStream, string.Empty, DefaultLineNumber);
+            return MakeToken(TokenType.BeginStream, string.Empty);
         }
 
         public static Token End()
         {
-            return new Token(TokenType.EndOfStream, string.Empty, DefaultLineNumber);
+            return MakeToken(TokenType.EndOfStream, string.Empty);
         }
 
         public static Token WhiteSpace()
         {
-            return new Token(TokenType.WhiteSpace, " ", DefaultLineNumber);
+            return MakeToken(TokenType.WhiteSpace, " ");
         }
 
         public static Token Symbol(string symbol)
         {
-            return new Token(TokenType.SymLit, symbol, DefaultLineNumber);
+            return MakeToken(TokenType.SymLit, symbol);
         }
 
         public static Token Variable(string variable)
         {
-            return new Token(TokenType.Variable, variable, DefaultLineNumber);
+            return MakeToken(TokenType.Variable, variable);
         }
 
         public static Token Comment(string comment)
         {
-            return new Token(TokenType.Comment, comment, DefaultLineNumber);
+            return MakeToken(TokenType.Comment, comment);
         }
 
         public static Token LCurly()
         {
-            return new Token(TokenType.LCurly, "{", DefaultLineNumber);
+            return MakeToken(TokenType.LCurly, "{");
         }
 
         public static Token EndInterpolation()
         {
-            return new Token(TokenType.EndInterpolation, "}", DefaultLineNumber);
+            return MakeToken(TokenType.EndInterpolation, "}");
         }
 
         public static Token Colon()
         {
-            return new Token(TokenType.Colon, ":", DefaultLineNumber);
+            return MakeToken(TokenType.Colon, ":");
         }
 
         public static Token SemiColon()
         {
-            return new Token(TokenType.SemiColon, ";", DefaultLineNumber);
+            return MakeToken(TokenType.SemiColon, ";");
         }
 
         public static Token Comma()
         {
-            return new Token(TokenType.Comma, ",", DefaultLineNumber);
+            return MakeToken(TokenType.Comma, ",");
         }
 
         public static Token Plus()
         {
-            return new Token(TokenType.Plus, "+", DefaultLineNumber);
+            return MakeToken(TokenType.Plus, "+");
         }
 
         public static Token Minus()
         {
-            return new Token(TokenType.Minus, "-", DefaultLineNumber);
+            return MakeToken(TokenType.Minus, "-");
         }
 
         public static Token Div()
         {
-            return new Token(TokenType.Div, "/", DefaultLineNumber);
+            return MakeToken(TokenType.Div, "/");
         }
 
         public static Token LParen()
         {
-            return new Token(TokenType.LParen, "(", DefaultLineNumber);
+            return MakeToken(TokenType.LParen, "(");
         }
 
         public static Token RParen()
         {
-            return new Token(TokenType.RParen, ")", DefaultLineNumber);
+            return MakeToken(TokenType.RParen, ")");
+        }
+
+        private static Token MakeToken(TokenType type, string value)
+        {
+            return new Token(type, value, string.Empty, string.Empty, 0);
         }
     }
 }

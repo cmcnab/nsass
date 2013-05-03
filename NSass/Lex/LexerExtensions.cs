@@ -7,7 +7,7 @@
     {
         public static IEnumerable<Token> ReadString(this Lexer lexer, string input)
         {
-            return lexer.Read(new StringReader(input));
+            return lexer.Read(InputSource.FromString(input));
         }
     }
 }

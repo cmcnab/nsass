@@ -42,7 +42,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Console.cs" />
+    <Compile Include="InputSource.cs" />
+    <Compile Include="Shell\Console.cs" />
+    <Compile Include="Shell\IConsoleIO.cs" />
+    <Compile Include="Shell\ConsoleIO.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Evaluate\IVariableScope.cs" />
     <Compile Include="Evaluate\Processor.cs" />
@@ -97,7 +100,6 @@
     <Compile Include="Parse\SyntaxException.cs" />
     <Compile Include="Lex\Token.cs" />
     <Compile Include="Lex\TokenType.cs" />
-    <Compile Include="Util\LambdaComparer.cs" />
     <Compile Include="Util\Params.cs" />
   </ItemGroup>
   <ItemGroup />

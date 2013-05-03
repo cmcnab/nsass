@@ -5,16 +5,14 @@
 
     public static class ParseContextExtensions
     {
-        // TODO: look up expecting from token type.
-        public static Token AssertNextIs(this ParseContext context, TokenType type, string expecting)
+        public static Token AssertPeekIs(this ParseContext context, TokenType expectedType)
         {
-            var token = context.MoveNext();
-            if (token == null || token.Type != type)
-            {
-                throw new SyntaxException(context, string.Format("expecting \"{0}\", was \"{1}\"", expecting, token == null ? string.Empty : token.Value));
-            }
+            return context.AssertIfIs(expectedType, Lexer.GetTokenTypeValue(expectedType), () => context.Peek());
+        }
 
-            return token;
+        public static Token AssertNextIs(this ParseContext context, TokenType expectedType)
+        {
+            return context.AssertIfIs(expectedType, Lexer.GetTokenTypeValue(expectedType), () => context.MoveNext());
         }
 
         public static ParseContext MoveNextIfNextIs(this ParseContext context, TokenType type)
@@ -26,6 +24,18 @@
             }
 
             return context;
+        }
+
+        private static Token AssertIfIs(this ParseContext context, TokenType type, string expectedValue, Func<Token> getter)
+        {
+            var current = context.Current;
+            var next = getter();
+            if (next == null || next.Type != type)
+            {
+                throw SyntaxException.Expecting(type, current, next);
+            }
+
+            return next;
         }
     }
 }

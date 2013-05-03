@@ -35,7 +35,7 @@
 
             if (!this.isRoot)
             {
-                parser.Tokens.AssertNextIs(TokenType.EndInterpolation, "}");
+                parser.Tokens.AssertNextIs(TokenType.EndInterpolation);
                 return new Body(statements);
             }
             else
@@ -61,9 +61,6 @@
                     parser.Tokens.MoveNext();
                     return new Comment(parser.Tokens.Current.Value);
 
-                case TokenType.EndInterpolation:
-                    return null;
-
                 default:
                     break;
             }
@@ -74,16 +71,13 @@
                 case TokenType.Colon:
                     // Assignment or property.
                     // TODO: no properties on root
-                    var property = parser.Parse();
-                    return property;
+                    return parser.Parse();
 
                 case TokenType.EndInterpolation:
-                    parser.Tokens.MoveNext();
-                    return null;
+                    throw SyntaxException.Expecting(TokenType.LCurly, first, second);
 
                 case TokenType.EndOfStream:
-                    parser.Tokens.MoveNext();
-                    return null;
+                    throw SyntaxException.Expecting(TokenType.LCurly, first, second);
 
                 default:
                     break;
@@ -94,6 +88,7 @@
             var selectors = this.GatherSelectors(parser).ToList();
 
             // End one before the LCurly so it will invoke the body parser again.
+            parser.Tokens.AssertPeekIs(TokenType.LCurly);
             var body = parser.Parse();
             return new Rule(selectors, (Body)body);
         }

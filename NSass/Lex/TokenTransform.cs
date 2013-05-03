@@ -22,8 +22,9 @@
                     var joined = new Token(
                         lookAhead[0].Type, 
                         string.Join(lookAhead[1].Value, lookAhead[0].Value, token.Value), 
-                        lookAhead[0].Line);
-
+                        lookAhead[0].LineContext,
+                        lookAhead[0].FileName,
+                        lookAhead[0].LineNumber);
                     lookAhead.Clear();
                     lookAhead.Add(joined);
                     continue;
