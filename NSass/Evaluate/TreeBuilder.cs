@@ -8,7 +8,7 @@
     {
         public INode Build(INode tree)
         {
-            this.Visit((dynamic)tree, new VisitData(null, 0, null));
+            this.Visit((dynamic)tree, new VisitData(null, 0));
             return tree;
         }
 
@@ -50,12 +50,11 @@
 
         private void Visit(Body body, VisitData arg)
         {
-            body.Variables = new VariableScope(body, arg.Scope);
             SetNode(body, arg);
 
             var next = ShouldDescend(body)
-                ? arg.DescendFrom(body, body.Variables)
-                : arg.LevelWith(body, body.Variables);
+                ? arg.DescendFrom(body)
+                : arg.LevelWith(body);
 
             this.VisitChildren(body, next);
         }
@@ -91,13 +90,11 @@
         {
             private readonly INode parent;
             private readonly int depth;
-            private readonly VariableScope scope;
 
-            public VisitData(INode parent, int depth, VariableScope scope)
+            public VisitData(INode parent, int depth)
             {
                 this.parent = parent;
                 this.depth = depth;
-                this.scope = scope;
             }
 
             public INode Parent
@@ -110,24 +107,14 @@
                 get { return this.depth; }
             }
 
-            public VariableScope Scope
-            {
-                get { return this.scope; }
-            }
-
             public VisitData LevelWith(INode parent)
             {
-                return new VisitData(parent, this.depth, this.scope);
+                return new VisitData(parent, this.depth);
             }
 
-            public VisitData LevelWith(INode parent, VariableScope scope)
+            public VisitData DescendFrom(INode parent)
             {
-                return new VisitData(parent, this.depth, scope);
-            }
-
-            public VisitData DescendFrom(INode parent, VariableScope scope)
-            {
-                return new VisitData(parent, this.depth + 1, scope);
+                return new VisitData(parent, this.depth + 1);
             }
         }
     }

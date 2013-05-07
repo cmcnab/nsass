@@ -255,6 +255,47 @@ a {
         }
 
         [Fact]
+        public void SimpleExpressionSampleOutputCorrectCss()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"#main {
+  color: #010203 + #040506;
+}";
+            var expected =
+@"#main {
+  color: #050709; }";
+
+            // Act
+            var output = engine.Compile(input);
+
+            // Assert
+            Assert.Equal(expected, output);
+        }
+
+        [Fact]
+        public void SimpleVariableSampleOutputCorrectCss()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"$main-color: #00ff00;
+#main {
+  color: $main-color;
+}";
+            var expected =
+@"#main {
+  color: #00ff00; }";
+
+            // Act
+            var output = engine.Compile(input);
+
+            // Assert
+            Assert.Equal(expected, output);
+        }
+
+        [Fact]
         public void SimpleMixinSampleOutputCorrectCss()
         {
             // Arrange
@@ -282,6 +323,34 @@ a {
   color: #ff0000;
   padding: 4px;
   margin-top: 10px; }";
+
+            // Act
+            var output = engine.Compile(input);
+
+            // Assert
+            Assert.Equal(expected, output);
+        }
+
+        [Fact]
+        public void SimpleMixinWithArgumentSampleOutputCorrectCss()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"@mixin sexy-border($color, $width) {
+  border: {
+    color: $color;
+    width: $width;
+    style: dashed;
+  }
+}
+
+p { @include sexy-border(blue, 1in); }";
+            var expected =
+@"p {
+  border-color: blue;
+  border-width: 1in;
+  border-style: dashed; }";
 
             // Act
             var output = engine.Compile(input);

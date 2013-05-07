@@ -4,8 +4,15 @@
     using NSass.Parse.Expressions;
     using NSass.Parse.Values;
 
-    internal class ExpressionEvaluator
+    public class ExpressionEvaluator
     {
+        private readonly IVariableScope scope;
+
+        public ExpressionEvaluator(IVariableScope scope)
+        {
+            this.scope = scope;
+        }
+
         public IValue Evaluate(INode tree)
         {
             return this.Visit((dynamic)tree);
@@ -25,7 +32,7 @@
 
         private IValue Visit(Variable variable)
         {
-            return variable.Resolve();
+            return variable.Resolve(this.scope);
         }
 
         private IValue Visit(Literal literal)

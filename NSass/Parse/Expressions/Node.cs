@@ -13,10 +13,5 @@
         public int Depth { get; internal set; }
 
         public abstract IEnumerable<INode> Children { get; }
-
-        internal IVariableScope Scope
-        {
-            get { return this.FindParentType<Body>().Variables; }
-        }
     }
 }

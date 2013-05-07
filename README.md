@@ -6,18 +6,4 @@ For the first iteration the focus is only on the SCSS syntax and right now it on
 
 ### TODO ###
 
-- [x] Nesting
-- [x] Parent References
-- [x] Variables
-- [x] Comments
-- [ ] Operations and Functions
-  - Data types
-  - Conversions
-- [ ] Interpolation
-- [ ] Mixins
-- [ ] Built-in functions
-- [ ] Variable defaults
-- [ ] @import
-- [ ] @extend
-  - Placeholder selectors
-- [ ] Old syntax
+See the public [Trello Board](https://trello.com/b/O4lTwe9D).

@@ -2,6 +2,7 @@
 {
     using NSass.Lex;
     using NSass.Parse;
+    using NSass.Util;
     using Xunit;
 
     public class TestParserMixins
@@ -63,6 +64,67 @@
                                 Expr.Property(
                                     "margin-top",
                                     Expr.Literal("10px"))));
+
+            // Act
+            var parser = new Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
+
+            // Assert
+            Assert.Equal(expected, ast, Expr.Comparer);
+        }
+
+        [Fact]
+        public void MixinWithArgumentsParsesCorrectly()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input =
+@"@mixin sexy-border($color, $width) {
+  border: {
+    color: $color;
+    width: $width;
+    style: dashed;
+  }
+}";
+            var expected = Expr.Root(
+                            Expr.Mixin(
+                                "sexy-border",
+                                Params.Get("$color", "$width"),
+                                Expr.NestedProperty(
+                                    "border",
+                                    Expr.Property(
+                                        "color",
+                                        Expr.Variable("$color")),
+                                    Expr.Property(
+                                        "width",
+                                        Expr.Variable("$width")),
+                                    Expr.Property(
+                                        "style",
+                                        Expr.Literal("dashed")))));
+
+            // Act
+            var parser = new Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
+
+            // Assert
+            Assert.Equal(expected, ast, Expr.Comparer);
+        }
+
+        [Fact]
+        public void IncludeWithArgumentsParsesCorrectly()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input =
+@"p { @include sexy-border(blue, 1in); }";
+
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "p",
+                                Expr.Include(
+                                    "sexy-border",
+                                    Expr.Literal("blue"),
+                                    Expr.Literal("1in"))));
 
             // Act
             var parser = new Parser(lexer.ReadString(input));

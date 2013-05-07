@@ -3,14 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using NSass.Evaluate;
 
     public static class NodeExtensions
     {
-        public static Root Root(this INode node)
-        {
-            return (Root)WalkToRoot(node).Last();
-        }
-
         public static INode FindParent(this INode node, Predicate<INode> pred)
         {
             if (node == null)
@@ -48,6 +44,11 @@
                    let nt = n as T
                    where nt != null
                    select nt;
+        }
+
+        public static Root Root(this INode node)
+        {
+            return (Root)WalkToRoot(node).Last();
         }
     }
 }

@@ -117,16 +117,52 @@
         private Mixin ParseMixin(IParser parser)
         {
             var name = parser.Tokens.AssertNextIs(TokenType.SymLit, "identifier");
+            var next = parser.Tokens.Peek();
+            List<string> arguments = new List<string>();
+            switch (next.Type)
+            {
+                case TokenType.LCurly:
+                    break;
+
+                case TokenType.LParen:
+                    parser.Tokens.MoveNext();
+                    arguments = this.GatherMixinArguments(parser).ToList();
+                    parser.Tokens.AssertNextIs(TokenType.RParen);
+                    break;
+
+                default:
+                    // TODO: syntax error
+                    break;
+            }
+
             parser.Tokens.AssertPeekIs(TokenType.LCurly);
             var body = parser.Parse();
-            return new Mixin(name.Value, (Body)body);
+            return new Mixin(name.Value, arguments, (Body)body);
         }
 
         private Include ParseInclude(IParser parser)
         {
             var name = parser.Tokens.AssertNextIs(TokenType.SymLit, "identifier");
+            var next = parser.Tokens.Peek();
+            List<INode> arguments = new List<INode>();
+            switch (next.Type)
+            {
+                case TokenType.SemiColon:
+                    break;
+
+                case TokenType.LParen:
+                    parser.Tokens.MoveNext();
+                    arguments = this.GatherIncludeArguments(parser);
+                    parser.Tokens.AssertNextIs(TokenType.RParen);
+                    break;
+
+                default:
+                    // TODO: syntax error
+                    break;
+            }
+
             parser.Tokens.MoveNextIfNextIs(TokenType.SemiColon);
-            return new Include(name, name.Value);
+            return new Include(name, name.Value, arguments);
         }
 
         private Rule ParseRule(IParser parser)
@@ -168,6 +204,60 @@
             {
                 yield return string.Join(" ", currentSelector);
             }
+        }
+
+        private IEnumerable<string> GatherMixinArguments(IParser parser)
+        {
+            while (true)
+            {
+                var token = parser.Tokens.Peek();
+                if (token.Type == TokenType.Variable)
+                {
+                    yield return token.Value;
+                }
+                else if (token.Type != TokenType.Comma)
+                {
+                    break;
+                }
+
+                parser.Tokens.MoveNext();
+            }
+        }
+
+        private List<INode> GatherIncludeArguments(IParser parser)
+        {
+            List<INode> arguments = new List<INode>();
+            arguments.Add(null);
+
+            while (true)
+            {
+                var token = parser.Tokens.Peek();
+                if (token.Type == TokenType.RParen)
+                {
+                    break;
+                }
+                else if (token.Type == TokenType.Comma)
+                {
+                    arguments.Add(null);
+                    parser.Tokens.MoveNext();
+                }
+                else
+                {
+                    if (arguments[arguments.Count - 1] != null)
+                    {
+                        throw new SyntaxException(); // TODO:
+                    }
+
+                    arguments[arguments.Count - 1] = parser.Parse();
+                }
+            }
+
+            if (arguments.Any(a => a == null))
+            {
+                throw new SyntaxException(); // TODO:
+            }
+
+            return arguments;
         }
 
         private string GatherToEndOfStatement(IParser parser)

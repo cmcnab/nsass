@@ -1,5 +1,6 @@
 ﻿namespace NSass.Parse.Expressions
 {
+    using NSass.Evaluate;
     using NSass.Parse.Values;
 
     /// <summary>
@@ -10,11 +11,6 @@
         public Assignment(string name, INode expression)
             : base(name, expression)
         {
-        }
-
-        public void Assign(IValue value)
-        {
-            this.Scope.Assign(this.Name, value);
         }
     }
 }

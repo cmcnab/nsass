@@ -24,7 +24,5 @@
         {
             get { return this.statements; }
         }
-
-        public VariableScope Variables { get; internal set; }
     }
 }

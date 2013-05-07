@@ -10,9 +10,9 @@
         {
         }
 
-        public IValue Resolve()
+        public IValue Resolve(IVariableScope scope)
         {
-            return this.Scope.Resolve(this.Text);
+            return scope.Resolve(this.Text);
         }
     }
 }

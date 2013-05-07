@@ -63,31 +63,6 @@
         }
 
         [Fact]
-        public void OneRuleAndPropertyValueGetsSet()
-        {
-            // Arrange
-            //
-            // #main {
-            //   color: #00ff00;
-            // }
-            var ast = Expr.Root(
-                            Expr.Rule(
-                                "#main",
-                                Expr.Property(
-                                    "color",
-                                    Expr.Literal("#00ff00"))));
-
-            // Act
-            var evald = ast.Process();
-
-            // Assert
-            var root = Assert.IsType<Root>(evald);
-            var rule = Assert.IsType<Rule>(root.Statements.First());
-            var prop = Assert.IsType<Property>(rule.Body.Statements.First());
-            Assert.Equal("#00ff00", prop.Value.ToString());
-        }
-
-        [Fact]
         public void NestedRulePropertyParentRulesGetSet()
         {
             // Arrange
@@ -303,35 +278,6 @@
             var ruleA = Assert.IsType<Rule>(root.Statements[0]);
             var ruleHover = Assert.IsType<Rule>(ruleA.Body.Statements[0]);
             Assert.Equal("a:hover", ruleHover.Selectors[0]);
-        }
-
-        [Fact]
-        public void VariableScopeIsSetOnBody()
-        {
-            // Arrange
-            //
-            // $main-color: #00ff00;
-            // #main {
-            //   color: $main-color;
-            // }
-            var ast = Expr.Root(
-                            Expr.Assignment(
-                                "$main-color",
-                                Expr.Literal("#00ff00")),
-                            Expr.Rule(
-                                "#main",
-                                Expr.Property(
-                                    "color",
-                                    Expr.Variable("$main-color"))));
-
-            // Act
-            var evald = ast.Process();
-
-            // Assert
-            var root = Assert.IsType<Root>(evald);
-            var rule = Assert.IsType<Rule>(root.Statements[1]);
-            Assert.NotNull(root.Variables);
-            Assert.NotNull(rule.Body.Variables);
         }
     }
 }

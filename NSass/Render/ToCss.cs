@@ -1,9 +1,13 @@
 ﻿namespace NSass.Render
 {
+    using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using NSass.Evaluate;
     using NSass.Parse;
     using NSass.Parse.Expressions;
+    using NSass.Parse.Values;
 
     public class ToCss
     {
@@ -22,10 +26,12 @@
         private class Visitor
         {
             private TextWriter output;
+            private Stack<IVariableScope> scopes;
 
             public Visitor(TextWriter output)
             {
                 this.output = output;
+                this.scopes = new Stack<IVariableScope>();
             }
 
             public void VisitTree(INode tree)
@@ -42,7 +48,7 @@
             {
                 var body = node.Parent as Body;
                 var activeStatements = from s in body.Statements
-                                        where !(s is Mixin)
+                                        where !(s is Mixin) && !(s is Assignment)
                                         select s;
                 return body != null && activeStatements.FirstOrDefault() == node;
             }
@@ -94,10 +100,16 @@
 
             private void Visit(Body body)
             {
+                this.scopes.Push(this.scopes.Count == 0
+                    ? new VariableScope()
+                    : new VariableScope(this.scopes.Peek()));
+
                 foreach (var statement in body.Statements)
                 {
                     this.Visit((dynamic)statement);
                 }
+
+                this.scopes.Pop();
             }
 
             private void Visit(Include include)
@@ -109,10 +121,14 @@
                     throw SyntaxException.MissingMixin(include.Name, include.SourceToken);
                 }
 
+                this.scopes.Push(this.MakeIncludeScope(mixin, include));
+
                 foreach (var child in mixin.Body.Statements)
                 {
                     this.Visit((dynamic)child);
                 }
+
+                this.scopes.Pop();
             }
 
             private void Visit(Property property)
@@ -130,8 +146,13 @@
                 this.WriteIdent(props.First());
                 this.output.Write(string.Join("-", from p in props select p.Name));
                 this.output.Write(": ");
-                this.output.Write(property.Value);
+                this.output.Write(this.Evaluate(property.Expression));
                 this.output.Write(";");
+            }
+
+            private void Visit(Assignment assignment)
+            {
+                this.scopes.Peek().Assign(assignment.Name, this.Evaluate(assignment.Expression));
             }
 
             private void Visit(Comment comment)
@@ -157,6 +178,24 @@
                 {
                     this.output.Write(' ');
                 }
+            }
+
+            private IValue Evaluate(INode expression)
+            {
+                var evaluator = new ExpressionEvaluator(this.scopes.Peek());
+                return evaluator.Evaluate(expression);
+            }
+
+            private IVariableScope MakeIncludeScope(Mixin mixin, Include include)
+            {
+                var scope = new VariableScope(this.scopes.Peek());
+
+                foreach (var p in mixin.Arguments.Zip(include.Arguments, (p, a) => Tuple.Create(p, a)))
+                {
+                    scope.Assign(p.Item1, this.Evaluate(p.Item2));
+                }
+
+                return scope;
             }
         }
     }

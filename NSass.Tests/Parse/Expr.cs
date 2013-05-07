@@ -31,12 +31,22 @@
 
         public static Mixin Mixin(string name, params INode[] statements)
         {
-            return new Mixin(name, new Body(new List<INode>(statements)));
+            return new Mixin(name, new List<string>(), new Body(new List<INode>(statements)));
+        }
+
+        public static Mixin Mixin(string name, string[] arguments, params INode[] statements)
+        {
+            return new Mixin(name, arguments, new Body(new List<INode>(statements)));
         }
 
         public static Include Include(string name)
         {
-            return new Include(null, name);
+            return new Include(null, name, new List<INode>());
+        }
+
+        public static Include Include(string name, params INode[] arguments)
+        {
+            return new Include(null, name, new List<INode>(arguments));
         }
 
         public static Property Property(string name, INode expression)
@@ -127,6 +137,19 @@
             return comment.Text == otherComment.Text;
         }
 
+        private static bool ExpressionsEqual(Mixin mixin, INode other)
+        {
+            var otherMixin = other as Mixin;
+            if (otherMixin == null)
+            {
+                return false;
+            }
+
+            return mixin.Name == otherMixin.Name
+                && Enumerable.SequenceEqual(mixin.Arguments, otherMixin.Arguments)
+                && ExpressionsEqual(mixin.Body, otherMixin.Body);
+        }
+
         private static bool ExpressionsEqual(Include include, INode other)
         {
             var otherInclude = other as Include;
@@ -135,7 +158,8 @@
                 return false;
             }
 
-            return include.Name == otherInclude.Name;
+            return include.Name == otherInclude.Name
+                && Enumerable.SequenceEqual(include.Arguments, otherInclude.Arguments, Comparer);
         }
 
         private static bool ExpressionsEqual(BinaryOperator op, INode other)

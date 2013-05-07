@@ -32,7 +32,7 @@
 
         public bool HasProperties
         {
-            get { return this.body.Statements.Any(s => s is Property); }
+            get { return this.body.Statements.Any(s => s is Property || s is Include); }
         }
     }
 }

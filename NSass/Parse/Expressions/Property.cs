@@ -29,7 +29,5 @@
         {
             get { return this.expression; }
         }
-
-        public IValue Value { get; set; }
     }
 }

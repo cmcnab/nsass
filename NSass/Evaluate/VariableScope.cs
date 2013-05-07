@@ -1,20 +1,32 @@
 ﻿namespace NSass.Evaluate
 {
     using System.Collections.Generic;
-    using NSass.Parse.Expressions;
     using NSass.Parse.Values;
 
     public class VariableScope : IVariableScope
     {
-        private readonly VariableScope parentScope;
-        private readonly Body owner;
-        private readonly Dictionary<string, IValue> variables;
+        private readonly IVariableScope parentScope;
+        private readonly IDictionary<string, IValue> variables;
 
-        public VariableScope(Body owner, VariableScope parentScope)
+        public VariableScope()
+            : this(null, new Dictionary<string, IValue>())
         {
-            this.owner = owner;
+        }
+
+        public VariableScope(IVariableScope parentScope)
+            : this(parentScope, new Dictionary<string, IValue>())
+        {
+        }
+
+        private VariableScope(IVariableScope parentScope, IDictionary<string, IValue> variables)
+        {
             this.parentScope = parentScope;
-            this.variables = new Dictionary<string, IValue>();
+            this.variables = variables;
+        }
+
+        public IVariableScope AsChildOf(IVariableScope parent)
+        {
+            return new VariableScope(parent, this.variables);
         }
 
         public IVariableScope Assign(string variable, IValue value)
