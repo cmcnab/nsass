@@ -2,6 +2,7 @@
 {
     using System.IO;
     using System.Linq;
+    using NSass.Parse;
     using NSass.Parse.Expressions;
 
     public class ToCss
@@ -103,7 +104,10 @@
             {
                 var mixins = include.Root().Mixins;
                 var mixin = mixins.FirstOrDefault(m => m.Name == include.Name);
-                // TODO: handle null
+                if (mixin == null)
+                {
+                    throw SyntaxException.MissingMixin(include.Name, include.SourceToken);
+                }
 
                 foreach (var child in mixin.Body.Statements)
                 {

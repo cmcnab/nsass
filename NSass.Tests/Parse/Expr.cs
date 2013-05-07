@@ -36,7 +36,7 @@
 
         public static Include Include(string name)
         {
-            return new Include(name);
+            return new Include(null, name);
         }
 
         public static Property Property(string name, INode expression)

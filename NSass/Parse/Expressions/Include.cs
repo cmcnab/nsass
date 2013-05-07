@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NSass.Lex;
 
 namespace NSass.Parse.Expressions
 {
@@ -10,8 +11,9 @@ namespace NSass.Parse.Expressions
     {
         private readonly string name;
 
-        public Include(string name)
+        public Include(Token token, string name)
         {
+            this.SourceToken = token;
             this.name = name;
         }
 

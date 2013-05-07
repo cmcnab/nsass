@@ -33,8 +33,15 @@
             this.lineNumber = 0;
         }
 
-        public SyntaxException(string lineContext, string expectedValue, string encounteredValue, Token at)
-            : base(FormatMessage(lineContext, expectedValue, encounteredValue, at))
+        private SyntaxException(string message, Token at)
+            : base(message)
+        {
+            this.lineContext = at.LineContext;
+            this.lineNumber = at.LineNumber;
+        }
+
+        private SyntaxException(string message, Token at, string lineContext)
+            : base(message)
         {
             this.lineContext = lineContext;
             this.lineNumber = at.LineNumber;
@@ -63,7 +70,22 @@
             var value = at == null
                 ? string.Empty
                 : at.Value;
-            return new SyntaxException(lineContext, expectedMessage, value, at ?? context);
+            return new SyntaxException(FormatMessage(lineContext, expectedMessage, value, at ?? context), at, lineContext);
+        }
+
+        public static SyntaxException MissingMixin(string mixinName, Token at)
+        {
+            return new SyntaxException(FormatMissingMixinMessage(mixinName, at), at);
+        }
+
+        private static string FormatMissingMixinMessage(string mixinName, Token at)
+        {
+            return string.Format(
+                "Syntax error: Undefined mixin '{0}'.{1}        on line {2} of {3}, in `{0}'{1}        from line {2} of {3}",
+                mixinName,
+                Environment.NewLine,
+                at.LineNumber,
+                at.FileName);
         }
 
         private static string FormatMessage(string lineContext, string expectedValue, string encounteredValue, Token at)

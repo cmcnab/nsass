@@ -123,7 +123,7 @@ using NSass.Parse.Expressions;
         {
             var name = parser.Tokens.AssertNextIs(TokenType.SymLit, "identifier");
             parser.Tokens.MoveNextIfNextIs(TokenType.SemiColon);
-            return new Include(name.Value);
+            return new Include(name, name.Value);
         }
 
         private Rule ParseRule(IParser parser)
