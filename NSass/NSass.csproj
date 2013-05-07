@@ -43,6 +43,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="InputSource.cs" />
+    <Compile Include="Parse\Expressions\Include.cs" />
     <Compile Include="Parse\Expressions\Mixin.cs" />
     <Compile Include="Shell\Console.cs" />
     <Compile Include="Shell\IConsoleIO.cs" />

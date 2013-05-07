@@ -255,7 +255,43 @@ a {
         }
 
         [Fact]
-        public void MixinSampleOutputCorrectCss()
+        public void SimpleMixinSampleOutputCorrectCss()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"@mixin large-text {
+  font: {
+    family: Arial;
+    size: 20px;
+    weight: bold;
+  }
+  color: #ff0000;
+}
+
+.page-title {
+  @include large-text;
+  padding: 4px;
+  margin-top: 10px;
+}";
+            var expected =
+@".page-title {
+  font-family: Arial;
+  font-size: 20px;
+  font-weight: bold;
+  color: #ff0000;
+  padding: 4px;
+  margin-top: 10px; }";
+
+            // Act
+            var output = engine.Compile(input);
+
+            // Assert
+            Assert.Equal(expected, output);
+        }
+
+        [Fact]
+        public void BiggerMixinSampleOutputCorrectCss()
         {
             // Arrange
             var engine = new Engine();
@@ -286,6 +322,30 @@ a {
     font-weight: bold; }
   #data td, #data th {
     padding: 2px; }";
+
+            // Act
+            var output = engine.Compile(input);
+
+            // Assert
+            Assert.Equal(expected, output);
+        }
+
+        [Fact]
+        public void UnknownDirectivePassedLiterally()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@".page-title {
+  @foo;
+  padding: 4px;
+  margin-top: 10px;
+}";
+            var expected =
+@".page-title {
+  @foo;
+  padding: 4px;
+  margin-top: 10px; }";
 
             // Act
             var output = engine.Compile(input);

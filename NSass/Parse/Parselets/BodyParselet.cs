@@ -1,9 +1,10 @@
 ﻿namespace NSass.Parse.Parselets
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using NSass.Lex;
-    using NSass.Parse.Expressions;
+    using System;
+using System.Collections.Generic;
+using System.Linq;
+using NSass.Lex;
+using NSass.Parse.Expressions;
 
     public class BodyParselet : IPrefixParselet
     {
@@ -53,13 +54,21 @@
 
         private INode ParseStatement(IParser parser)
         {
-            // TODO: If the first token is a comment, return comment.
             var first = parser.Tokens.LookAhead(1);
             switch (first.Type)
             {
                 case TokenType.Comment:
                     parser.Tokens.MoveNext();
                     return new Comment(parser.Tokens.Current.Value);
+
+                case TokenType.SymLit:
+                    var directiveParser = this.CanParseAsDirective(first.Value);
+                    if (directiveParser != null)
+                    {
+                        parser.Tokens.MoveNext();
+                        return directiveParser(parser);
+                    }
+                    break;
 
                 default:
                     break;
@@ -83,15 +92,22 @@
                     break;
             }
 
-            // Rule or directive.
-            parser.Tokens.MoveNext();
-            if (parser.Tokens.Current.Value == "@mixin")
+            return this.ParseRule(parser);
+        }
+
+        private Func<IParser, INode> CanParseAsDirective(string literal)
+        {
+            if (literal == "@mixin")
             {
-                return this.ParseMixin(parser);
+                return this.ParseMixin;
+            }
+            else if (literal == "@include")
+            {
+                return this.ParseInclude;
             }
             else
             {
-                return this.ParseRule(parser);
+                return null;
             }
         }
 
@@ -103,8 +119,16 @@
             return new Mixin(name.Value, (Body)body);
         }
 
+        private Include ParseInclude(IParser parser)
+        {
+            var name = parser.Tokens.AssertNextIs(TokenType.SymLit, "identifier");
+            parser.Tokens.MoveNextIfNextIs(TokenType.SemiColon);
+            return new Include(name.Value);
+        }
+
         private Rule ParseRule(IParser parser)
         {
+            parser.Tokens.MoveNext();
             var selectors = this.GatherRuleSelectors(parser).ToList();
 
             // End one before the LCurly so it will invoke the body parser again.

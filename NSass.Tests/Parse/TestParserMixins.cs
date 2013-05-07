@@ -46,5 +46,35 @@ namespace NSass.Tests.Parse
             // Assert
             Assert.Equal(expected, ast, Expr.Comparer);
         }
+
+        [Fact]
+        public void SimpleIncludeParsesCorrectly()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input =
+@".page-title {
+  @include large-text;
+  padding: 4px;
+  margin-top: 10px;
+}";
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                ".page-title",
+                                Expr.Include("large-text"),
+                                Expr.Property(
+                                    "padding",
+                                    Expr.Literal("4px")),
+                                Expr.Property(
+                                    "margin-top",
+                                    Expr.Literal("10px"))));
+
+            // Act
+            var parser = new Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
+
+            // Assert
+            Assert.Equal(expected, ast, Expr.Comparer);
+        }
     }
 }

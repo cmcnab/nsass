@@ -13,5 +13,10 @@ namespace NSass.Parse.Expressions
             : base(Params.Get(name), body)
         {
         }
+
+        public string Name
+        {
+            get { return this.Selectors.First(); }
+        }
     }
 }

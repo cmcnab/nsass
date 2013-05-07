@@ -163,6 +163,45 @@
             Assert.Equal(FormatErrorMessageLiteral("@mixin ", "identifier", "{", 1, InputSource.StdInFileName), ex.Message);
         }
 
+        [Fact]
+        public void IncludeMissingNameHasCorrectMessage()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@".page-title {
+  @include ;
+  padding: 4px;
+}";
+
+            // Act/Assert
+            var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
+            Assert.Equal(FormatErrorMessageLiteral("  @include ", "identifier", ";", 2, InputSource.StdInFileName), ex.Message);
+        }
+
+        [Fact]
+        public void IncludeMissingMixinHasCorrectMessage()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@".page-title {
+  @include large-text;
+  padding: 4px;
+}";
+
+            var errorMessage = string.Format(
+@"Syntax error: Undefined mixin 'large-text'.
+        on line {0} of {1}, in `large-text'
+        from line {0} of {1}",
+                2,
+                InputSource.StdInFileName);
+
+            // Act/Assert
+            var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
+            Assert.Equal(errorMessage, ex.Message);
+        }
+
         private static string FormatErrorMessage(string context, string expected, string actual, int lineNumber, string fileName)
         {
             return FormatErrorMessageLiteral(context, "\"" + expected + "\"", actual, lineNumber, fileName);

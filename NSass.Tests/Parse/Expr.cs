@@ -34,6 +34,11 @@
             return new Mixin(name, new Body(new List<INode>(statements)));
         }
 
+        public static Include Include(string name)
+        {
+            return new Include(name);
+        }
+
         public static Property Property(string name, INode expression)
         {
             return new Property(name, expression);
@@ -120,6 +125,17 @@
             }
 
             return comment.Text == otherComment.Text;
+        }
+
+        private static bool ExpressionsEqual(Include include, INode other)
+        {
+            var otherInclude = other as Include;
+            if (otherInclude == null)
+            {
+                return false;
+            }
+
+            return include.Name == otherInclude.Name;
         }
 
         private static bool ExpressionsEqual(BinaryOperator op, INode other)

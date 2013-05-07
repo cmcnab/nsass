@@ -40,7 +40,10 @@
             private static bool IsFirstChild(Statement node)
             {
                 var body = node.Parent as Body;
-                return body != null && body.Statements.FirstOrDefault() == node;
+                var activeStatements = from s in body.Statements
+                                        where !(s is Mixin)
+                                        select s;
+                return body != null && activeStatements.FirstOrDefault() == node;
             }
 
             private static bool IsVeryFirstNode(Statement node)
@@ -52,6 +55,11 @@
             {
                 var parentRule = rule.ParentRule;
                 return parentRule != null && parentRule.HasProperties;
+            }
+
+            private void Visit(Mixin mixin)
+            {
+                // Don't render anything directly from a mixin.
             }
 
             private void Visit(Rule rule)
@@ -88,6 +96,18 @@
                 foreach (var statement in body.Statements)
                 {
                     this.Visit((dynamic)statement);
+                }
+            }
+
+            private void Visit(Include include)
+            {
+                var mixins = include.Root().Mixins;
+                var mixin = mixins.FirstOrDefault(m => m.Name == include.Name);
+                // TODO: handle null
+
+                foreach (var child in mixin.Body.Statements)
+                {
+                    this.Visit((dynamic)child);
                 }
             }
 
