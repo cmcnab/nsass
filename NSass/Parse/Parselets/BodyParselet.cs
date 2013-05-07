@@ -83,9 +83,29 @@
                     break;
             }
 
-            // Gather selectors for a rule.
+            // Rule or directive.
             parser.Tokens.MoveNext();
-            var selectors = this.GatherSelectors(parser).ToList();
+            if (parser.Tokens.Current.Value == "@mixin")
+            {
+                return this.ParseMixin(parser);
+            }
+            else
+            {
+                return this.ParseRule(parser);
+            }
+        }
+
+        private Mixin ParseMixin(IParser parser)
+        {
+            var name = parser.Tokens.AssertNextIs(TokenType.SymLit, "identifier");
+            parser.Tokens.AssertPeekIs(TokenType.LCurly);
+            var body = parser.Parse();
+            return new Mixin(name.Value, (Body)body);
+        }
+
+        private Rule ParseRule(IParser parser)
+        {
+            var selectors = this.GatherRuleSelectors(parser).ToList();
 
             // End one before the LCurly so it will invoke the body parser again.
             parser.Tokens.AssertPeekIs(TokenType.LCurly);
@@ -93,7 +113,7 @@
             return new Rule(selectors, (Body)body);
         }
 
-        private IEnumerable<string> GatherSelectors(IParser parser)
+        private IEnumerable<string> GatherRuleSelectors(IParser parser)
         {
             List<string> currentSelector = new List<string>() { parser.Tokens.Current.Value };
 

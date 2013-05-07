@@ -98,7 +98,8 @@
                 || c == '-'
                 || c == '.'
                 || c == '$'
-                || c == '&';
+                || c == '&'
+                || c == '@';
         }
 
         private IEnumerable<Token> ReadMain()

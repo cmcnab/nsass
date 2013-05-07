@@ -29,6 +29,11 @@
             return new Rule(new List<string>(selectors), new Body(new List<INode>(statements)));
         }
 
+        public static Mixin Mixin(string name, params INode[] statements)
+        {
+            return new Mixin(name, new Body(new List<INode>(statements)));
+        }
+
         public static Property Property(string name, INode expression)
         {
             return new Property(name, expression);

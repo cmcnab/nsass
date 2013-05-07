@@ -253,5 +253,45 @@ a {
             // Assert
             Assert.Equal(expected, output);
         }
+
+        [Fact]
+        public void MixinSampleOutputCorrectCss()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"@mixin table-base {
+  th {
+    text-align: center;
+    font-weight: bold;
+  }
+  td, th {padding: 2px}
+}
+
+@mixin left($dist) {
+  float: left;
+  margin-left: $dist;
+}
+
+#data {
+  @include left(10px);
+  @include table-base;
+}";
+            var expected =
+@"#data {
+  float: left;
+  margin-left: 10px; }
+  #data th {
+    text-align: center;
+    font-weight: bold; }
+  #data td, #data th {
+    padding: 2px; }";
+
+            // Act
+            var output = engine.Compile(input);
+
+            // Assert
+            Assert.Equal(expected, output);
+        }
     }
 }

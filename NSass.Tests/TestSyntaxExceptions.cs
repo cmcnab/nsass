@@ -148,6 +148,21 @@
             Assert.Equal(FormatErrorMessageLiteral("#main ", "selector or at-rule", "}", 1, InputSource.StdInFileName), ex.Message);
         }
 
+        [Fact]
+        public void MixinMissingNameHasCorrectMessage()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"@mixin {
+  td, th {padding: 2px}
+}";
+
+            // Act/Assert
+            var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
+            Assert.Equal(FormatErrorMessageLiteral("@mixin ", "identifier", "{", 1, InputSource.StdInFileName), ex.Message);
+        }
+
         private static string FormatErrorMessage(string context, string expected, string actual, int lineNumber, string fileName)
         {
             return FormatErrorMessageLiteral(context, "\"" + expected + "\"", actual, lineNumber, fileName);

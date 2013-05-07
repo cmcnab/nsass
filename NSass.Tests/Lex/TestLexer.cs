@@ -234,6 +234,26 @@
         }
 
         [Fact]
+        public void StartsWithAtSignIsSingleSymLit()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input = "@mixin";
+            var expected = new Token[]
+            {
+                Tokens.Begin(),
+                Tokens.Symbol("@mixin"),
+                Tokens.End()
+            };
+
+            // Act
+            var tokens = lexer.ReadString(input).ToList();
+
+            // Assert
+            Assert.Equal(expected, tokens, new TokenComparer());
+        }
+
+        [Fact]
         public void Sample1LexesCorrectly()
         {
             // Arrange

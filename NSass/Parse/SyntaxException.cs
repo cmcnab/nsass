@@ -52,19 +52,24 @@
 
         public static SyntaxException Expecting(TokenType expectedType, Token context, Token at)
         {
+            return Expecting(expectedType, "\"" + Lexer.GetTokenTypeValue(expectedType) + "\"", context, at);
+        }
+
+        public static SyntaxException Expecting(TokenType expectedType, string expectedMessage, Token context, Token at)
+        {
             var lineContext = context.LineNumber == at.LineNumber
                 ? at.LeadingLineContext
                 : context.LineContext;
             var value = at == null
                 ? string.Empty
                 : at.Value;
-            return new SyntaxException(lineContext, Lexer.GetTokenTypeValue(expectedType), value, at ?? context);
+            return new SyntaxException(lineContext, expectedMessage, value, at ?? context);
         }
 
         private static string FormatMessage(string lineContext, string expectedValue, string encounteredValue, Token at)
         {
             return string.Format(
-                "Syntax error: Invalid CSS after \"{0}\": expected \"{1}\", was \"{2}\"{3}        on line {4} of {5}",
+                "Syntax error: Invalid CSS after \"{0}\": expected {1}, was \"{2}\"{3}        on line {4} of {5}",
                 lineContext,
                 expectedValue,
                 encounteredValue,
