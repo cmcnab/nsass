@@ -1,10 +1,10 @@
 ﻿namespace NSass.Parse.Parselets
 {
     using System;
-using System.Collections.Generic;
-using System.Linq;
-using NSass.Lex;
-using NSass.Parse.Expressions;
+    using System.Collections.Generic;
+    using System.Linq;
+    using NSass.Lex;
+    using NSass.Parse.Expressions;
 
     public class BodyParselet : IPrefixParselet
     {
@@ -68,6 +68,7 @@ using NSass.Parse.Expressions;
                         parser.Tokens.MoveNext();
                         return directiveParser(parser);
                     }
+
                     break;
 
                 default:
