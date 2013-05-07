@@ -62,11 +62,9 @@
                     return new Comment(parser.Tokens.Current.Value);
 
                 case TokenType.SymLit:
-                    var directiveParser = this.CanParseAsDirective(first.Value);
-                    if (directiveParser != null)
+                    if (first.Value.StartsWith("@"))
                     {
-                        parser.Tokens.MoveNext();
-                        return directiveParser(parser);
+                        return this.ParseDirective(parser);
                     }
 
                     break;
@@ -96,19 +94,23 @@
             return this.ParseRule(parser);
         }
 
-        private Func<IParser, INode> CanParseAsDirective(string literal)
+        private INode ParseDirective(IParser parser)
         {
-            if (literal == "@mixin")
+            var directive = parser.Tokens.MoveNext();
+            if (directive.Value == "@mixin")
             {
-                return this.ParseMixin;
+                return this.ParseMixin(parser);
             }
-            else if (literal == "@include")
+            else if (directive.Value == "@include")
             {
-                return this.ParseInclude;
+                return this.ParseInclude(parser);
             }
             else
             {
-                return null;
+                // TODO: If the line doesn't end with a semi-colon this method
+                // will fail I believe.  I may need to be able to detect newlines 
+                // here instead of filtering them out globally.
+                return new Comment(this.GatherToEndOfStatement(parser));
             }
         }
 
@@ -165,6 +167,20 @@
             if (currentSelector.Any())
             {
                 yield return string.Join(" ", currentSelector);
+            }
+        }
+
+        private string GatherToEndOfStatement(IParser parser)
+        {
+            return string.Join(" ", this.AllToEndOfStatement(parser)) + ";";
+        }
+
+        private IEnumerable<string> AllToEndOfStatement(IParser parser)
+        {
+            while (parser.Tokens.Current.Type != TokenType.SemiColon)
+            {
+                yield return parser.Tokens.Current.Value;
+                parser.Tokens.MoveNext();
             }
         }
     }

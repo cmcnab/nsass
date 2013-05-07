@@ -353,5 +353,29 @@ a {
             // Assert
             Assert.Equal(expected, output);
         }
+
+        [Fact]
+        public void UnknownDirectiveWithTrailingPassedLiterally()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@".page-title {
+  @foo whatever;
+  padding: 4px;
+  margin-top: 10px;
+}";
+            var expected =
+@".page-title {
+  @foo whatever;
+  padding: 4px;
+  margin-top: 10px; }";
+
+            // Act
+            var output = engine.Compile(input);
+
+            // Assert
+            Assert.Equal(expected, output);
+        }
     }
 }
