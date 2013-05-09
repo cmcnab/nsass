@@ -135,8 +135,7 @@
                     break;
 
                 default:
-                    // TODO: syntax error
-                    break;
+                    break; // The following AssertPeekIs will catch the syntax error.
             }
 
             parser.Tokens.AssertPeekIs(TokenType.LCurly);
@@ -161,8 +160,7 @@
                     break;
 
                 default:
-                    // TODO: syntax error
-                    break;
+                    throw SyntaxException.Expecting(TokenType.EndInterpolation, name, next);
             }
 
             parser.Tokens.MoveNextIfNextIs(TokenType.SemiColon);

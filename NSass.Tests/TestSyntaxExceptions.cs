@@ -145,7 +145,7 @@
 
             // Act/Assert
             var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
-            Assert.Equal(FormatErrorMessageLiteral("", "selector or at-rule", "}", 1, InputSource.StdInFileName), ex.Message);
+            Assert.Equal(FormatErrorMessageLiteral(string.Empty, "selector or at-rule", "}", 1, InputSource.StdInFileName), ex.Message);
         }
 
         [Fact]
@@ -164,6 +164,21 @@
         }
 
         [Fact]
+        public void MixinSymbolAfterNameHasCorrectMessage()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"@mixin foo bar {
+  td, th {padding: 2px}
+}";
+
+            // Act/Assert
+            var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
+            Assert.Equal(FormatErrorMessage("@mixin foo ", "{", "bar", 1, InputSource.StdInFileName), ex.Message); // TODO: should be 'was "bar {"'
+        }
+
+        [Fact]
         public void IncludeMissingNameHasCorrectMessage()
         {
             // Arrange
@@ -177,6 +192,26 @@
             // Act/Assert
             var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
             Assert.Equal(FormatErrorMessageLiteral("  @include ", "identifier", ";", 2, InputSource.StdInFileName), ex.Message);
+        }
+
+        [Fact]
+        public void IncludeSymbolAfterNameHasCorrectMessage()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"@mixin foo {
+  color: #ff0000;
+}
+
+.page-title {
+  @include foo bar;
+  padding: 4px;
+}";
+
+            // Act/Assert
+            var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
+            Assert.Equal(FormatErrorMessage("  @include foo ", "}", "bar", 6, InputSource.StdInFileName), ex.Message); // TODO: should be 'was "bar;"'
         }
 
         [Fact]

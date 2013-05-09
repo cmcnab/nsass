@@ -101,7 +101,6 @@
     <Compile Include="Lex\Token.cs" />
     <Compile Include="Lex\TokenType.cs" />
     <Compile Include="Util\Params.cs" />
-    <Compile Include="Util\StackExtensions.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -8,19 +8,32 @@
 
     internal class RuleContext
     {
+        private readonly Rule rule;
+        private readonly List<Tuple<IVariableScope, INode>> statements;
+        private readonly IEnumerable<string> selectors;
+
         public RuleContext(Rule rule, RuleContext parentRuleContext)
         {
-            this.Rule = rule;
-            this.Statements = new List<Tuple<IVariableScope, INode>>(
+            this.rule = rule;
+            this.statements = new List<Tuple<IVariableScope, INode>>(
                 from s in rule.Body.Statements select Tuple.Create<IVariableScope, INode>(null, s));
-            this.Selectors = GetRuleSelectors(rule, parentRuleContext);
+            this.selectors = GetRuleSelectors(rule, parentRuleContext);
         }
 
-        public Rule Rule { get; private set; }
+        public Rule Rule
+        {
+            get { return this.rule; }
+        }
 
-        public List<Tuple<IVariableScope, INode>> Statements { get; private set; }
+        public List<Tuple<IVariableScope, INode>> Statements
+        {
+            get { return this.statements; }
+        }
 
-        public IEnumerable<string> Selectors { get; private set; }
+        public IEnumerable<string> Selectors
+        {
+            get { return this.selectors; }
+        }
 
         public string SelectorsString
         {

@@ -24,11 +24,6 @@
             this.variables = variables;
         }
 
-        public IVariableScope AsChildOf(IVariableScope parent)
-        {
-            return new VariableScope(parent, this.variables);
-        }
-
         public IVariableScope Assign(string variable, IValue value)
         {
             this.variables[variable] = value;
