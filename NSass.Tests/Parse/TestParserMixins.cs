@@ -135,6 +135,32 @@
         }
 
         [Fact]
+        public void IncludeWithExpressionGroupArgumentParsesCorrectly()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input =
+@"p { @include sexy-border(blue foo, 1in); }";
+
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "p",
+                                Expr.Include(
+                                    "sexy-border",
+                                    Expr.Group(
+                                        Expr.Literal("blue"),
+                                        Expr.Literal("foo")),
+                                    Expr.Literal("1in"))));
+
+            // Act
+            var parser = new Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
+
+            // Assert
+            Assert.Equal(expected, ast, Expr.Comparer);
+        }
+
+        [Fact]
         public void MixinWithRuleParsesCorrectly()
         {
             // Arrange

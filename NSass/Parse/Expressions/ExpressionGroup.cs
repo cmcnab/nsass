@@ -15,5 +15,12 @@
         {
             get { return this.children; }
         }
+
+        public static INode Collapse(IReadOnlyList<INode> expressions)
+        {
+            return expressions.Count == 1
+                ? expressions[0]
+                : new ExpressionGroup(expressions);
+        }
     }
 }

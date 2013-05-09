@@ -229,7 +229,7 @@
         private List<INode> GatherIncludeArguments(IParser parser)
         {
             List<INode> arguments = new List<INode>();
-            arguments.Add(null);
+            List<INode> current = new List<INode>();
 
             while (true)
             {
@@ -240,23 +240,19 @@
                 }
                 else if (token.Type == TokenType.Comma)
                 {
-                    arguments.Add(null);
+                    arguments.Add(ExpressionGroup.Collapse(current));
+                    current = new List<INode>();
                     parser.Tokens.MoveNext();
                 }
                 else
                 {
-                    if (arguments[arguments.Count - 1] != null)
-                    {
-                        throw new SyntaxException(); // TODO:
-                    }
-
-                    arguments[arguments.Count - 1] = parser.Parse();
+                    current.Add(parser.Parse());
                 }
             }
 
-            if (arguments.Any(a => a == null))
+            if (current.Any())
             {
-                throw new SyntaxException(); // TODO:
+                arguments.Add(ExpressionGroup.Collapse(current));
             }
 
             return arguments;

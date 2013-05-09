@@ -18,7 +18,7 @@
             var expression = parser.Parse();
             if (expression is Body)
             {
-                return SingleExpressionProperty(nameExp, expression);
+                return MakeProperty(nameExp, expression);
             }
 
             var expressions = new List<INode>();
@@ -31,12 +31,10 @@
             }
 
             parser.Tokens.MoveNextIfNextIs(TokenType.SemiColon);
-            return expressions.Count == 1
-                ? SingleExpressionProperty(nameExp, expressions.First())
-                : MultiExpressionProperty(nameExp, expressions);
+            return MakeProperty(nameExp, ExpressionGroup.Collapse(expressions));
         }
 
-        private static INode SingleExpressionProperty(Name nameExp, INode expression)
+        private static INode MakeProperty(Name nameExp, INode expression)
         {
             if (nameExp is Variable)
             {
@@ -46,11 +44,6 @@
             {
                 return new Property(nameExp.Text, expression);
             }
-        }
-
-        private static INode MultiExpressionProperty(Name nameExp, List<INode> expressions)
-        {
-            return new Property(nameExp.Text, new ExpressionGroup(expressions));
         }
 
         private static bool IsEndProperty(TokenType type)
