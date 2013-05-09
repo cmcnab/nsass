@@ -152,5 +152,58 @@
             // Assert
             Assert.Equal(expected, ast, Expr.Comparer);
         }
+
+        [Fact]
+        public void PropertyWith2SymbolsParsesCorrectly()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input =
+@"#main {
+  border: 1px #f00;
+}";
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "#main",
+                                Expr.Property(
+                                    "border",
+                                    Expr.Group(
+                                        Expr.Literal("1px"),
+                                        Expr.Literal("#f00")))));
+
+            // Act
+            var parser = new Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
+
+            // Assert
+            Assert.Equal(expected, ast, Expr.Comparer);
+        }
+
+        [Fact]
+        public void PropertyWith3SymbolsParsesCorrectly()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input =
+@"#main {
+  border: 1px solid red;
+}";
+            var expected = Expr.Root(
+                            Expr.Rule(
+                                "#main",
+                                Expr.Property(
+                                    "border",
+                                    Expr.Group(
+                                        Expr.Literal("1px"),
+                                        Expr.Literal("solid"),
+                                        Expr.Literal("red")))));
+
+            // Act
+            var parser = new Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
+
+            // Assert
+            Assert.Equal(expected, ast, Expr.Comparer);
+        }
     }
 }

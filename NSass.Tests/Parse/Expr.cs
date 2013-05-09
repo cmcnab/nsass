@@ -64,6 +64,11 @@
             return new Assignment(name, expression);
         }
 
+        public static ExpressionGroup Group(params INode[] expressions)
+        {
+            return new ExpressionGroup(new List<INode>(expressions));
+        }
+
         public static Literal Literal(string value)
         {
             return new Literal(value);
@@ -160,6 +165,17 @@
 
             return include.Name == otherInclude.Name
                 && Enumerable.SequenceEqual(include.Arguments, otherInclude.Arguments, Comparer);
+        }
+
+        private static bool ExpressionsEqual(ExpressionGroup expGroup, INode other)
+        {
+            var otherExpGroup = other as ExpressionGroup;
+            if (otherExpGroup == null)
+            {
+                return false;
+            }
+
+            return Enumerable.SequenceEqual(expGroup.Children, otherExpGroup.Children, Comparer);
         }
 
         private static bool ExpressionsEqual(BinaryOperator op, INode other)

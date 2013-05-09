@@ -1,5 +1,7 @@
 ﻿namespace NSass.Parse.Parselets
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using NSass.Lex;
     using NSass.Parse.Expressions;
 
@@ -14,8 +16,29 @@
         {
             var nameExp = (Name)left;
             var expression = parser.Parse();
+            if (expression is Body)
+            {
+                return SingleExpressionProperty(nameExp, expression);
+            }
+
+            var expressions = new List<INode>();
+            expressions.Add(expression);
+
+            // TODO: or stop on newline?
+            for (var next = parser.Tokens.Peek(); !IsEndProperty(next.Type); next = parser.Tokens.Peek())
+            {
+                expressions.Add(parser.Parse());
+            }
+
             parser.Tokens.MoveNextIfNextIs(TokenType.SemiColon);
-            if (left is Variable)
+            return expressions.Count == 1
+                ? SingleExpressionProperty(nameExp, expressions.First())
+                : MultiExpressionProperty(nameExp, expressions);
+        }
+
+        private static INode SingleExpressionProperty(Name nameExp, INode expression)
+        {
+            if (nameExp is Variable)
             {
                 return new Assignment(nameExp.Text, expression);
             }
@@ -23,6 +46,17 @@
             {
                 return new Property(nameExp.Text, expression);
             }
+        }
+
+        private static INode MultiExpressionProperty(Name nameExp, List<INode> expressions)
+        {
+            return new Property(nameExp.Text, new ExpressionGroup(expressions));
+        }
+
+        private static bool IsEndProperty(TokenType type)
+        {
+            return type == TokenType.SemiColon
+                || type == TokenType.EndInterpolation;
         }
     }
 }

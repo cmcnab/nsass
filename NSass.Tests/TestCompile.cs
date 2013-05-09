@@ -446,5 +446,25 @@ p { @include sexy-border(blue, 1in); }";
             // Assert
             Assert.Equal(expected, output);
         }
+
+        [Fact]
+        public void SimplePropertyWithMultipleSymbolsOutputCorrectCss()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"#main {
+  border: 1px  #f00;
+}";
+            var expected =
+@"#main {
+  border: 1px #f00; }";
+
+            // Act
+            var output = engine.Compile(input);
+
+            // Assert
+            Assert.Equal(expected, output);
+        }
     }
 }

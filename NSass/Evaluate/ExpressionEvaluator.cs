@@ -1,6 +1,7 @@
 ﻿namespace NSass.Evaluate
 {
     using System;
+    using System.Linq;
     using NSass.Parse.Expressions;
     using NSass.Parse.Values;
 
@@ -16,6 +17,12 @@
         public IValue Evaluate(INode tree)
         {
             return this.Visit((dynamic)tree);
+        }
+
+        private IValue Visit(ExpressionGroup expGroup)
+        {
+            var evald = from c in expGroup.Children select this.Visit((dynamic)c);
+            return new Text(string.Join(" ", evald));
         }
 
         private IValue Visit(BinaryOperator op)
