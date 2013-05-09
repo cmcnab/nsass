@@ -45,14 +45,15 @@
     <Compile Include="InputSource.cs" />
     <Compile Include="Parse\Expressions\Include.cs" />
     <Compile Include="Parse\Expressions\Mixin.cs" />
+    <Compile Include="Render\BaseVisitor.cs" />
+    <Compile Include="Render\RuleContext.cs" />
+    <Compile Include="Render\ToCss.cs" />
     <Compile Include="Shell\Console.cs" />
     <Compile Include="Shell\IConsoleIO.cs" />
     <Compile Include="Shell\ConsoleIO.cs" />
     <Compile Include="Engine.cs" />
     <Compile Include="Evaluate\IVariableScope.cs" />
-    <Compile Include="Evaluate\Processor.cs" />
     <Compile Include="Evaluate\ExpressionEvaluator.cs" />
-    <Compile Include="Evaluate\TreeBuilder.cs" />
     <Compile Include="Evaluate\VariableScope.cs" />
     <Compile Include="FileSystem\FileSystem.cs" />
     <Compile Include="FileSystem\IFileSystem.cs" />
@@ -62,7 +63,6 @@
     <Compile Include="Parse\Expressions\Comment.cs" />
     <Compile Include="Parse\Expressions\Literal.cs" />
     <Compile Include="Parse\Expressions\Node.cs" />
-    <Compile Include="Parse\Expressions\NodeExtensions.cs" />
     <Compile Include="Parse\Expressions\Property.cs" />
     <Compile Include="Parse\Expressions\PropertyExpression.cs" />
     <Compile Include="Parse\Expressions\Root.cs" />
@@ -93,7 +93,6 @@
     <Compile Include="Lex\Lexer.cs" />
     <Compile Include="Lex\LexerExtensions.cs" />
     <Compile Include="Render\RenderFunctions.cs" />
-    <Compile Include="Render\ToCss.cs" />
     <Compile Include="SassException.cs" />
     <Compile Include="Util\DictionaryExtensions.cs" />
     <Compile Include="Parse\ParseContext.cs" />
@@ -102,6 +101,7 @@
     <Compile Include="Lex\Token.cs" />
     <Compile Include="Lex\TokenType.cs" />
     <Compile Include="Util\Params.cs" />
+    <Compile Include="Util\StackExtensions.cs" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

@@ -5,9 +5,5 @@
     /// </summary>
     public abstract class Statement : Node
     {
-        public Rule ParentRule
-        {
-            get { return this.FindParentType<Rule>(); }
-        }
     }
 }

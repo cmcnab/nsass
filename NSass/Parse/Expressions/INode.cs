@@ -7,8 +7,6 @@
     {
         Token SourceToken { get; }
 
-        INode Parent { get; }
-
         IEnumerable<INode> Children { get; }
     }
 }

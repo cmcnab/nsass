@@ -8,7 +8,7 @@
         public static void ToCss(this INode node, TextWriter output)
         {
             var renderer = new ToCss(output);
-            renderer.Render(node);
+            renderer.Visit(node);
         }
     }
 }

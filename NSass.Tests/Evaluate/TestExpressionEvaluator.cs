@@ -18,7 +18,7 @@
             // #main {
             //   width: 10px + 50px;
             // }
-            var ast = Expr.Root(
+            var root = Expr.Root(
                         Expr.Rule(
                             "#main",
                             Expr.Property(
@@ -29,7 +29,6 @@
                                     Expr.Literal("50px")))));
 
             // Act
-            var root = (Root)ast.Process();
             var rule = (Rule)root.Statements.First();
             var prop = (Property)rule.Body.Statements.First();
             var result = evaluator.Evaluate(prop.Expression);
@@ -47,7 +46,7 @@
             // #main {
             //   color: #010203 + #040506;
             // }
-            var ast = Expr.Root(
+            var root = Expr.Root(
                         Expr.Rule(
                             "#main",
                             Expr.Property(
@@ -58,7 +57,6 @@
                                     Expr.Literal("#040506")))));
 
             // Act
-            var root = (Root)ast.Process();
             var rule = (Rule)root.Statements.First();
             var prop = (Property)rule.Body.Statements.First();
             var result = evaluator.Evaluate(prop.Expression);
@@ -76,7 +74,7 @@
             // #main {
             //   color: #ff0001 + #080001;
             // }
-            var ast = Expr.Root(
+            var root = Expr.Root(
                         Expr.Rule(
                             "#main",
                             Expr.Property(
@@ -87,7 +85,6 @@
                                     Expr.Literal("#080001")))));
 
             // Act
-            var root = (Root)ast.Process();
             var rule = (Rule)root.Statements.First();
             var prop = (Property)rule.Body.Statements.First();
             var result = evaluator.Evaluate(prop.Expression);

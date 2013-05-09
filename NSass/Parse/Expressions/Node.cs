@@ -8,10 +8,6 @@
     {
         public Token SourceToken { get; internal set; }
 
-        public INode Parent { get; internal set; }
-
-        public int Depth { get; internal set; }
-
         public abstract IEnumerable<INode> Children { get; }
     }
 }
