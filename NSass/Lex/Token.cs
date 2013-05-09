@@ -1,5 +1,7 @@
 ﻿namespace NSass.Lex
 {
+    using System.Diagnostics.CodeAnalysis;
+
     public class Token
     {
         private readonly TokenType type;
@@ -7,8 +9,6 @@
         private readonly string lineContext;
         private readonly string fileName;
         private readonly int lineNumber;
-        private readonly int offset;
-        private readonly int position;
 
         public Token(TokenType type, string value, string lineContext, string fileName, int lineNumber)
         {
@@ -17,10 +17,6 @@
             this.lineContext = lineContext;
             this.fileName = fileName;
             this.lineNumber = lineNumber;
-
-            // TODO: set these
-            this.offset = 0;
-            this.position = 0;
         }
 
         public TokenType Type
@@ -58,16 +54,7 @@
             get { return this.lineNumber; }
         }
 
-        public int Offset
-        {
-            get { return this.offset; }
-        }
-
-        public int Position
-        {
-            get { return this.position; }
-        }
-
+        [ExcludeFromCodeCoverage]
         public override string ToString()
         {
             return this.Type == TokenType.SymLit

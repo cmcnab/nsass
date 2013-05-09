@@ -494,5 +494,33 @@ p { @include sexy-border(blue foo, 1in); }";
             // Assert
             Assert.Equal(expected, output);
         }
+
+        [Fact(Skip = "TODO")]
+        public void CommentInsideArgumentsIsNotRendered()
+        {
+            // Arrange
+            var engine = new Engine();
+            var input =
+@"@mixin sexy-border($color, $width) {
+  border: {
+    color: $color;
+    width: $width;
+    style: dashed;
+  }
+}
+
+p { @include sexy-border(blue foo /* comment */, 1in); }";
+            var expected =
+@"p {
+  border-color: blue foo;
+  border-width: 1in;
+  border-style: dashed; }";
+
+            // Act
+            var output = engine.Compile(input);
+
+            // Assert
+            Assert.Equal(expected, output);
+        }
     }
 }

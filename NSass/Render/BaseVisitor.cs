@@ -1,6 +1,7 @@
 ﻿namespace NSass.Render
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using NSass.Parse.Expressions;
 
@@ -60,41 +61,49 @@
             this.current = this.stack.Pop();
         }
 
+        [ExcludeFromCodeCoverage]
         protected virtual void OnVisit(Mixin mixin)
         {
             this.Descend();
         }
 
+        [ExcludeFromCodeCoverage]
         protected virtual void OnVisit(Rule rule)
         {
             this.Descend();
         }
 
+        [ExcludeFromCodeCoverage]
         protected virtual void OnVisit(Body body)
         {
             this.Descend();
         }
 
+        [ExcludeFromCodeCoverage]
         protected virtual void OnVisit(Include include)
         {
             this.Descend();
         }
 
+        [ExcludeFromCodeCoverage]
         protected virtual void OnVisit(Property property)
         {
             this.Descend();
         }
 
+        [ExcludeFromCodeCoverage]
         protected virtual void OnVisit(Assignment assignment)
         {
             this.Descend();
         }
 
+        [ExcludeFromCodeCoverage]
         protected virtual void OnVisit(Comment comment)
         {
             this.Descend();
         }
 
+        [ExcludeFromCodeCoverage]
         protected virtual void OnVisit(Node node)
         {
             this.Descend();
