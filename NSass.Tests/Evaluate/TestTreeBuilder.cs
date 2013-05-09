@@ -279,5 +279,38 @@
             var ruleHover = Assert.IsType<Rule>(ruleA.Body.Statements[0]);
             Assert.Equal("a:hover", ruleHover.Selectors[0]);
         }
+
+        [Fact]
+        public void MixinRulesRetainSelectors()
+        {
+            // Arrange
+            //
+            // @mixin table-base {
+            //   th {
+            //     text-align: center;
+            //     font-weight: bold;
+            //   }
+            // }
+            var ast = Expr.Root(
+                        Expr.Mixin(
+                            "table-base",
+                            Expr.Rule(
+                                "th",
+                                Expr.Property(
+                                    "text-align",
+                                    Expr.Literal("center")),
+                                Expr.Property(
+                                    "font-weight",
+                                    Expr.Literal("bold")))));
+
+            // Act
+            var evald = ast.Process();
+
+            // Assert
+            var root = Assert.IsType<Root>(evald);
+            var mixin = Assert.IsType<Mixin>(root.Statements[0]);
+            var ruleTh = Assert.IsType<Rule>(mixin.Body.Statements[0]);
+            Assert.Equal("th", ruleTh.Selectors[0]);
+        }
     }
 }

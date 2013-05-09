@@ -27,11 +27,15 @@
         {
             private TextWriter output;
             private Stack<IVariableScope> scopes;
+            private Stack<RuleContext> ruleStatements;
+            private int ruleCount;
 
             public Visitor(TextWriter output)
             {
                 this.output = output;
                 this.scopes = new Stack<IVariableScope>();
+                this.ruleStatements = new Stack<RuleContext>();
+                this.ruleCount = 0;
             }
 
             public void VisitTree(INode tree)
@@ -85,11 +89,36 @@
                     this.WriteIdent(rule);
                     this.output.Write(GetRuleSelectors(rule));
                     this.output.Write(" {");
+                    this.ruleCount += 1;
                 }
 
-                foreach (var child in rule.Body.Statements)
+                var context = new RuleContext(rule.Body.Statements);
+                this.ruleStatements.Push(context);
+
+                while (context.Statements.Count > 0)
                 {
-                    this.Visit((dynamic)child);
+                    var next = context.Statements.First();
+                    context.Statements.RemoveAt(0);
+
+                    bool useScope = next.Item1 != null;
+                    if (useScope)
+                    {
+                        this.scopes.Push(next.Item1);
+                    }
+
+                    this.Visit((dynamic)next.Item2);
+
+                    if (useScope)
+                    {
+                        this.scopes.Pop();
+                    }
+                }
+
+                this.ruleStatements.Pop();
+
+                if (rule.HasProperties)
+                {
+                    this.ruleCount -= 1;
                 }
 
                 if (rule.ParentRule == null)
@@ -121,14 +150,22 @@
                     throw SyntaxException.MissingMixin(include.Name, include.SourceToken);
                 }
 
-                this.scopes.Push(this.MakeIncludeScope(mixin, include));
+                var scope = this.MakeIncludeScope(mixin, include);
+                var context = this.ruleStatements.Peek();
 
-                foreach (var child in mixin.Body.Statements)
+                foreach (var child in mixin.Body.Statements.Reverse())
                 {
-                    this.Visit((dynamic)child);
+                    context.Statements.Insert(0, Tuple.Create(scope, child));
                 }
 
-                this.scopes.Pop();
+                //this.scopes.Push(this.MakeIncludeScope(mixin, include));
+
+                //foreach (var child in mixin.Body.Statements)
+                //{
+                //    this.Visit((dynamic)child);
+                //}
+
+                //this.scopes.Pop();
             }
 
             private void Visit(Property property)
@@ -173,7 +210,7 @@
 
             private void WriteIdent(Node node)
             {
-                var spaces = 2 * (node.Depth - 1);
+                var spaces = 2 * ruleCount;
                 for (int i = 0; i < spaces; ++i)
                 {
                     this.output.Write(' ');
@@ -196,6 +233,17 @@
                 }
 
                 return scope;
+            }
+
+            private class RuleContext
+            {
+                public RuleContext(IEnumerable<INode> originalStatements)
+                {
+                    this.Statements = new List<Tuple<IVariableScope, INode>>(
+                        from s in originalStatements select Tuple.Create<IVariableScope, INode>(null, s));
+                }
+
+                public List<Tuple<IVariableScope, INode>> Statements { get; private set; }
             }
         }
     }

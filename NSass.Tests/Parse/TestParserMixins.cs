@@ -133,5 +133,37 @@
             // Assert
             Assert.Equal(expected, ast, Expr.Comparer);
         }
+
+        [Fact]
+        public void MixinWithRuleParsesCorrectly()
+        {
+            // Arrange
+            var lexer = new Lexer();
+            var input =
+@"@mixin table-base {
+  th {
+    text-align: center;
+    font-weight: bold;
+  }
+}";
+            var expected = Expr.Root(
+                            Expr.Mixin(
+                                "table-base",
+                                Expr.Rule(
+                                    "th",
+                                    Expr.Property(
+                                        "text-align",
+                                        Expr.Literal("center")),
+                                    Expr.Property(
+                                        "font-weight",
+                                        Expr.Literal("bold")))));
+
+            // Act
+            var parser = new Parser(lexer.ReadString(input));
+            var ast = parser.Parse();
+
+            // Assert
+            Assert.Equal(expected, ast, Expr.Comparer);
+        }
     }
 }
