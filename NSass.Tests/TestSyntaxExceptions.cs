@@ -135,7 +135,7 @@
             Assert.Equal(FormatErrorMessage("#main {{", "{", string.Empty, 1, InputSource.StdInFileName), ex.Message);
         }
 
-        [Fact(Skip = "Figure this one out.")]
+        [Fact]
         public void CloseScopeFirstTokenHasCorrectMessage()
         {
             // Arrange
@@ -145,7 +145,7 @@
 
             // Act/Assert
             var ex = Assert.Throws<SyntaxException>(() => engine.Compile(input));
-            Assert.Equal(FormatErrorMessageLiteral("#main ", "selector or at-rule", "}", 1, InputSource.StdInFileName), ex.Message);
+            Assert.Equal(FormatErrorMessageLiteral("", "selector or at-rule", "}", 1, InputSource.StdInFileName), ex.Message);
         }
 
         [Fact]

@@ -59,10 +59,10 @@
 
         public static SyntaxException Expecting(TokenType expectedType, Token context, Token at)
         {
-            return Expecting(expectedType, "\"" + Lexer.GetTokenTypeValue(expectedType) + "\"", context, at);
+            return Expecting("\"" + Lexer.GetTokenTypeValue(expectedType) + "\"", context, at);
         }
 
-        public static SyntaxException Expecting(TokenType expectedType, string expectedMessage, Token context, Token at)
+        public static SyntaxException Expecting(string expectedMessage, Token context, Token at)
         {
             var lineContext = context.LineNumber == at.LineNumber
                 ? at.LeadingLineContext

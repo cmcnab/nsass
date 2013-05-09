@@ -41,7 +41,11 @@
             }
             else
             {
-                // TODO: AssertNextIs EndInterpolation ?
+                if (parser.Tokens.Current.Type == TokenType.BeginStream)
+                {
+                    throw SyntaxException.Expecting("selector or at-rule", parser.Tokens.Current, parser.Tokens.Peek());
+                }
+
                 return new Root(statements);
             }
         }

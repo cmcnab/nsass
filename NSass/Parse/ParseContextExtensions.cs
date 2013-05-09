@@ -43,7 +43,7 @@
                 }
                 else
                 {
-                    throw SyntaxException.Expecting(type, expectedMessage, current, next);
+                    throw SyntaxException.Expecting(expectedMessage, current, next);
                 }
             }
 
