@@ -1,10 +1,12 @@
 ﻿namespace NSass.Tests.Parse
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using NSass.Parse.Expressions;
     using NSass.Util;
 
+    [ExcludeFromCodeCoverage]
     public static class Expr
     {
         private static readonly IEqualityComparer<INode> ExprComparer = new LambdaComparer<INode>((a, b) => ExpressionsEqual((dynamic)a, b));

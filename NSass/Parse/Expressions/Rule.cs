@@ -1,12 +1,13 @@
 ﻿namespace NSass.Parse.Expressions
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
 
     public class Rule : Statement
     {
         private readonly Body body;
-        private IReadOnlyList<string> selectors;
+        private readonly IReadOnlyList<string> selectors;
 
         public Rule(IReadOnlyList<string> selectors, Body body)
         {
@@ -17,9 +18,9 @@
         public IReadOnlyList<string> Selectors
         {
             get { return this.selectors; }
-            internal set { this.selectors = value; } // TODO: hmm can I restore immutability?
         }
 
+        [ExcludeFromCodeCoverage]
         public override IEnumerable<INode> Children
         {
             get { return Enumerable.Repeat(this.body, 1); }

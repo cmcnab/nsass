@@ -4,6 +4,7 @@
     using System.Diagnostics.CodeAnalysis;
     using NSass.Lex;
 
+    [ExcludeFromCodeCoverage]
     public class TokenComparer : IEqualityComparer<Token>
     {
         public bool Equals(Token x, Token y)
@@ -19,7 +20,6 @@
             }
         }
 
-        [ExcludeFromCodeCoverage]
         public int GetHashCode(Token token)
         {
             unchecked

@@ -1,9 +1,11 @@
 ﻿namespace NSass.Tests
 {
+    using System.Diagnostics.CodeAnalysis;
     using System.Text;
     using NSass.Parse;
     using Xunit;
 
+    [ExcludeFromCodeCoverage]
     public class TestSyntaxExceptions
     {
         [Fact]

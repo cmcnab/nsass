@@ -28,11 +28,12 @@
         {
             get
             {
-                var body = this.Parent as Body;
+                System.Diagnostics.Debug.Assert(this.Parent is Body, "IsFirstChild is only used from the context of Statements");
+                var body = (Body)this.Parent;
                 var activeStatements = from s in body.Statements
                                        where !(s is Mixin) && !(s is Assignment)
                                        select s;
-                return body != null && activeStatements.FirstOrDefault() == this.Current;
+                return activeStatements.FirstOrDefault() == this.Current;
             }
         }
 

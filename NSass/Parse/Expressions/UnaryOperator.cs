@@ -1,6 +1,7 @@
 ﻿namespace NSass.Parse.Expressions
 {
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using NSass.Lex;
 
@@ -15,6 +16,7 @@
             this.operand = operand;
         }
 
+        [ExcludeFromCodeCoverage]
         public override IEnumerable<INode> Children
         {
             get { return Enumerable.Repeat(this.operand, 1); }
