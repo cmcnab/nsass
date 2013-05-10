@@ -495,7 +495,7 @@ p { @include sexy-border(blue foo, 1in); }";
             Assert.Equal(expected, output);
         }
 
-        [Fact(Skip = "TODO")]
+        [Fact]
         public void CommentInsideArgumentsIsNotRendered()
         {
             // Arrange

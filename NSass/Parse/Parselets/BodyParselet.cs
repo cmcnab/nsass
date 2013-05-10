@@ -244,6 +244,10 @@
                     current = new List<INode>();
                     parser.Tokens.MoveNext();
                 }
+                else if (token.Type == TokenType.Comment)
+                {
+                    parser.Tokens.MoveNext();
+                }
                 else
                 {
                     current.Add(parser.Parse());
