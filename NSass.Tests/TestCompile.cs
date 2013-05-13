@@ -495,7 +495,7 @@ p { @include sexy-border(blue foo, 1in); }";
             Assert.Equal(expected, output);
         }
 
-        [Fact]
+        [Fact] // Test
         public void CommentInsideArgumentsIsNotRendered()
         {
             // Arrange
